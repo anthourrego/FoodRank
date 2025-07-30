@@ -1,7 +1,9 @@
+import { RateProductGrid } from "../components/RateProductGrid"
+
 function RateProducts(){
   return(
     <>
-      <p>rate Products</p>
+      <RateProductGrid/>
     </>
   )
 }
