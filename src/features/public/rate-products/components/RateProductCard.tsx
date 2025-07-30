@@ -123,7 +123,7 @@ export function RateProductCard({ product }: ProductCardProps) {
 
             <div className="space-y-4 animate-in slide-in-from-top-2">
               <Separator />
-              {(product.description && product.description.length>1) && (
+              {product.description && product.description.length > 1 && (
                 <>
                   <div className="max-h-30 overflow-y-auto">
                     <h4 className="font-semibold text-gray-900 mb-2">
@@ -153,21 +153,26 @@ export function RateProductCard({ product }: ProductCardProps) {
                         {product.restaurant.locations.length !== 1 ? "s" : ""}:
                       </span>
                     </div>
-                    <div className="flex flex-wrap gap-2 ml-6">
+                    <div className="flex gap-2  overflow-auto  ">
                       {product.restaurant.locations.map((location, index) => (
-                        <Badge
-                          key={index}
-                          variant="outline"
-                          className="text-xs"
-                        >
-                          {location}
-                        </Badge>
+                        <div className="flex  flex-col min-w-20">
+                          <Badge
+                            key={index}
+                            variant="outline"
+                            className="text-xs flex flex-col items-start"
+                          >
+                            {location.site}
+                          </Badge>
+                            <p className="text-xs text-slate-600 text-balance ml-2">
+                              {location.address}
+                            </p>
+                        </div>
                       ))}
                     </div>
                   </div>
 
                   {/* Direcciones */}
-                  <div>
+                  {/* <div>
                     <div className="flex items-center gap-2 text-sm mb-2">
                       <MapPin className="w-4 h-4 text-muted-foreground" />
                       <span className="text-muted-foreground font-medium">
@@ -182,7 +187,7 @@ export function RateProductCard({ product }: ProductCardProps) {
                         </div>
                       ))}
                     </div>
-                  </div>
+                  </div> */}
 
                   {/* Propietario */}
                   <div className="flex items-center gap-2 text-sm">

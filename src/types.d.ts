@@ -1,7 +1,6 @@
 interface Restaurant {
   name: string
-  locations: string[]
-  addresses: string[]
+  locations: any[]
   socialMedia: {
     instagram: string
     facebook: string

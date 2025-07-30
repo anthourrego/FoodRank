@@ -8,8 +8,20 @@ export const productsList = [
       "Hamburguesa gourmet con carne premium, tocino crujiente y quesos artesanales. Una experiencia culinaria única que combina sabores tradicionales con técnicas modernas.",
     restaurant: {
       name: "The Prime Grill",
-      locations: ["La Villa", "Centro", "Pinares"],
-      addresses: ["Calle 15 #8-45, La Villa", "Carrera 7 #23-12, Centro", "Avenida Circunvalar #45-23, Pinares"],
+      locations: [
+        {
+          site:"La Villa",
+          address:"Calle 15 #8-45"
+        },
+        {
+          site:"Centro",
+          address:"Carrera 7 #23-12"
+        },
+        {
+          site:"Pinares",
+          address:"Avenida Circunvalar #45-23"
+        },
+      ],
       socialMedia: {
         instagram: "@theprimegrill",
         facebook: "The Prime Grill Pereira",
@@ -27,8 +39,16 @@ export const productsList = [
       "Doble carne, doble queso, la combinación perfecta para los amantes de las hamburguesas clásicas. Preparada con ingredientes frescos y salsas caseras.",
     restaurant: {
       name: "413 Burgers",
-      locations: ["Villa del Prado", "Dosquebradas"],
-      addresses: ["Carrera 14 #25-30, Villa del Prado", "Calle 50 #14-25, Dosquebradas Centro"],
+      locations: [
+        {
+          site:"Villa del Prado",
+          address:"Carrera 14 #25-30"
+        },
+        {
+          site:"Dosquebradas",
+          address:"Calle 50 #14-25"
+        },
+      ],
       socialMedia: {
         instagram: "@413burgers",
         facebook: "413 Burgers Pereira",
@@ -46,12 +66,23 @@ export const productsList = [
       "Hamburguesa artesanal con salsa especial de la casa y vegetales frescos. Cada ingrediente es cuidadosamente seleccionado para crear el sabor perfecto.",
     restaurant: {
       name: "Z Burger",
-      locations: ["La Rebeca", "Castellana", "Cuba", "El Poblado"],
-      addresses: [
-        "Calle 18 #12-34, La Rebeca",
-        "Carrera 8 #15-67, Castellana",
-        "Avenida 30 de Agosto #20-15, Cuba",
-        "Calle 105 #15-20, El Poblado",
+      locations: [
+        {
+          site:"La Rebeca",
+          address:"Calle 18 #12-34"
+        },
+        {
+          site:"Castellana",
+          address:"Carrera 8 #15-67"
+        },
+        {
+          site:"Cuba",
+          address:"Avenida 30 de Agosto #20-15"
+        },
+        {
+          site:"El Poblado",
+          address:"Calle 105 #15-20"
+        },
       ],
       socialMedia: {
         instagram: "@zburger_oficial",
