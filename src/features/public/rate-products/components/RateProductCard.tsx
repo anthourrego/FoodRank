@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 
 import {
-  ChevronDown,
   MapPin,
   Instagram,
   Facebook,
@@ -17,18 +16,19 @@ import { StarRating } from "@/components/StarRating";
 
 interface ProductCardProps {
   product: Product;
+  showRating?:boolean
 }
 
-export function RateProductCard({ product }: ProductCardProps) {
+export function RateProductCard({ product,showRating=false }: ProductCardProps) {
   const [userRating, setUserRating] = useState<number>(0);
-  const [showRating, setShowRating] = useState(false);
+  
   const [hasVoted, setHasVoted] = useState(false);
   const [alreadyVoted, setAlreadyVoted] = useState(false);
 
   // Verificar si ya votó por este producto al cargar el componente
   useEffect(() => {
     const votedProducts = JSON.parse(
-      localStorage.getItem("votedBurgers") || "{}"
+      localStorage.getItem("x-foodrank-voted-product") || "{}"
     );
     if (votedProducts[product.id]) {
       setAlreadyVoted(true);
@@ -47,10 +47,10 @@ export function RateProductCard({ product }: ProductCardProps) {
 
     // Guardar el voto en localStorage
     const votedProducts = JSON.parse(
-      localStorage.getItem("votedBurgers") || "{}"
+      localStorage.getItem("x-foodrank-voted-product") || "{}"
     );
     votedProducts[product.id] = userRating;
-    localStorage.setItem("votedBurgers", JSON.stringify(votedProducts));
+    localStorage.setItem("x-foodrank-voted-product", JSON.stringify(votedProducts));
 
     setHasVoted(true);
     setAlreadyVoted(true);
@@ -59,12 +59,11 @@ export function RateProductCard({ product }: ProductCardProps) {
     console.log(`Rated ${product.name} with ${userRating} stars`);
   };
 
-  const handleCardClick = () => {
-    setShowRating(true);
-  };
+
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 border-0 shadow-md h-full">
+      
       <div className="cursor-pointer">
         <div className=" relative overflow-hidden">
           <LazyLoadImage
@@ -155,7 +154,7 @@ export function RateProductCard({ product }: ProductCardProps) {
                     </div>
                     <div className="flex gap-2  overflow-auto  ">
                       {product.restaurant.locations.map((location, index) => (
-                        <div className="flex  flex-col min-w-20">
+                        <div className="flex  flex-col min-w-20" key={index}>
                           <Badge
                             key={index}
                             variant="outline"

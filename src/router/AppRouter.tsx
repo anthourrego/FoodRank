@@ -6,6 +6,7 @@ import { RoutesNotFound } from "./NotFound";
 
 const Login = lazy(()=> import('@/features/public/auth/page/Login'))
 const RateProducts = lazy(()=> import('@/features/public/rate-products/page/RateProducts'))
+const RateProductsVoting = lazy(()=> import('@/features/public/rate-products-voting/page/RateProductsVoting'))
 
 export function AppRouter(){
   return(
@@ -16,6 +17,7 @@ export function AppRouter(){
           <Route path="/" element={<Navigate to="/rate-product" replace/>} />
           <Route path="/login" element={<Login/>} />
           <Route path='/rate-product' element={<RateProducts/>} />
+          <Route path='/rate-product/:productId' element={<RateProductsVoting/>} />
         </RoutesNotFound>
       </HashRouter>
 

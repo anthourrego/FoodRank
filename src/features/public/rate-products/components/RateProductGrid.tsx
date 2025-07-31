@@ -1,12 +1,10 @@
 
 import { productsList } from "@/models/products"
-import { useState } from "react"
 import { RateProductCard } from "./RateProductCard"
 
 
 export function RateProductGrid() {
   
-
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
