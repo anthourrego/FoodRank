@@ -62,7 +62,7 @@ export function RateProductCard({ product,showRating=false }: ProductCardProps) 
 
 
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 border-0 shadow-md h-full">
+    <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 border-0 shadow-md h-full shadow-violet-400/30">
       
       <div className="cursor-pointer">
         <div className=" relative overflow-hidden">
@@ -86,7 +86,7 @@ export function RateProductCard({ product,showRating=false }: ProductCardProps) 
           )}
         </div>
 
-        <CardHeader className="py-3">
+        <CardHeader className="py-3 h-20">
           <h3 className="text-xl font-bold text-gray-900 leading-tight">
             {product.name}
           </h3>
@@ -124,7 +124,7 @@ export function RateProductCard({ product,showRating=false }: ProductCardProps) 
               <Separator />
               {product.description && product.description.length > 1 && (
                 <>
-                  <div className="max-h-30 overflow-y-auto">
+                  <div className="h-30 overflow-y-auto">
                     <h4 className="font-semibold text-gray-900 mb-2">
                       Descripción
                     </h4>
@@ -152,19 +152,19 @@ export function RateProductCard({ product,showRating=false }: ProductCardProps) 
                         {product.restaurant.locations.length !== 1 ? "s" : ""}:
                       </span>
                     </div>
-                    <div className="flex gap-2  overflow-auto  ">
+                    <div className="grid grid-cols-2 gap-2  overflow-auto h-34">
                       {product.restaurant.locations.map((location, index) => (
-                        <div className="flex  flex-col min-w-20" key={index}>
+                        <div className="flex  flex-col   p-2" key={index}>
                           <Badge
                             key={index}
                             variant="outline"
-                            className="text-xs flex flex-col items-start"
+                            className="text-xs "
                           >
                             {location.site}
                           </Badge>
-                            <p className="text-xs text-slate-600 text-balance ml-2">
-                              {location.address}
-                            </p>
+                          <p className="text-xs text-slate-600 text-balance ml-2">
+                            {location.address}
+                          </p>
                         </div>
                       ))}
                     </div>
@@ -189,13 +189,13 @@ export function RateProductCard({ product,showRating=false }: ProductCardProps) 
                   </div> */}
 
                   {/* Propietario */}
-                  <div className="flex items-center gap-2 text-sm">
+                 {/*  <div className="flex items-center gap-2 text-sm">
                     <User className="w-4 h-4 text-muted-foreground" />
                     <span className="text-muted-foreground">Propietario:</span>
                     <span className="text-gray-900 font-medium">
                       {product.restaurant.owner}
                     </span>
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className="flex gap-2 mt-4 relative bottom-0">
