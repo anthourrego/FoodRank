@@ -64,7 +64,7 @@ export function RateProductCard({ product,showRating=false,selected=false }: Pro
 
 
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 border-0 shadow-md h-full shadow-violet-400/30">
+    <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 border-0 shadow-md h-full shadow-red-400/30">
       
       <div onClick={()=>setIsSelected(prevState => !prevState)} className="cursor-pointer">
         <div className=" relative overflow-hidden">
@@ -125,7 +125,7 @@ export function RateProductCard({ product,showRating=false,selected=false }: Pro
               isSelected && (
                 <div className="space-y-4 animate-in slide-in-from-top-2">
                 <Separator />
-                {product.description && product.description.length > 1 && (
+                {/* {product.description && product.description.length > 1 && (
                   <>
                     <div className="h-30 overflow-y-auto">
                       <h4 className="font-semibold text-gray-900 mb-2">
@@ -138,7 +138,7 @@ export function RateProductCard({ product,showRating=false,selected=false }: Pro
   
                     <Separator />
                   </>
-                )}
+                )} */}
   
                 <div className="">
                   <h4 className="font-semibold text-gray-900 mb-3">
