@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { HashRouter, Navigate, Route } from "react-router";
 import { RoutesNotFound } from "./NotFound";
+import { PrivateLayout } from "@/layout/PrivateLayout";
 
 
 
@@ -13,11 +14,12 @@ export function AppRouter(){
     <Suspense fallback={<>Cargando.........................</>}>
       <HashRouter>
         <RoutesNotFound>
-
-          <Route path="/" element={<Navigate to="/rate-product" replace/>} />
-          <Route path="/login" element={<Login/>} />
-          <Route path='/rate-product' element={<RateProducts/>} />
-          <Route path='/rate-product/:productId' element={<RateProductsVoting/>} />
+          <Route element={<PrivateLayout/>}>
+            <Route path="/" element={<Navigate to="/rate-product" replace/>} />
+            <Route path="/login" element={<Login/>} />
+            <Route path='/rate-product' element={<RateProducts/>} />
+            <Route path='/rate-product/:productId' element={<RateProductsVoting/>} />
+          </Route>
         </RoutesNotFound>
       </HashRouter>
 
