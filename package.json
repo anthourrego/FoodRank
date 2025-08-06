@@ -17,6 +17,8 @@
     "clsx": "^2.1.1",
     "crypto-js": "^4.2.0",
     "html-to-image": "^1.11.13",
+    "flowbite-react": "^0.12.5",
+    "init": "^0.1.2",
     "lucide-react": "^0.534.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

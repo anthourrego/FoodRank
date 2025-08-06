@@ -61,7 +61,7 @@ function RateProductsVoting() {
     <div className="bg-white bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] p-4">
 
     <div className="max-w-md mx-auto ">
-      <RateProductCard product={product} showRating={true} />
+      <RateProductCard product={product} showRating={true} selected={true}/>
     </div>
     </div>
   );
