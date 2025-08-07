@@ -1,12 +1,21 @@
 import { useNavigate, useParams } from "react-router";
 import { RateProductCard } from "../../rate-products/components/RateProductCard";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { productsList } from "@/models/products";
 import useGeolocation from "@/hooks/useGeoloation";
+import Transform from "@/lib/transform";
+import ErrorProduct from "./ErrorProduct";
+import NotFoundProduct from "./NotFoundProduct";
+import LoadingProduct from "./LoadingProduct";
+
+interface IDataScan {
+  id_event: string;
+  id_product: number;
+}
 
 function RateProductsVoting() {
-  const { productId } = useParams(); // Obtiene el productId de la URL
-  const [product, setProduct] = useState(null);
+  const { productId } = useParams();
+  const [product, setProduct] = useState<typeof productsList[0] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -18,51 +27,60 @@ function RateProductsVoting() {
   } = useGeolocation();
   console.log({ latitude, longitude, errorLocation, loadingLocation });
 
+  const dataScan: IDataScan | null = useMemo(() => {
+    if (!productId) return null;
+    return Transform.decryptJson(productId);
+  }, [productId]);
+
   useEffect(() => {
-    if (!productId) {
-      // Si por alguna razón no hay productId, podrías redirigir o mostrar un error
-      setError("ID de producto no proporcionado.");
-      setLoading(false);
-      return;
-    }
+    fetchData();
+  }, [dataScan]);
 
-
-    // Simulación de carga de datos
-    setTimeout(() => {
-      if (productId === "123") {
-        // Ejemplo con un ID de producto
-        setProduct(productsList[0]);
+  const fetchData = async () => {
+    try {
+      if (dataScan) {
+        const productFind = productsList.find(it => it.id == dataScan.id_product)
+        if (productFind) {
+          setProduct(productFind);
+        } else {
+          setProduct(productsList[0]);
+        }
+        /* consultar la api para validar los datos */
       } else {
         setError(`Producto con ID ${productId} no encontrado.`);
       }
-      setLoading(false);
-    }, 1000);
-  }, [productId]); // Vuelve a cargar si el productId cambia
+    } catch (error) {
+      setError(`Producto con ID ${productId} no encontrado.`);
+      console.error('Error al consultar la API:', error);
+    }
+    setLoading(false);
+  };
 
-  const handleVote = (score) => {
+  const handleVote = (score: string) => {
     console.log(`Votando por producto ${productId} con puntaje: ${score}`);
     // Aquí enviarías la votación a tu backend
     alert(`¡Gracias por votar por ${product?.name} con ${score} estrellas!`);
-    navigate("/rate-product"); 
+    navigate("/rate-product");
   };
+
   if (loading) {
-    return <p>Cargando detalles del producto...</p>;
+    return <LoadingProduct />
   }
 
   if (error) {
-    return <p style={{ color: "red" }}>Error: {error}</p>;
+    return <ErrorProduct title={error} />;
   }
 
   if (!product) {
-    return <p>Producto no encontrado.</p>;
+    return <NotFoundProduct />;
   }
 
   return (
     <div className="bg-white bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] p-4">
 
-    <div className="max-w-md mx-auto ">
-      <RateProductCard product={product} showRating={true} selected={true}/>
-    </div>
+      <div className="max-w-md mx-auto ">
+        <RateProductCard product={product} showRating={true} selected={true} />
+      </div>
     </div>
   );
 }
