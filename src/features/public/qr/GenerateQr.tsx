@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { QrCode } from 'lucide-react';
+import { useParams } from 'react-router';
 import DrawQr from './DrawQr';
 
 interface GenerateQrProps {
@@ -9,6 +10,10 @@ interface GenerateQrProps {
 }
 
 const GenerateQr = ({ dataQr, descriptionShare, titleShare }: GenerateQrProps) => {
+    const { productId, eventId } = useParams();
+
+    const qrData = { id_product: productId ?? "", id_event: eventId ?? "" };
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 flex items-center justify-center">
             <Card className="w-full max-w-md mx-auto shadow-2xl border-0 bg-white/90 backdrop-blur-sm">
@@ -23,7 +28,7 @@ const GenerateQr = ({ dataQr, descriptionShare, titleShare }: GenerateQrProps) =
                 </CardHeader>
 
                 <CardContent className="space-y-6">
-                    <DrawQr dataQr={dataQr} descriptionShare={descriptionShare} titleShare={titleShare} />
+                    <DrawQr dataQr={qrData} descriptionShare={descriptionShare} titleShare={titleShare} />
                 </CardContent>
             </Card>
         </div>

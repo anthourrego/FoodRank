@@ -39,8 +39,8 @@ const ActionsQr = ({ urlShare, descriptionShare, titleShare, handleDownload }: A
     };
 
     return (
-        <div className="grid grid-cols-3 gap-2">
-            <Button
+        <div className="grid grid-cols-1 gap-2">
+            {/* <Button
                 variant="outline"
                 size="sm"
                 onClick={handleCopy}
@@ -48,19 +48,19 @@ const ActionsQr = ({ urlShare, descriptionShare, titleShare, handleDownload }: A
             >
                 <Copy className="w-4 h-4" />
                 <span className="text-xs">{copied ? 'Copiado!' : 'Copiar'}</span>
-            </Button>
+            </Button> */}
 
             <Button
                 variant="outline"
                 size="sm"
                 onClick={handleDownload}
-                className="flex flex-col items-center gap-1 h-auto py-3 hover:bg-green-50 hover:border-green-200 transition-colors"
+                className="flex flex-col items-center gap-1 h-auto py-3 hover:bg-red-50 hover:border-red-200 transition-colors cursor-pointer"
             >
                 <Download className="w-4 h-4" />
                 <span className="text-xs">Descargar</span>
             </Button>
 
-            <Button
+            {/* <Button
                 variant="outline"
                 size="sm"
                 onClick={handleShare}
@@ -68,7 +68,7 @@ const ActionsQr = ({ urlShare, descriptionShare, titleShare, handleDownload }: A
             >
                 <Share2 className="w-4 h-4" />
                 <span className="text-xs">Compartir</span>
-            </Button>
+            </Button> */}
         </div>
     );
 };

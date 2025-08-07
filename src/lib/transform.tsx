@@ -7,7 +7,7 @@ const Transform = {
         try {
             const jsonString = JSON.stringify(jsonData);
             const encrypted = CryptoJS.AES.encrypt(jsonString, SECRET_KEY).toString();
-            return encrypted;
+            return encrypted.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
         } catch (error) {
             console.error('Error encriptando:', error);
             return null;
@@ -15,7 +15,11 @@ const Transform = {
     },
     decryptJson(encryptedData: string) {
         try {
-            const decrypted = CryptoJS.AES.decrypt(encryptedData, SECRET_KEY);
+            let base64 = encryptedData.replace(/-/g, '+').replace(/_/g, '/');
+            while (base64.length % 4) {
+                base64 += '=';
+            }
+            const decrypted = CryptoJS.AES.decrypt(base64, SECRET_KEY);
             const decryptedString = decrypted.toString(CryptoJS.enc.Utf8);
             return JSON.parse(decryptedString);
         } catch (error) {

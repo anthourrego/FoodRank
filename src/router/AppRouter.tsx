@@ -11,10 +11,6 @@ const RateProducts = lazy(() => import('@/features/public/rate-products/page/Rat
 const RateProductsVoting = lazy(() => import('@/features/public/rate-products-voting/page/RateProductsVoting'))
 
 export function AppRouter() {
-  const qrData = {
-    url: "https://example.com/profile",
-  };
-
   return (
     <Suspense fallback={<>Cargando.........................</>}>
       <HashRouter>
@@ -24,7 +20,7 @@ export function AppRouter() {
             <Route path="/login" element={<Login/>} />
             <Route path='/rate-product' element={<RateProducts/>} />
             <Route path='/rate-product/:productId' element={<RateProductsVoting/>} />
-            <Route path='/qr' element={<GenerateQr dataQr={qrData} descriptionShare="Escanea el QR" titleShare="Vota por tu producto favorito"  />} />
+            <Route path='/qr/:productId/:eventId' element={<GenerateQr dataQr={{}} descriptionShare="Escanea el QR" titleShare="Vota por tu producto favorito"  />} />
           </Route>
         </RoutesNotFound>
       </HashRouter>
