@@ -69,14 +69,14 @@ export function RateProductCard({ product,showRating=false,selected=false }: Pro
       <div onClick={()=>setIsSelected(prevState => !prevState)} className="cursor-pointer">
         <div className=" relative overflow-hidden">
           <LazyLoadImage
-            src={product.image || "/placeholder.svg"}
+            src={product.image_url || "/placeholder.svg"}
             alt={product.name}
             className="aspect-3/2 object-cover hover:scale-105 transition-transform duration-300"
           />
           <div className="absolute top-4 right-4">
             <Badge variant="secondary" className="bg-white/90 text-gray-800">
-              {product.restaurant.locations.length} sede
-              {product.restaurant.locations.length !== 1 ? "s" : ""}
+              {product.restaurant.restaurant_branches.length} sede
+              {product.restaurant.restaurant_branches.length !== 1 ? "s" : ""}
             </Badge>
           </div>
           {alreadyVoted && (
@@ -152,18 +152,18 @@ export function RateProductCard({ product,showRating=false,selected=false }: Pro
                         <MapPin className="w-4 h-4 text-muted-foreground" />
                         <span className="text-muted-foreground font-medium">
                           Sede
-                          {product.restaurant.locations.length !== 1 ? "s" : ""}:
+                          {product.restaurant.restaurant_branches.length !== 1 ? "s" : ""}:
                         </span>
                       </div>
                       <div className="grid grid-cols-2 gap-2  overflow-auto h-34">
-                        {product.restaurant.locations.map((location, index) => (
+                        {product.restaurant.restaurant_branches.map((location, index) => (
                           <div className="flex  flex-col   p-2" key={index}>
                             <Badge
                               key={index}
                               variant="outline"
                               className="text-xs "
                             >
-                              {location.site}
+                              {location.site || 'nombre sede?'}
                             </Badge>
                             <p className="text-xs text-slate-600 text-balance ml-2">
                               {location.address}
@@ -209,7 +209,7 @@ export function RateProductCard({ product,showRating=false,selected=false }: Pro
                     >
                       <Instagram className="w-3 h-3" />
                       <span className="text-xs">
-                        {product.restaurant.socialMedia.instagram}
+                        {product.restaurant?.socialMedia?.instagram}
                       </span>
                     </Button>
                     <Button
