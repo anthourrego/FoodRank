@@ -1,12 +1,12 @@
 
-import { productsList } from "@/models/products"
 import { RateProductCard } from "./RateProductCard"
 
 import { useProductsEvents } from "../../hooks/useProductsEvent";
+import type { EventsProduct } from "../../models/EventsProducts";
 
 export function RateProductGrid() {
  const {productsEvents}=useProductsEvents()
- console.log({productsEvents})
+ 
   return (
     <section className="py-16   ">
       <div className="container mx-auto px-4">
@@ -18,7 +18,7 @@ export function RateProductGrid() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto items-start">
-          {productsEvents.map((product, index) => (
+          {productsEvents.map((product:EventsProduct, index) => (
             <div
               key={product.id}
               className="animate-in slide-in-from-bottom-4"

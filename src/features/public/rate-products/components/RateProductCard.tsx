@@ -14,14 +14,16 @@ import {
 } from "lucide-react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { StarRating } from "@/components/StarRating";
+import type { RestaurantProduct } from "../../models/RestaurantProduct";
 
 interface ProductCardProps {
-  product: Product;
+  product: RestaurantProduct;
   showRating?:boolean;
   selected?:boolean
 }
 
 export function RateProductCard({ product,showRating=false,selected=false }: ProductCardProps) {
+  
   const [userRating, setUserRating] = useState<number>(0);
   const [isSelected, setIsSelected] = useState(selected)
   const [hasVoted, setHasVoted] = useState(false);
@@ -63,6 +65,7 @@ export function RateProductCard({ product,showRating=false,selected=false }: Pro
 
 
 
+
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 border-0 shadow-md h-full shadow-red-400/30">
       
@@ -75,8 +78,8 @@ export function RateProductCard({ product,showRating=false,selected=false }: Pro
           />
           <div className="absolute top-4 right-4">
             <Badge variant="secondary" className="bg-white/90 text-gray-800">
-              {product.restaurant.restaurant_branches.length} sede
-              {product.restaurant.restaurant_branches.length !== 1 ? "s" : ""}
+              {product.restaurant?.restaurant_branches.length} sede
+              {product.restaurant?.restaurant_branches.length !== 1 ? "s" : ""}
             </Badge>
           </div>
           {alreadyVoted && (
@@ -152,11 +155,11 @@ export function RateProductCard({ product,showRating=false,selected=false }: Pro
                         <MapPin className="w-4 h-4 text-muted-foreground" />
                         <span className="text-muted-foreground font-medium">
                           Sede
-                          {product.restaurant.restaurant_branches.length !== 1 ? "s" : ""}:
+                          {product.restaurant?.restaurant_branches.length !== 1 ? "s" : ""}:
                         </span>
                       </div>
                       <div className="grid grid-cols-2 gap-2  overflow-auto h-34">
-                        {product.restaurant.restaurant_branches.map((location, index) => (
+                        {product.restaurant?.restaurant_branches.map((location, index) => (
                           <div className="flex  flex-col   p-2" key={index}>
                             <Badge
                               key={index}
