@@ -2,7 +2,7 @@
 import { productsList } from "@/models/products"
 import { RateProductCard } from "./RateProductCard"
 
-import { useProductsEvents } from "../hooks/useProductsEvent";
+import { useProductsEvents } from "../../hooks/useProductsEvent";
 
 export function RateProductGrid() {
  const {productsEvents}=useProductsEvents()

@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react"
-import { getProductsEvents } from "../services/productEventsService"
+import { getProductsEvents } from "../service/productEventsService"
 
 export const useProductsEvents = ()=>{
   const [productsEvents,setProductEvents]  = useState([])

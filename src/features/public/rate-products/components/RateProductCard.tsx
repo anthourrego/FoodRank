@@ -69,7 +69,7 @@ export function RateProductCard({ product,showRating=false,selected=false }: Pro
       <div onClick={()=>setIsSelected(prevState => !prevState)} className="cursor-pointer">
         <div className=" relative overflow-hidden">
           <LazyLoadImage
-            src={product?.image_url2  ? product.image_url+ "/placeholder.svg" : 'https://www.dolomite.it/_ui/responsive/common/images/no-product-image-available.png' }
+            src={product?.image_url  ? product.image_url+ "/placeholder.svg" : 'https://www.dolomite.it/_ui/responsive/common/images/no-product-image-available.png' }
             alt={product.name}
             className="aspect-3/2 object-cover hover:scale-105 transition-transform duration-300"
           />
@@ -101,7 +101,7 @@ export function RateProductCard({ product,showRating=false,selected=false }: Pro
                   <Star
                     key={star}
                     className={`w-4 h-4 ${
-                      star <= product.rating
+                      star <= product?.rating
                         ? "fill-yellow-400 text-yellow-400"
                         : "fill-gray-200 text-gray-200"
                     }`}

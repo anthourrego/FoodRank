@@ -7,8 +7,9 @@ import Transform from "@/lib/transform";
 import ErrorProduct from "./ErrorProduct";
 import NotFoundProduct from "./NotFoundProduct";
 import LoadingProduct from "./LoadingProduct";
+import { useFilterProductsEvents } from "../../hooks/useFilterProductEvent";
 
-interface IDataScan {
+export interface IDataScan {
   id_event: string;
   id_product: number;
 }
@@ -25,6 +26,7 @@ function RateProductsVoting() {
     error: errorLocation,
     loading: loadingLocation,
   } = useGeolocation();
+  const {filterProductToRate}=useFilterProductsEvents()
   console.log({ latitude, longitude, errorLocation, loadingLocation });
 
   const dataScan: IDataScan | null = useMemo(() => {
@@ -39,7 +41,10 @@ function RateProductsVoting() {
   const fetchData = async () => {
     try {
       if (dataScan) {
-        const productFind = productsList.find(it => it.id == dataScan.id_product)
+        /* const productFind = productsList.find(it => it.id == dataScan.id_product) */
+        const productFind =filterProductToRate(dataScan)
+        console.log({productFind});
+        return
         if (productFind) {
           setProduct(productFind);
         } else {
