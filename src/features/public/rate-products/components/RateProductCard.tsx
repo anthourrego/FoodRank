@@ -63,7 +63,11 @@ export function RateProductCard({ product,showRating=false,selected=false }: Pro
     console.log(`Rated ${product.name} with ${userRating} stars`);
   };
 
+  console.log({name:product})
 
+  if(!product ){
+    return "no existe"
+  }
 
 
   return (

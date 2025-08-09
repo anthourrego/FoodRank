@@ -21,14 +21,14 @@ function RateProductsVoting() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-/*   const {
+  const {
     latitude,
     longitude,
     error: errorLocation,
     loading: loadingLocation,
-  } = useGeolocation(); */
+  } = useGeolocation();
   const {filterProductToRate}=useFilterProductsEvents()
-  /* console.log({ latitude, longitude, errorLocation, loadingLocation }); */
+  console.log({ latitude, longitude, errorLocation, loadingLocation });
 
   const dataScan: IDataScan | null = useMemo(() => {
     if (!productId) return null;
@@ -46,8 +46,9 @@ function RateProductsVoting() {
         const productFind =await filterProductToRate(dataScan)
         
         if (productFind) {
-          const [productToVoting] = productFind
-          setProduct(productFind[0]);
+          const [eventProduct] = productFind
+          const productToRating=eventProduct?.restaurant_product
+          setProduct(productToRating);
         } else {
           setError(`Producto con ID ${productId} no encontrado.`);
         }
