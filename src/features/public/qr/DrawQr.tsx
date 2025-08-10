@@ -1,15 +1,16 @@
-import QRCode from "react-qr-code";
-import ActionsQr from "./ActionsQr";
-import { useMemo, useRef } from "react";
 import { toPng } from "html-to-image";
+import { useMemo, useRef } from "react";
+import ActionsQr from "./ActionsQr";
+import QRCode from "react-qr-code";
 import Transform from "@/lib/transform";
+import type { IDataQr } from "./GenerateQr";
 
-const URLPAGE = "http://localhost:5173/#/rate-product";
+const URLPAGE = import.meta.env.VITE_URL_FRONT;
 
 interface DrawQrProps {
     titleShare: string;
     descriptionShare: string;
-    dataQr: { [key: string]: string }
+    dataQr: IDataQr
 }
 
 const DrawQr = ({ dataQr, descriptionShare, titleShare }: DrawQrProps) => {
@@ -17,10 +18,8 @@ const DrawQr = ({ dataQr, descriptionShare, titleShare }: DrawQrProps) => {
     const qrRef = useRef<HTMLDivElement | null>(null);
 
     const urlQr = useMemo(() => {
-        return `${URLPAGE}/${Transform.encryptJson(dataQr)}`;
+        return `${URLPAGE}#/rate-product/${Transform.encryptJson(dataQr)}`;
     }, [dataQr])
-
-    console.log(urlQr)
 
     const handleDownload = () => {
         if (!qrRef.current) return;

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Copy, Download, Share2 } from 'lucide-react';
+import { Copy, Download, Share2, AppWindow } from 'lucide-react';
 
 interface ActionsQrProps {
     titleShare: string;
@@ -39,7 +39,7 @@ const ActionsQr = ({ urlShare, descriptionShare, titleShare, handleDownload }: A
     };
 
     return (
-        <div className="grid grid-cols-1 gap-2">
+        <div className="grid grid-cols-2 gap-2">
             {/* <Button
                 variant="outline"
                 size="sm"
@@ -58,6 +58,18 @@ const ActionsQr = ({ urlShare, descriptionShare, titleShare, handleDownload }: A
             >
                 <Download className="w-4 h-4" />
                 <span className="text-xs">Descargar</span>
+            </Button>
+
+            <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                    window.open(urlShare, "_blank")
+                }}
+                className="flex flex-col items-center gap-1 h-auto py-3 hover:bg-red-50 hover:border-red-200 transition-colors cursor-pointer"
+            >
+                <AppWindow className="w-4 h-4" />
+                <span className="text-xs">Validar</span>
             </Button>
 
             {/* <Button

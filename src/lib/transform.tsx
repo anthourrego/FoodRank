@@ -3,7 +3,7 @@ import CryptoJS from 'crypto-js';
 const SECRET_KEY = 'mi-clave-super-secreta-2024';
 
 const Transform = {
-    encryptJson(jsonData: { [key: string]: string }) {
+    encryptJson(jsonData: any) {
         try {
             const jsonString = JSON.stringify(jsonData);
             const encrypted = CryptoJS.AES.encrypt(jsonString, SECRET_KEY).toString();
