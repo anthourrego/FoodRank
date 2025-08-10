@@ -20,7 +20,7 @@ export function AppRouter() {
             <Route path="/login" element={<Login/>} />
             <Route path='/rate-product' element={<RateProducts/>} />
             <Route path='/rate-product/:productId' element={<RateProductsVoting/>} />
-            <Route path='/qr/:productId/:eventId' element={<GenerateQr dataQr={{}} descriptionShare="Escanea el QR" titleShare="Vota por tu producto favorito"  />} />
+            <Route path='/qr' element={<GenerateQr />} />
           </Route>
         </RoutesNotFound>
       </HashRouter>

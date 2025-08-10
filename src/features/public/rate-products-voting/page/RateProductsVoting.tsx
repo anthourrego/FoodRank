@@ -9,6 +9,7 @@ import NotFoundProduct from "./NotFoundProduct";
 import LoadingProduct from "./LoadingProduct";
 import { useFilterProductsEvents } from "../../hooks/useFilterProductEvent";
 import type { RestaurantProduct } from "../../models/RestaurantProduct";
+import type { IDataQr } from "../../qr/GenerateQr";
 
 export interface IDataScan {
   id_event: string;
@@ -27,10 +28,10 @@ function RateProductsVoting() {
     error: errorLocation,
     loading: loadingLocation,
   } = useGeolocation();
-  const {filterProductToRate}=useFilterProductsEvents()
+  const { filterProductToRate } = useFilterProductsEvents()
   console.log({ latitude, longitude, errorLocation, loadingLocation });
 
-  const dataScan: IDataScan | null = useMemo(() => {
+  const dataScan: IDataQr | null = useMemo(() => {
     if (!productId) return null;
     return Transform.decryptJson(productId);
   }, [productId]);
@@ -42,17 +43,15 @@ function RateProductsVoting() {
   const fetchData = async () => {
     try {
       if (dataScan) {
-        /* const productFind = productsList.find(it => it.id == dataScan.id_product) */
-        const productFind =await filterProductToRate(dataScan)
-        
+        const productFind = await filterProductToRate(dataScan)
+
         if (productFind) {
           const [eventProduct] = productFind
-          const productToRating=eventProduct?.restaurant_product
+          const productToRating = eventProduct?.restaurant_product
           setProduct(productToRating);
         } else {
           setError(`Producto con ID ${productId} no encontrado.`);
         }
-        /* consultar la api para validar los datos */
       } else {
         setError(`Producto con ID ${productId} no encontrado.`);
       }
@@ -62,7 +61,7 @@ function RateProductsVoting() {
     }
     setLoading(false);
   };
-  
+
   const handleVote = (score: string) => {
     console.log(`Votando por producto ${productId} con puntaje: ${score}`);
     // Aquí enviarías la votación a tu backend
@@ -81,7 +80,7 @@ function RateProductsVoting() {
   if (!product) {
     return <NotFoundProduct />;
   }
-  
+
   return (
     <div className="bg-white bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] p-4">
 

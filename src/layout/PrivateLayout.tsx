@@ -6,7 +6,7 @@ export const PrivateLayout = () => {
   return (
     <div className="min-h-screen w-full bg-background ">
       <Header />
-      <main className="h-full">
+      <main className="!h-[calc(100vh-118px)]">
         <Outlet />
       </main>
       <Footer/>

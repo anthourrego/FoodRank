@@ -1,19 +1,15 @@
 
 
 import { findProductEvents } from "../service/productEventsService"
-import type { IDataScan } from "../rate-products-voting/page/RateProductsVoting"
+import type { IDataQr } from "../qr/GenerateQr"
 
-export const useFilterProductsEvents = ()=>{
-  
+export const useFilterProductsEvents = () => {
 
-  async function filterProductToRate({id_event,id_product}:IDataScan){
-    const result = await findProductEvents({id_event,id_product})
-    
+  async function filterProductToRate(dataQr: IDataQr) {
+    const result = await findProductEvents(dataQr)
+
     return result
   }
 
-  return {
-    
-    filterProductToRate
-  }
+  return { filterProductToRate }
 }
