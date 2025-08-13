@@ -3,18 +3,18 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import noImage  from '@/assets/no-image.svg'
 import {
   MapPin,
   Instagram,
   Facebook,
-  User,
   Star,
   ChevronDown,
 } from "lucide-react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { StarRating } from "@/components/StarRating";
 import type { RestaurantProduct } from "../../models/RestaurantProduct";
+import { getUniqueDeviceId, deviceFingerprint, getPublicIp } from "@/lib/DeviceFingerprint";
+import useGeolocation from "@/hooks/useGeoloation";
 
 interface ProductCardProps {
   product: RestaurantProduct;
@@ -28,15 +28,20 @@ export function RateProductCard({ product,showRating=false,selected=false }: Pro
   const [isSelected, setIsSelected] = useState(selected)
   const [hasVoted, setHasVoted] = useState(false);
   const [alreadyVoted, setAlreadyVoted] = useState(false);
+  const { latitude, longitude, error: geoError, loading: geoLoading } = useGeolocation();
 
   // Verificar si ya votó por este producto al cargar el componente
   useEffect(() => {
     const votedProducts = JSON.parse(
       localStorage.getItem("x-foodrank-voted-product") || "{}"
     );
-    if (votedProducts[product.id]) {
+    const entry = votedProducts[product.id];
+    if (entry !== undefined) {
       setAlreadyVoted(true);
-      setUserRating(votedProducts[product.id]);
+      const storedRating = typeof entry === "number" ? entry : entry?.rating;
+      if (storedRating) {
+        setUserRating(storedRating);
+      }
       setHasVoted(true);
     }
   }, [product.id]);
@@ -46,34 +51,73 @@ export function RateProductCard({ product,showRating=false,selected=false }: Pro
     setUserRating(rating);
   };
 
-  const confirmVote = () => {
+  const confirmVote = async () => {
     if (alreadyVoted || userRating === 0) return;
 
-    // Guardar el voto en localStorage
-    const votedProducts = JSON.parse(
-      localStorage.getItem("x-foodrank-voted-product") || "{}"
-    );
-    votedProducts[product.id] = userRating;
-    localStorage.setItem("x-foodrank-voted-product", JSON.stringify(votedProducts));
+    try {
+      const deviceId = await getUniqueDeviceId();
+      const detailed = await deviceFingerprint.getDetailedFingerprint();
+      const publicIp = await getPublicIp();
 
-    setHasVoted(true);
-    setAlreadyVoted(true);
+      const deviceInfo = {
+        userAgent: detailed.userAgent,
+        language: detailed.language,
+        platform: detailed.platform,
+        screenResolution: detailed.screenResolution,
+        colorDepth: detailed.colorDepth,
+        pixelRatio: detailed.pixelRatio,
+        timezone: detailed.timezone,
+        timezoneOffset: detailed.timezoneOffset,
+        cookiesEnabled: detailed.cookiesEnabled,
+        doNotTrack: detailed.doNotTrack,
+        onlineStatus: detailed.onlineStatus,
+        hardwareConcurrency: detailed.hardwareConcurrency,
+        maxTouchPoints: detailed.maxTouchPoints,
+        geo: {
+          latitude,
+          longitude,
+          loading: geoLoading,
+          error: geoError,
+        },
+      };
 
-    // Aquí podrías enviar la calificación a tu backend
-    console.log(`Rated ${product.name} with ${userRating} stars`);
+      // Guardar el voto en localStorage con datos del dispositivo
+      const votedProducts = JSON.parse(
+        localStorage.getItem("x-foodrank-voted-product") || "{}"
+      );
+      votedProducts[product.id] = {
+        rating: userRating,
+        deviceId,
+        deviceInfo,
+        publicIp,
+        votedAt: new Date().toISOString(),
+      };
+      localStorage.setItem(
+        "x-foodrank-voted-product",
+        JSON.stringify(votedProducts)
+      );
+
+      setHasVoted(true);
+      setAlreadyVoted(true);
+
+      // Listo para enviar al backend si es necesario
+      console.log("Voto registrado", {
+        productId: product.id,
+        productName: product.name,
+        rating: userRating,
+        deviceId,
+        deviceInfo,
+      });
+    } catch (error) {
+      console.warn("Error registrando voto con fingerprint:", error);
+    }
   };
-
-  console.log({name:product})
-
-  if(!product ){
-    return "no existe"
-  }
 
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 border-0 shadow-md h-full shadow-red-400/30">
       
-      <div onClick={()=>setIsSelected(prevState => !prevState)} className="cursor-pointer">
+      <div  className="cursor-pointer">
         <div className=" relative overflow-hidden">
           <LazyLoadImage
             src={product?.image_url  ? product.image_url+ "/placeholder.svg" : 'https://www.dolomite.it/_ui/responsive/common/images/no-product-image-available.png' }
@@ -118,13 +162,13 @@ export function RateProductCard({ product,showRating=false,selected=false }: Pro
               <span className="text-sm text-muted-foreground">
                 Calificación promedio
               </span>
-            </div>
+            </div>  
           )}
         </CardHeader>
 
         <CardContent className="pt-0">
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between" onClick={()=>setIsSelected(prevState => !prevState)}>
               <span className="text-sm font-medium text-gray-700">Ver detalles</span>
               <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isSelected ? "rotate-180" : ""}`} />
             </div>

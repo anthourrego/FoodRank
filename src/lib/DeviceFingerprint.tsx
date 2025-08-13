@@ -336,12 +336,44 @@ class DeviceFingerprint {
     public async getDetailedFingerprint(): Promise<FingerprintData> {
         return this.getFingerprint();
     }
+
+    /**
+     * Get public IP address
+     */
+    public async getPublicIp(): Promise<string | null> {
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000);
+            try {
+                const res = await fetch('https://api.ipify.org?format=json', { signal: controller.signal });
+                clearTimeout(timeoutId);
+                if (res.ok) {
+                    const data = await res.json();
+                    return data?.ip ?? null;
+                }
+            } catch {}
+
+            // Fallback provider
+            const res2 = await fetch('https://ipapi.co/json/');
+            if (res2.ok) {
+                const data2 = await res2.json();
+                return data2?.ip ?? null;
+            }
+        } catch {
+            return null;
+        }
+        return null;
+    }
 }
 
 export const deviceFingerprint = new DeviceFingerprint();
 
 export async function getUniqueDeviceId(): Promise<string> {
     return await deviceFingerprint.getDeviceId();
+}
+
+export async function getPublicIp(): Promise<string | null> {
+    return await deviceFingerprint.getPublicIp();
 }
 
 export type { FingerprintData, DeviceRecord };

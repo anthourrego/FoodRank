@@ -1,7 +1,6 @@
 import { useNavigate, useParams } from "react-router";
 import { RateProductCard } from "../../rate-products/components/RateProductCard";
 import { useEffect, useMemo, useState } from "react";
-
 import useGeolocation from "@/hooks/useGeoloation";
 import Transform from "@/lib/transform";
 import ErrorProduct from "./ErrorProduct";
@@ -22,14 +21,9 @@ function RateProductsVoting() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const {
-    latitude,
-    longitude,
-    error: errorLocation,
-    loading: loadingLocation,
-  } = useGeolocation();
+
   const { filterProductToRate } = useFilterProductsEvents()
-  console.log({ latitude, longitude, errorLocation, loadingLocation });
+  
 
   const dataScan: IDataQr | null = useMemo(() => {
     if (!productId) return null;

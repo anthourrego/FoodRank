@@ -6,7 +6,7 @@ import type { EventsProduct } from "../../models/EventsProducts";
 
 export function RateProductGrid() {
  const {productsEvents}=useProductsEvents()
- 
+ console.log({productsEvents})
   return (
     <section className="py-16   ">
       <div className="container mx-auto px-4">

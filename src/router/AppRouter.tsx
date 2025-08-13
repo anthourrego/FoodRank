@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { HashRouter, Navigate, Route } from "react-router";
+import { BrowserRouter, HashRouter, Navigate, Route } from "react-router";
 import { RoutesNotFound } from "./NotFound";
 import GenerateQr from "@/features/public/qr/GenerateQr";
 import { PrivateLayout } from "@/layout/PrivateLayout";
@@ -13,7 +13,7 @@ const RateProductsVoting = lazy(() => import('@/features/public/rate-products-vo
 export function AppRouter() {
   return (
     <Suspense fallback={<>Cargando.........................</>}>
-      <HashRouter>
+      <BrowserRouter>
         <RoutesNotFound>
           <Route element={<PrivateLayout/>}>
             <Route path="/" element={<Navigate to="/rate-product" replace/>} />
@@ -23,7 +23,7 @@ export function AppRouter() {
             <Route path='/qr' element={<GenerateQr />} />
           </Route>
         </RoutesNotFound>
-      </HashRouter>
+      </BrowserRouter>
 
     </Suspense>
   )
