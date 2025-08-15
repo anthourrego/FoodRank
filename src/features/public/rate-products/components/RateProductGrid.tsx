@@ -18,7 +18,7 @@ export function RateProductGrid() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto items-start">
-          {productsEvents.map((product:EventsProduct, index) => (
+          {productsEvents?.map((product:EventsProduct, index) => (
             <div
               key={product.id}
               className="animate-in slide-in-from-bottom-4"
