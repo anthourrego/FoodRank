@@ -3,32 +3,51 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import {
-  MapPin,
-  Instagram,
-  Facebook,
-  Star,
-  ChevronDown,
-} from "lucide-react";
+import { MapPin, Instagram, Facebook } from "lucide-react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { StarRating } from "@/components/StarRating";
 import type { RestaurantProduct } from "../../models/RestaurantProduct";
-import { getUniqueDeviceId, deviceFingerprint, getPublicIp } from "@/lib/DeviceFingerprint";
+import {
+  getUniqueDeviceId,
+  deviceFingerprint,
+  getPublicIp,
+} from "@/lib/DeviceFingerprint";
 import useGeolocation from "@/hooks/useGeoloation";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { ReviewService } from "../../service/reviewService";
+import { toast } from "sonner";
+import { useNavigate } from "react-router";
 
 interface ProductCardProps {
   product: RestaurantProduct;
-  showRating?:boolean;
-  selected?:boolean
+  showRating?: boolean;
+  selected?: boolean;
+  eventId?: number|string|null|undefined;
+  eventProductId?: number|null|undefined;
 }
 
-export function RateProductCard({ product,showRating=false,selected=false }: ProductCardProps) {
-  
+export function RateProductCard({
+  product,
+  showRating = false,
+  eventId=null,
+  eventProductId=null
+}: ProductCardProps) {
   const [userRating, setUserRating] = useState<number>(0);
-  const [isSelected, setIsSelected] = useState(selected)
+  const [comment, setComment] = useState<string>("");
   const [hasVoted, setHasVoted] = useState(false);
   const [alreadyVoted, setAlreadyVoted] = useState(false);
-  const { latitude, longitude, error: geoError, loading: geoLoading } = useGeolocation();
+  const {
+    latitude,
+    longitude,
+    error: geoError,
+    loading: geoLoading,
+  } = useGeolocation();
+  const navigate = useNavigate();
 
   // Verificar si ya votó por este producto al cargar el componente
   useEffect(() => {
@@ -41,6 +60,10 @@ export function RateProductCard({ product,showRating=false,selected=false }: Pro
       const storedRating = typeof entry === "number" ? entry : entry?.rating;
       if (storedRating) {
         setUserRating(storedRating);
+      }
+      const storedComment = typeof entry === "object" ? entry?.comment : undefined;
+      if (storedComment) {
+        setComment(storedComment);
       }
       setHasVoted(true);
     }
@@ -73,12 +96,20 @@ export function RateProductCard({ product,showRating=false,selected=false }: Pro
         onlineStatus: detailed.onlineStatus,
         hardwareConcurrency: detailed.hardwareConcurrency,
         maxTouchPoints: detailed.maxTouchPoints,
-        geo: {
+        deviceMemory: detailed.deviceMemory,
+        connection: detailed.connection,
+        webgl: {
+          supported: detailed.webglSupported,
+          vendor: detailed.webglVendor,
+          renderer: detailed.webglRenderer,
+        },
+        audioFingerprint: detailed.audioFingerprint,
+        /* geo: {
           latitude,
           longitude,
           loading: geoLoading,
           error: geoError,
-        },
+        }, */
       };
 
       // Guardar el voto en localStorage con datos del dispositivo
@@ -87,40 +118,52 @@ export function RateProductCard({ product,showRating=false,selected=false }: Pro
       );
       votedProducts[product.id] = {
         rating: userRating,
+        comment,
         deviceId,
-        deviceInfo,
+        fingerprint:deviceInfo,
         publicIp,
         votedAt: new Date().toISOString(),
       };
-      localStorage.setItem(
-        "x-foodrank-voted-product",
-        JSON.stringify(votedProducts)
-      );
 
-      setHasVoted(true);
-      setAlreadyVoted(true);
-
-      // Listo para enviar al backend si es necesario
-      console.log("Voto registrado", {
-        productId: product.id,
-        productName: product.name,
+      const reviewService = new ReviewService()
+      const result = await reviewService.saveReview({
+        event_product_id: eventProductId,
+        product_id: product.id,
+        event_product_branch_id:1,
+        event_id: eventId,
         rating: userRating,
+        comment,
+        latitude: latitude,
+        longitude: longitude,
+        ip:publicIp,
+        fingerprint_device:JSON.stringify(deviceInfo),
         deviceId,
-        deviceInfo,
-      });
+      })
+      if(result.status === 201){
+        localStorage.setItem(
+          "x-foodrank-voted-product",
+          JSON.stringify(votedProducts)
+        );
+        setHasVoted(true);
+        setAlreadyVoted(true);
+
+        navigate("/rate-product")
+      }
     } catch (error) {
       console.warn("Error registrando voto con fingerprint:", error);
     }
   };
 
-
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 border-0 shadow-md h-full shadow-red-400/30">
-      
-      <div  className="cursor-pointer">
+      <div className="cursor-pointer">
         <div className=" relative overflow-hidden">
           <LazyLoadImage
-            src={product?.image_url  ? product.image_url+ "/placeholder.svg" : 'https://www.dolomite.it/_ui/responsive/common/images/no-product-image-available.png' }
+            src={
+              product?.image_url
+                ? product.image_url + "/placeholder.svg"
+                : "https://www.dolomite.it/_ui/responsive/common/images/no-product-image-available.png"
+            }
             alt={product.name}
             className="aspect-3/2 object-cover hover:scale-105 transition-transform duration-300"
           />
@@ -143,9 +186,13 @@ export function RateProductCard({ product,showRating=false,selected=false }: Pro
           <h3 className="text-xl font-bold text-gray-900 leading-tight">
             {product.name}
           </h3>
+          <span className="text-sm font-semibold text-gray-500">
+            {product.restaurant?.name} 
+          </span>
+          <Separator />
 
           {/* Solo mostrar rating si el usuario ya votó */}
-          {alreadyVoted && (
+          {/* {alreadyVoted && (
             <div className="flex items-center gap-2">
               <div className="flex items-center">
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -163,69 +210,72 @@ export function RateProductCard({ product,showRating=false,selected=false }: Pro
                 Calificación promedio
               </span>
             </div>  
-          )}
+          )} */}
         </CardHeader>
 
         <CardContent className="pt-0">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between" onClick={()=>setIsSelected(prevState => !prevState)}>
-              <span className="text-sm font-medium text-gray-700">Ver detalles</span>
-              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isSelected ? "rotate-180" : ""}`} />
-            </div>
-            {
-              isSelected && (
-                <div className="space-y-4 animate-in slide-in-from-top-2">
-                <Separator />
-                {/* {product.description && product.description.length > 1 && (
-                  <>
-                    <div className="h-30 overflow-y-auto">
-                      <h4 className="font-semibold text-gray-900 mb-2">
-                        Descripción
-                      </h4>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {product.description}
-                      </p>
-                    </div>
-  
-                    <Separator />
-                  </>
-                )} */}
-  
-                <div className="">
-                  <h4 className="font-semibold text-gray-900 mb-3">
-                    Información del Restaurante
-                  </h4>
-  
-                  <div className="space-y-4">
-                    {/* Sedes */}
-                    <div>
-                      <div className="flex items-center gap-2 text-sm mb-2">
-                        <MapPin className="w-4 h-4 text-muted-foreground" />
-                        <span className="text-muted-foreground font-medium">
-                          Sede
-                          {product.restaurant?.restaurant_branches.length !== 1 ? "s" : ""}:
-                        </span>
+          <div className="space-y-2">
+            <Accordion type="single" collapsible>
+              <AccordionItem value="item-1">
+                <AccordionTrigger>Descripción</AccordionTrigger>
+                <AccordionContent>
+                  {product.description && product.description.length > 1 && (
+                    <>
+                      <div className="h-30 overflow-y-auto">
+
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {product.description}
+                        </p>
                       </div>
-                      <div className="grid grid-cols-2 gap-2  overflow-auto h-34">
-                        {product.restaurant?.restaurant_branches.map((location, index) => (
+
+                      <Separator />
+                    </>
+                  )}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+
+            <div className="space-y-4 animate-in slide-in-from-top-2">
+              <div className="">
+                <h4 className="font-semibold text-gray-900 mb-3">
+                  Información del Restaurante
+                </h4>
+
+                <div className="space-y-4">
+                  {/* Sedes */}
+                  <div>
+                    <div className="flex items-center gap-2 text-sm mb-2">
+                      <MapPin className="w-4 h-4 text-muted-foreground" />
+                      <span className="text-muted-foreground font-medium">
+                        Sede
+                        {product.restaurant?.restaurant_branches.length !== 1
+                          ? "s"
+                          : ""}
+                        :
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2  overflow-auto h-34">
+                      {product.restaurant?.restaurant_branches.map(
+                        (location, index) => (
                           <div className="flex  flex-col   p-2" key={index}>
                             <Badge
                               key={index}
                               variant="outline"
                               className="text-xs "
                             >
-                              {location.city.name || 'nombre sede?'}
+                              {location.city.name || "nombre sede?"}
                             </Badge>
                             <p className="text-xs text-slate-600 text-balance ml-2">
                               {location.address}
                             </p>
                           </div>
-                        ))}
-                      </div>
+                        )
+                      )}
                     </div>
-  
-                    {/* Direcciones */}
-                    {/* <div>
+                  </div>
+
+                  {/* Direcciones */}
+                  {/* <div>
                       <div className="flex items-center gap-2 text-sm mb-2">
                         <MapPin className="w-4 h-4 text-muted-foreground" />
                         <span className="text-muted-foreground font-medium">
@@ -241,113 +291,134 @@ export function RateProductCard({ product,showRating=false,selected=false }: Pro
                         ))}
                       </div>
                     </div> */}
-  
-                    {/* Propietario */}
-                   {/*  <div className="flex items-center gap-2 text-sm">
+
+                  {/* Propietario */}
+                  {/*  <div className="flex items-center gap-2 text-sm">
                       <User className="w-4 h-4 text-muted-foreground" />
                       <span className="text-muted-foreground">Propietario:</span>
                       <span className="text-gray-900 font-medium">
                         {product.restaurant.owner}
                       </span>
                     </div> */}
-                  </div>
-  
-                  <div className="flex gap-2 mt-4 relative bottom-0">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex items-center gap-2 h-8 bg-transparent"
-                    >
-                      <Instagram className="w-3 h-3" />
-                      <span className="text-xs">
-                        {product.restaurant?.socialMedia?.instagram}
-                      </span>
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex items-center gap-2 h-8 bg-transparent"
-                    >
-                      <Facebook className="w-3 h-3" />
-                      <span className="text-xs">Facebook</span>
-                    </Button>
-                  </div>
                 </div>
-  
-                {showRating && (
-                  <>
-                    <Separator />
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      {alreadyVoted ? (
-                        <div className="text-center">
-                          <h4 className="font-semibold text-gray-900 mb-3">
-                            Tu calificación
-                          </h4>
-                          <div className="flex flex-col items-center gap-3">
-                            <StarRating
-                              rating={userRating}
-                              readonly={true}
-                              size="lg"
-                              showLabels={true}
-                            />
-                            <Badge
-                              variant="default"
-                              className="bg-green-600 hover:bg-green-600"
-                            >
-                              Ya calificaste esta hamburguesa
-                            </Badge>
-                            <p className="text-xs text-muted-foreground">
-                              Diste {userRating} estrella
-                              {userRating !== 1 ? "s" : ""} a este producto
-                            </p>
-                          </div>
-                        </div>
-                      ) : (
-                        <div>
-                          <h4 className="font-semibold text-gray-900 mb-3 text-center">
-                            ¿Cómo calificarías esta hamburguesa?
-                          </h4>
-                          <div className="flex flex-col items-center gap-4">
-                            <StarRating
-                              rating={userRating}
-                              onRate={handleRate}
-                              size="lg"
-                              showLabels={true}
-                            />
-                            {userRating > 0 && !hasVoted && (
-                              <Button
-                                onClick={confirmVote}
-                                className="bg-red-600 hover:bg-red-700"
-                                size="sm"
-                              >
-                                Confirmar Calificación
-                              </Button>
-                            )}
-                            {hasVoted && (
-                              <div className="text-center">
-                                <Badge
-                                  variant="default"
-                                  className="bg-green-600 hover:bg-green-600"
-                                >
-                                  ¡Gracias por tu calificación!
-                                </Badge>
-                                <p className="text-xs text-muted-foreground mt-2">
-                                  Tu voto de {userRating} estrella
-                                  {userRating !== 1 ? "s" : ""} ha sido registrado
-                                </p>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </>
-                )}
+
+                <div className="flex gap-2 mt-4 relative bottom-0">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-2 h-8 bg-transparent"
+                  >
+                    <Instagram className="w-3 h-3" />
+                    <span className="text-xs">
+                      {product.restaurant?.socialMedia?.instagram}
+                    </span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-2 h-8 bg-transparent"
+                  >
+                    <Facebook className="w-3 h-3" />
+                    <span className="text-xs">Facebook</span>
+                  </Button>
+                </div>
               </div>
-              )
-            
-            }
-           
+
+              {showRating && (
+                <>
+                  <Separator />
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    {alreadyVoted ? (
+                      <div className="text-center">
+                        <h4 className="font-semibold text-gray-900 mb-3">
+                          Tu calificación
+                        </h4>
+                        <div className="flex flex-col items-center gap-3">
+                          <StarRating
+                            rating={userRating}
+                            readonly={true}
+                            size="lg"
+                            showLabels={true}
+                          />
+                          {comment && (
+                            <div className="max-w-full w-full bg-white rounded-md p-3 border text-left">
+                              <p className="text-xs font-semibold text-gray-700 mb-1">Tu comentario</p>
+                              <p className="text-sm text-gray-700 break-words whitespace-pre-wrap">{comment}</p>
+                            </div>
+                          )}
+                          <Badge
+                            variant="default"
+                            className="bg-green-600 hover:bg-green-600"
+                          >
+                            Ya calificaste esta hamburguesa
+                          </Badge>
+                          <p className="text-xs text-muted-foreground">
+                            Diste {userRating} estrella
+                            {userRating !== 1 ? "s" : ""} a este producto
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-3 text-center">
+                          ¿Cómo calificarías esta hamburguesa?
+                        </h4>
+                        <div className="flex flex-col items-center gap-4">
+                          <StarRating
+                            rating={userRating}
+                            onRate={handleRate}
+                            size="lg"
+                            showLabels={true}
+                          />
+                          <div className="w-full">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Comentario (opcional)
+                            </label>
+                            <textarea
+                              value={comment}
+                              onChange={(e) => setComment(e.target.value)}
+                              disabled={hasVoted}
+                              rows={3}
+                              className="w-full border rounded-md p-2 text-sm outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 disabled:opacity-70"
+                              placeholder="Cuéntanos más sobre tu experiencia..."
+                            />
+                          </div>
+                          {userRating > 0 && !hasVoted && (
+                            <Button
+                              onClick={confirmVote}
+                              className="bg-red-600 hover:bg-red-700"
+                              size="sm"
+                            >
+                              Confirmar Calificación
+                            </Button>
+                          )}
+                          {hasVoted && (
+                            <div className="text-center">
+                              <Badge
+                                variant="default"
+                                className="bg-green-600 hover:bg-green-600"
+                              >
+                                ¡Gracias por tu calificación!
+                              </Badge>
+                              <p className="text-xs text-muted-foreground mt-2">
+                                Tu voto de {userRating} estrella
+                                {userRating !== 1 ? "s" : ""} ha sido registrado
+                              </p>
+                              {comment && (
+                                <div className="mt-3 max-w-full w-full bg-white rounded-md p-3 border text-left">
+                                  <p className="text-xs font-semibold text-gray-700 mb-1">Tu comentario</p>
+                                  <p className="text-sm text-gray-700 break-words whitespace-pre-wrap">{comment}</p>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </CardContent>
       </div>

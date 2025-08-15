@@ -15,6 +15,17 @@ interface FingerprintData {
     maxTouchPoints: number;
     canvas: string;
     fonts: string;
+    deviceMemory?: number;
+    connection?: {
+        downlink?: number;
+        effectiveType?: string;
+        rtt?: number;
+        saveData?: boolean;
+    };
+    webglVendor?: string;
+    webglRenderer?: string;
+    webglSupported?: boolean;
+    audioFingerprint?: string;
 }
 
 interface DeviceRecord {
@@ -62,6 +73,9 @@ class DeviceFingerprint {
      * Get fingerprint data
      */
     private getFingerprint(): FingerprintData {
+        const navAny = navigator as any;
+        const connection = navAny?.connection || navAny?.mozConnection || navAny?.webkitConnection;
+
         return {
             userAgent: navigator.userAgent || '',
             language: navigator.language || '',
@@ -78,7 +92,16 @@ class DeviceFingerprint {
             hardwareConcurrency: navigator.hardwareConcurrency || 0,
             maxTouchPoints: navigator.maxTouchPoints || 0,
             canvas: this.getCanvasFingerprint(),
-            fonts: this.detectFonts()
+            fonts: this.detectFonts(),
+            deviceMemory: (navigator as any).deviceMemory || undefined,
+            connection: connection
+                ? {
+                    downlink: connection.downlink,
+                    effectiveType: connection.effectiveType,
+                    rtt: connection.rtt,
+                    saveData: connection.saveData,
+                }
+                : undefined,
         };
     }
 
@@ -113,6 +136,73 @@ class DeviceFingerprint {
             return canvas.toDataURL();
         } catch {
             return 'canvas_unavailable';
+        }
+    }
+
+    /**
+     * WebGL GPU vendor/renderer
+     */
+    private getWebGLInfo(): { vendor: string; renderer: string; supported: boolean } {
+        try {
+            const canvas = document.createElement('canvas');
+            const gl = (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')) as WebGLRenderingContext | null;
+            if (!gl) return { vendor: 'webgl_unavailable', renderer: 'webgl_unavailable', supported: false };
+
+            const debugInfo = gl.getExtension('WEBGL_debug_renderer_info') as any;
+            const vendor = debugInfo && gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
+            const renderer = debugInfo && gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+
+            return {
+                vendor: vendor || 'unknown_vendor',
+                renderer: renderer || 'unknown_renderer',
+                supported: true,
+            };
+        } catch {
+            return { vendor: 'error', renderer: 'error', supported: false };
+        }
+    }
+
+    /**
+     * AudioContext fingerprint via OfflineAudioContext hash
+     */
+    private async getAudioFingerprint(): Promise<string> {
+        try {
+            // Prefer OfflineAudioContext to avoid actual audio output
+            const OfflineCtx = (window as any).OfflineAudioContext || (window as any).webkitOfflineAudioContext;
+            if (!OfflineCtx) return 'offline_audio_unavailable';
+
+            const sampleRate = 44100;
+            const length = 44100;
+            const context = new OfflineCtx(1, length, sampleRate);
+
+            const oscillator = context.createOscillator();
+            oscillator.type = 'triangle';
+            oscillator.frequency.value = 10000;
+
+            const compressor = context.createDynamicsCompressor();
+            compressor.threshold.value = -50;
+            compressor.knee.value = 40;
+            compressor.ratio.value = 12;
+            compressor.attack.value = 0;
+            compressor.release.value = 0.25;
+
+            oscillator.connect(compressor);
+            compressor.connect(context.destination);
+
+            oscillator.start(0);
+
+            const buffer = await context.startRendering();
+            const channel = buffer.getChannelData(0);
+
+            // Simple hash
+            let hash = 0;
+            for (let i = 0; i < channel.length; i += 1000) {
+                hash = ((hash << 5) - hash) + Math.floor((channel[i] + 1) * 1000);
+                hash |= 0;
+            }
+            return 'af_' + Math.abs(hash).toString(36);
+        } catch {
+            return 'audio_fp_error';
         }
     }
 
@@ -334,7 +424,16 @@ class DeviceFingerprint {
      * Get detail finger print
      */
     public async getDetailedFingerprint(): Promise<FingerprintData> {
-        return this.getFingerprint();
+        const base = this.getFingerprint();
+        const webgl = this.getWebGLInfo();
+        const audioFingerprint = await this.getAudioFingerprint();
+        return {
+            ...base,
+            webglVendor: webgl.vendor,
+            webglRenderer: webgl.renderer,
+            webglSupported: webgl.supported,
+            audioFingerprint,
+        };
     }
 
     /**

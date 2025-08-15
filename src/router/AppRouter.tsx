@@ -6,6 +6,7 @@ import { PrivateLayout } from "@/layout/PrivateLayout";
 
 
 
+
 const Login = lazy(() => import('@/features/public/auth/page/Login'))
 const RateProducts = lazy(() => import('@/features/public/rate-products/page/RateProducts'))
 const RateProductsVoting = lazy(() => import('@/features/public/rate-products-voting/page/RateProductsVoting'))
@@ -24,7 +25,7 @@ export function AppRouter() {
           </Route>
         </RoutesNotFound>
       </BrowserRouter>
-
+      
     </Suspense>
   )
 }

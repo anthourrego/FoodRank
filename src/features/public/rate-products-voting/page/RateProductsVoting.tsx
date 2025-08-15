@@ -20,6 +20,7 @@ function RateProductsVoting() {
   const [product, setProduct] = useState<RestaurantProduct | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [eventProductId, setEventProductId] = useState<number|null>(null);
   const navigate = useNavigate();
 
   const { filterProductToRate } = useFilterProductsEvents()
@@ -43,6 +44,7 @@ function RateProductsVoting() {
           const [eventProduct] = productFind
           const productToRating = eventProduct?.restaurant_product
           setProduct(productToRating);
+          setEventProductId(eventProduct.id)
         } else {
           setError(`Producto con ID ${productId} no encontrado.`);
         }
@@ -56,12 +58,6 @@ function RateProductsVoting() {
     setLoading(false);
   };
 
-  const handleVote = (score: string) => {
-    console.log(`Votando por producto ${productId} con puntaje: ${score}`);
-    // Aquí enviarías la votación a tu backend
-    alert(`¡Gracias por votar por ${product?.name} con ${score} estrellas!`);
-    navigate("/rate-product");
-  };
 
   if (loading) {
     return <LoadingProduct />
@@ -79,7 +75,7 @@ function RateProductsVoting() {
     <div className="bg-white bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] p-4">
 
       <div className="max-w-md mx-auto ">
-        <RateProductCard product={product} showRating={true} selected={true} />
+        <RateProductCard product={product} showRating={true} selected={true} eventId={dataScan?.event_id} eventProductId={eventProductId} />
       </div>
     </div>
   );
