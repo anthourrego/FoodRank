@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { MapPin, Instagram, Facebook } from "lucide-react";
+import { MapPin, Instagram, Facebook, Star } from "lucide-react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { StarRating } from "@/components/StarRating";
 import type { RestaurantProduct } from "../../models/RestaurantProduct";
@@ -146,7 +146,9 @@ export function RateProductCard({
         );
         setHasVoted(true);
         setAlreadyVoted(true);
-        toast.success('Gracias, Hemos recibido tu calificación')
+        toast.success('Gracias, Hemos recibido tu calificación', {
+          icon: <Star className="w-5 h-5 text-yellow-400" fill="currentColor" />
+        })
         navigate("/rate-product")
       }
     } catch (error) {
