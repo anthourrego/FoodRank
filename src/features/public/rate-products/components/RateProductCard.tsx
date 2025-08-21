@@ -146,7 +146,7 @@ export function RateProductCard({
         );
         setHasVoted(true);
         setAlreadyVoted(true);
-
+        toast.success('Gracias, Hemos recibido tu calificación')
         navigate("/rate-product")
       }
     } catch (error) {
