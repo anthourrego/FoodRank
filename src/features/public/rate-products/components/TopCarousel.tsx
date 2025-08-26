@@ -13,8 +13,8 @@ import image_2 from "@/assets/images/image_ads2.webp";
 
 export function TopCarousel() {
   return (
-    <div className="flex flex-col items-center justify-center  overflow-hidden">
-    <Carousel  className="w-full"  plugins={[Autoplay({ delay: 5000 })]} >
+    <div className="flex flex-col  justify-center  overflow-hidden min-h-60 bg-black">
+    <Carousel  className="w-full "  plugins={[Autoplay({ delay: 5000 })]} >
       <CarouselContent>
         <CarouselItem>
           <img src={image_1} alt="image_1" />
