@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import logo from '../assets/images/logo.png';
 
 export function Header() {
   return (
@@ -16,9 +17,9 @@ export function Header() {
           </nav>
 
           <div className="flex items-center">
-            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
-              <span className="text-red-600 font-bold text-sm">Food Rank</span>
-            </div>
+            <Link to="/">
+              <img src={logo} alt="Food Rank" className="h-12 w-auto" />
+            </Link>
           </div>
         </div>
       </div>

@@ -161,11 +161,7 @@ export function RateProductCard({
       <div className="cursor-pointer">
         <div className=" relative overflow-hidden">
           <LazyLoadImage
-            src={
-              product?.image_url
-                ? product.image_url + "/placeholder.svg"
-                : "https://www.dolomite.it/_ui/responsive/common/images/no-product-image-available.png"
-            }
+            src={import.meta.env.VITE_URL_BACK + "imageproduct/" + product?.image_url}
             alt={product.name}
             className="aspect-3/2 object-cover hover:scale-105 transition-transform duration-300"
           />

@@ -4,16 +4,15 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 
-import image_2 from "@/assets/images/image_ads2.webp";
+import image_1 from "@/assets/images/image_ads1.webp";
 
-
-export function TopCarousel() {
+export function BottomCarousel() {
   return (
     <div className="flex flex-col justify-center overflow-hidden min-h-60 bg-black">
     <Carousel className="w-full">
       <CarouselContent>
         <CarouselItem>
-          <img src={image_2} alt="Evento" />
+          <img src={image_1} alt="Patrocinadores" />
         </CarouselItem>
       </CarouselContent>
     </Carousel>
