@@ -301,37 +301,48 @@ export function RateProductCard({
                 </div>
 
                 <div className="flex gap-2 mt-4 relative bottom-0">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center gap-2 h-8 bg-transparent"
-                  >
-                    <Instagram className="w-3 h-3" />
-                    <span className="text-xs">
-                      {
-                        product.restaurant?.instagram ? (
-                          <Link to={`https://www.instagram.com/${product.restaurant?.instagram}` } target="_blank" rel="noopener noreferrer">Instagram</Link>
-                        )
-                        : <span className="text-xs">Instagram</span>
-                      }
+                  {
+                     product.restaurant?.instagram && (
                       
-                     
-                    </span>
-                  </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex items-center gap-2 h-8 bg-transparent"
+                        >
+                          <Instagram className="w-3 h-3" />
+                          
+                            
+                              
+                                <Link to={`https://www.instagram.com/${product.restaurant?.instagram}` } target="_blank" rel="noopener noreferrer">Instagram</Link>
+                              
+                              
+                            
+                            
+                          
+                          
+                        </Button>
+                     )
+                  }
+                  {
+                     product.restaurant?.facebook && (
                   <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center gap-2 h-8 bg-transparent"
-                  >
-                    <Facebook className="w-3 h-3" />
-                    {
-                      product.restaurant?.facebook ? (
-                        <Link to={`https://www.facebook.com/${product.restaurant?.facebook}` } target="_blank" rel="noopener noreferrer">Facebook</Link>
-                      )
-                      : <span className="text-xs">Facebook</span>
-                      }
+                          variant="outline"
+                          size="sm"
+                          className="flex items-center gap-2 h-8 bg-transparent"
+                        >
+                          <Facebook className="w-3 h-3" />
+                          
+                            <Link to={`https://www.facebook.com/${product.restaurant?.facebook}` } target="_blank" rel="noopener noreferrer">Facebook</Link>
+                            
+                             
+                          
+                        </Button>
+                    )
+                  }
+                  {
+                     product.restaurant?.phone && (
+                  
                     
-                  </Button>
 
                   <Button
                     variant="outline"
@@ -339,13 +350,10 @@ export function RateProductCard({
                     className="flex items-center gap-2 h-8 bg-transparent"
                   >
                     <MessageCircleMore className="w-3 h-3" />
-                    {
-                      product.restaurant?.phone ? (
-                        <Link to={`https://wa.me/${product.restaurant?.phone}` } target="_blank" rel="noopener noreferrer">WhatsApp</Link>
-                      )
-                      : <span className="text-xs">WhatsApp</span>
-                    }
+                    <Link to={`https://wa.me/${product.restaurant?.phone}` } target="_blank" rel="noopener noreferrer">WhatsApp</Link>
                   </Button>
+                     )
+                    }
 
                   
                 </div>
