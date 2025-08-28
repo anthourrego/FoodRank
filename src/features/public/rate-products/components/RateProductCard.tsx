@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { MapPin, Instagram, Facebook, Star } from "lucide-react";
+import { MapPin, Instagram, Facebook, Star, MessageCircleMore } from "lucide-react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { StarRating } from "@/components/StarRating";
 import type { RestaurantProduct } from "../../models/RestaurantProduct";
@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/accordion";
 import { ReviewService } from "../../service/reviewService";
 import { toast } from "sonner";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 interface ProductCardProps {
   product: RestaurantProduct;
@@ -308,7 +308,14 @@ export function RateProductCard({
                   >
                     <Instagram className="w-3 h-3" />
                     <span className="text-xs">
-                      {product.restaurant?.socialMedia?.instagram}
+                      {
+                        product.restaurant?.instagram ? (
+                          <Link to={`https://www.instagram.com/${product.restaurant?.instagram}` } target="_blank" rel="noopener noreferrer">Instagram</Link>
+                        )
+                        : <span className="text-xs">Instagram</span>
+                      }
+                      
+                     
                     </span>
                   </Button>
                   <Button
@@ -317,8 +324,30 @@ export function RateProductCard({
                     className="flex items-center gap-2 h-8 bg-transparent"
                   >
                     <Facebook className="w-3 h-3" />
-                    <span className="text-xs">Facebook</span>
+                    {
+                      product.restaurant?.facebook ? (
+                        <Link to={`https://www.facebook.com/${product.restaurant?.facebook}` } target="_blank" rel="noopener noreferrer">Facebook</Link>
+                      )
+                      : <span className="text-xs">Facebook</span>
+                      }
+                    
                   </Button>
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-2 h-8 bg-transparent"
+                  >
+                    <MessageCircleMore className="w-3 h-3" />
+                    {
+                      product.restaurant?.phone ? (
+                        <Link to={`https://wa.me/${product.restaurant?.phone}` } target="_blank" rel="noopener noreferrer">WhatsApp</Link>
+                      )
+                      : <span className="text-xs">WhatsApp</span>
+                    }
+                  </Button>
+
+                  
                 </div>
               </div>
 
