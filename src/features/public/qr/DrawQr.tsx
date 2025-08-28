@@ -20,7 +20,7 @@ const DrawQr = ({ dataQr, descriptionShare, titleShare }: DrawQrProps) => {
     const qrRef = useRef<HTMLDivElement | null>(null);
 
     const urlQr = useMemo(() => {
-        return `${URLPAGE}/rate-product/${Transform.encryptJson(dataQr)}`;
+        return `${URLPAGE}rate-product/${Transform.encryptJson(dataQr)}`;
     }, [dataQr]);
 
     const handleDownload = () => {
