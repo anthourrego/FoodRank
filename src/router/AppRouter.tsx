@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter, HashRouter, Navigate, Route } from "react-router";
+import { BrowserRouter, Navigate, Route } from "react-router";
 import { RoutesNotFound } from "./NotFound";
 import GenerateQr from "@/features/public/qr/GenerateQr";
 import { PrivateLayout } from "@/layout/PrivateLayout";

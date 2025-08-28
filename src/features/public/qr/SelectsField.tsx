@@ -74,19 +74,19 @@ export default function SelectsField({ generateQr }: SelectsFieldProps) {
         gradientFrom,
         gradientTo
     }) => (
-        <div className="relative group">
+        <div className="relative group w-full">
             <label className="block text-sm font-semibold text-gray-700 mb-2">
                 {label}
             </label>
-            <div className="relative flex gap-4">
-                <div className={`absolute inset-0 bg-gradient-to-r ${gradientFrom} ${gradientTo} rounded-xl opacity-0 transition-opacity duration-300`}></div>
+            <div className="relative">
+                <div className={`absolute inset-0 bg-gradient-to-r ${gradientFrom} ${gradientTo} rounded-xl opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
                 <div className="relative bg-white border-2 border-gray-200 rounded-xl focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-100 transition-all duration-300 shadow-sm">
-                    <div className="flex items-center px-4 py-3">
-                        <Icon className="h-5 w-5 text-gray-400 mr-3" />
+                    <div className="flex items-center px-3 sm:px-4 py-3">
+                        <Icon className="h-5 w-5 text-gray-400 mr-2 sm:mr-3 flex-shrink-0" />
                         <select
                             value={value}
                             onChange={onChange}
-                            className="flex-1 bg-transparent text-gray-900 placeholder-gray-400 focus:outline-none appearance-none cursor-pointer"
+                            className="flex-1 bg-transparent text-gray-900 placeholder-gray-400 focus:outline-none appearance-none cursor-pointer text-sm sm:text-base"
                         >
                             <option value="">{placeholder}</option>
                             {options.map((option) => (
@@ -95,7 +95,7 @@ export default function SelectsField({ generateQr }: SelectsFieldProps) {
                                 </option>
                             ))}
                         </select>
-                        <ChevronDown className="h-5 w-5 text-gray-400 pointer-events-none" />
+                        <ChevronDown className="h-5 w-5 text-gray-400 pointer-events-none flex-shrink-0" />
                     </div>
                 </div>
             </div>
@@ -103,32 +103,36 @@ export default function SelectsField({ generateQr }: SelectsFieldProps) {
     );
 
     return (
-        <div className="via-blue-50 to-indigo-100 mb-5">
+        <div className="via-blue-50 to-indigo-100 mb-5 px-4">
             <div className="max-w-4xl mx-auto">
-                <div className='flex items-end gap-4'>
-                    <SelectField
-                        label="Restaurantes"
-                        value={selectedRestaurant}
-                        onChange={(e) => setSelectedRestaurant(e.target.value)}
-                        options={restaurantesSelect}
-                        placeholder="Selecciona restaurante"
-                        icon={MapPin}
-                        gradientFrom="from-emerald-400"
-                        gradientTo="to-cyan-400"
-                    />
+                <div className='flex flex-col lg:flex-row lg:items-end gap-4'>
+                    <div className="flex-1">
+                        <SelectField
+                            label="Restaurantes"
+                            value={selectedRestaurant}
+                            onChange={(e) => setSelectedRestaurant(e.target.value)}
+                            options={restaurantesSelect}
+                            placeholder="Selecciona restaurante"
+                            icon={MapPin}
+                            gradientFrom="from-emerald-400"
+                            gradientTo="to-cyan-400"
+                        />
+                    </div>
 
-                    <SelectField
-                        label="Sucursal"
-                        value={selectedBranch}
-                        onChange={(e) => setSelectedBranch(e.target.value)}
-                        options={branchsRestaurantSelect}
-                        placeholder="Elige sucursal"
-                        icon={User}
-                        gradientFrom="from-purple-400"
-                        gradientTo="to-pink-400"
-                    />
+                    <div className="flex-1">
+                        <SelectField
+                            label="Sucursal"
+                            value={selectedBranch}
+                            onChange={(e) => setSelectedBranch(e.target.value)}
+                            options={branchsRestaurantSelect}
+                            placeholder="Elige sucursal"
+                            icon={User}
+                            gradientFrom="from-purple-400"
+                            gradientTo="to-pink-400"
+                        />
+                    </div>
 
-                    <div>
+                    <div className="w-full lg:w-auto">
                         <button
                             onClick={() => {
                                 console.log({
@@ -142,9 +146,10 @@ export default function SelectsField({ generateQr }: SelectsFieldProps) {
                                     event_id: selectedEventId
                                 })
                             }}
-                            className="px-8 py-4 bg-indigo-600 text-white font-semibold rounded-xl shadow-lg transform transition-all duration-300 cursor-pointer"
+                            className="w-full lg:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-lg transform transition-all duration-300 cursor-pointer flex items-center justify-center gap-2"
                         >
                             <Send className="h-5 w-5" />
+                            <span className="lg:hidden">Generar QR</span>
                         </button>
                     </div>
                 </div>
