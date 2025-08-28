@@ -13,7 +13,7 @@ export function RateProductGrid() {
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Hamburguesas Participantes</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Descubre y califica las mejores hamburguesas de la competencia. Tu opinión cuenta para elegir al ganador.
+            Descubre, visita y califica las mejores hamburguesas. Tu opinión cuenta para elegir al ganador.
           </p>
         </div>
 
