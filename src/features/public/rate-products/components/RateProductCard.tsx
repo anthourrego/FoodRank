@@ -3,7 +3,14 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { MapPin, Instagram, Facebook, Star, MessageCircleMore } from "lucide-react";
+import {
+  MapPin,
+  Instagram,
+  Facebook,
+  Star,
+  MessageCircleMore,
+  ChevronDown,
+} from "lucide-react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { StarRating } from "@/components/StarRating";
 import type { RestaurantProduct } from "../../models/RestaurantProduct";
@@ -27,20 +34,21 @@ interface ProductCardProps {
   product: RestaurantProduct;
   showRating?: boolean;
   selected?: boolean;
-  eventId?: number|string|null|undefined;
-  eventProductId?: number|null|undefined;
+  eventId?: number | string | null | undefined;
+  eventProductId?: number | null | undefined;
 }
 
 export function RateProductCard({
   product,
   showRating = false,
-  eventId=null,
-  eventProductId=null
+  eventId = null,
+  eventProductId = null,
 }: ProductCardProps) {
   const [userRating, setUserRating] = useState<number>(0);
   const [comment, setComment] = useState<string>("");
   const [hasVoted, setHasVoted] = useState(false);
   const [alreadyVoted, setAlreadyVoted] = useState(false);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(false);
   const {
     latitude,
     longitude,
@@ -61,13 +69,44 @@ export function RateProductCard({
       if (storedRating) {
         setUserRating(storedRating);
       }
-      const storedComment = typeof entry === "object" ? entry?.comment : undefined;
+      const storedComment =
+        typeof entry === "object" ? entry?.comment : undefined;
       if (storedComment) {
         setComment(storedComment);
       }
       setHasVoted(true);
     }
   }, [product.id]);
+
+  useEffect(() => {
+    if (!showRating || alreadyVoted) {
+      setShowScrollIndicator(false);
+      return;
+    }
+
+    const checkScrollPosition = () => {
+      const scrollTop =
+        window.pageYOffset || document.documentElement.scrollTop;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      const isMobile = window.innerWidth < 768;
+
+      const hasContentBelow = scrollTop + windowHeight < documentHeight - 100;
+
+      setShowScrollIndicator(isMobile && hasContentBelow);
+    };
+
+    checkScrollPosition();
+
+    window.addEventListener("scroll", checkScrollPosition);
+    window.addEventListener("resize", checkScrollPosition);
+
+    return () => {
+      window.removeEventListener("scroll", checkScrollPosition);
+      window.removeEventListener("resize", checkScrollPosition);
+    };
+  }, [showRating, alreadyVoted]);
 
   const handleRate = (rating: number) => {
     if (alreadyVoted) return;
@@ -120,36 +159,38 @@ export function RateProductCard({
         rating: userRating,
         comment,
         deviceId,
-        fingerprint:deviceInfo,
+        fingerprint: deviceInfo,
         publicIp,
         votedAt: new Date().toISOString(),
       };
 
-      const reviewService = new ReviewService()
+      const reviewService = new ReviewService();
       const result = await reviewService.saveReview({
         event_product_id: eventProductId,
         product_id: product.id,
-        event_product_branch_id:1,
+        event_product_branch_id: 1,
         event_id: eventId,
         rating: userRating,
         comment,
         latitude: latitude,
         longitude: longitude,
-        ip:publicIp,
-        fingerprint_device:JSON.stringify(deviceInfo),
+        ip: publicIp,
+        fingerprint_device: JSON.stringify(deviceInfo),
         deviceId,
-      })
-      if(result.status === 201){
+      });
+      if (result.status === 201) {
         localStorage.setItem(
           "x-foodrank-voted-product",
           JSON.stringify(votedProducts)
         );
         setHasVoted(true);
         setAlreadyVoted(true);
-        toast.success('Gracias, Hemos recibido tu calificación', {
-          icon: <Star className="w-5 h-5 text-yellow-400" fill="currentColor" />
-        })
-        navigate("/rate-product")
+        toast.success("Gracias, Hemos recibido tu calificación", {
+          icon: (
+            <Star className="w-5 h-5 text-yellow-400" fill="currentColor" />
+          ),
+        });
+        navigate("/rate-product");
       }
     } catch (error) {
       console.warn("Error registrando voto con fingerprint:", error);
@@ -161,7 +202,11 @@ export function RateProductCard({
       <div className="cursor-pointer">
         <div className=" relative overflow-hidden">
           <LazyLoadImage
-            src={import.meta.env.VITE_URL_BACK + "imageproduct/" + product?.image_url}
+            src={
+              import.meta.env.VITE_URL_BACK +
+              "imageproduct/" +
+              product?.image_url
+            }
             alt={product.name}
             className="aspect-3/2 object-cover hover:scale-105 transition-transform duration-300"
           />
@@ -185,7 +230,7 @@ export function RateProductCard({
             {product.name}
           </h3>
           <span className="text-sm font-semibold text-gray-500">
-            {product.restaurant?.name} 
+            {product.restaurant?.name}
           </span>
           <Separator />
 
@@ -220,7 +265,6 @@ export function RateProductCard({
                   {product.description && product.description.length > 1 && (
                     <>
                       <div className="h-30 overflow-y-auto">
-
                         <p className="text-sm text-muted-foreground leading-relaxed">
                           {product.description}
                         </p>
@@ -301,61 +345,56 @@ export function RateProductCard({
                 </div>
 
                 <div className="flex gap-2 mt-4 relative bottom-0">
-                  {
-                     product.restaurant?.instagram && (
-                      
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="flex items-center gap-2 h-8 bg-transparent"
-                        >
-                          <Instagram className="w-3 h-3" />
-                          
-                            
-                              
-                                <Link to={`https://www.instagram.com/${product.restaurant?.instagram}` } target="_blank" rel="noopener noreferrer">Instagram</Link>
-                              
-                              
-                            
-                            
-                          
-                          
-                        </Button>
-                     )
-                  }
-                  {
-                     product.restaurant?.facebook && (
-                  <Button
-                          variant="outline"
-                          size="sm"
-                          className="flex items-center gap-2 h-8 bg-transparent"
-                        >
-                          <Facebook className="w-3 h-3" />
-                          
-                            <Link to={`https://www.facebook.com/${product.restaurant?.facebook}` } target="_blank" rel="noopener noreferrer">Facebook</Link>
-                            
-                             
-                          
-                        </Button>
-                    )
-                  }
-                  {
-                     product.restaurant?.phone && (
-                  
-                    
+                  {product.restaurant?.instagram && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center gap-2 h-8 bg-transparent"
+                    >
+                      <Instagram className="w-3 h-3 text-pink-500" />
 
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center gap-2 h-8 bg-transparent"
-                  >
-                    <MessageCircleMore className="w-3 h-3" />
-                    <Link to={`https://wa.me/${product.restaurant?.phone}` } target="_blank" rel="noopener noreferrer">WhatsApp</Link>
-                  </Button>
-                     )
-                    }
+                      <Link
+                        to={`https://www.instagram.com/${product.restaurant?.instagram}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Instagram
+                      </Link>
+                    </Button>
+                  )}
+                  {product.restaurant?.facebook && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center gap-2 h-8 bg-transparent"
+                    >
+                      <Facebook className="w-3 h-3 text-blue-600" />
 
-                  
+                      <Link
+                        to={`https://www.facebook.com/${product.restaurant?.facebook}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Facebook
+                      </Link>
+                    </Button>
+                  )}
+                  {product.restaurant?.phone && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center gap-2 h-8 bg-transparent"
+                    >
+                      <MessageCircleMore className="w-3 h-3 text-green-500" />
+                      <Link
+                        to={`https://wa.me/${product.restaurant?.phone}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        WhatsApp
+                      </Link>
+                    </Button>
+                  )}
                 </div>
               </div>
 
@@ -377,8 +416,12 @@ export function RateProductCard({
                           />
                           {comment && (
                             <div className="max-w-full w-full bg-white rounded-md p-3 border text-left">
-                              <p className="text-xs font-semibold text-gray-700 mb-1">Tu comentario</p>
-                              <p className="text-sm text-gray-700 break-words whitespace-pre-wrap">{comment}</p>
+                              <p className="text-xs font-semibold text-gray-700 mb-1">
+                                Tu comentario
+                              </p>
+                              <p className="text-sm text-gray-700 break-words whitespace-pre-wrap">
+                                {comment}
+                              </p>
                             </div>
                           )}
                           <Badge
@@ -418,11 +461,14 @@ export function RateProductCard({
                               placeholder="Cuéntanos más sobre tu experiencia..."
                             />
                           </div>
-                          {userRating > 0 && !hasVoted && (
+                          {!hasVoted && (
                             <Button
                               onClick={confirmVote}
                               className="bg-red-600 hover:bg-red-700"
                               size="sm"
+                              disabled={
+                                userRating === 0 || alreadyVoted || hasVoted
+                              }
                             >
                               Confirmar Calificación
                             </Button>
@@ -441,8 +487,12 @@ export function RateProductCard({
                               </p>
                               {comment && (
                                 <div className="mt-3 max-w-full w-full bg-white rounded-md p-3 border text-left">
-                                  <p className="text-xs font-semibold text-gray-700 mb-1">Tu comentario</p>
-                                  <p className="text-sm text-gray-700 break-words whitespace-pre-wrap">{comment}</p>
+                                  <p className="text-xs font-semibold text-gray-700 mb-1">
+                                    Tu comentario
+                                  </p>
+                                  <p className="text-sm text-gray-700 break-words whitespace-pre-wrap">
+                                    {comment}
+                                  </p>
                                 </div>
                               )}
                             </div>
@@ -457,6 +507,27 @@ export function RateProductCard({
           </div>
         </CardContent>
       </div>
+
+      
+      {showScrollIndicator && (
+        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="bg-slate-200/50 backdrop-blur-sm  px-3 py-3 rounded-lg  flex flex-col items-center">
+            <div className="relative h-4 w-6 flex flex-col items-center justify-center">
+              
+              <ChevronDown
+                className="w-5 h-5 text-red-600 absolute cascade-arrow-1"
+                strokeWidth={2.5}
+              />
+
+              
+              <ChevronDown
+                className="w-5 h-5 text-red-500 absolute cascade-arrow-2"
+                strokeWidth={2.5}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </Card>
   );
 }

@@ -118,3 +118,32 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+@keyframes cascadeArrow {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+
+.cascade-arrow-1 {
+  animation: cascadeArrow 2s infinite ease-in-out;
+  animation-delay: 0s;
+  top: -4px;
+}
+
+.cascade-arrow-2 {
+  animation: cascadeArrow 2s infinite ease-in-out;
+  animation-delay: 0.5s;
+  top: 4px;
+}
