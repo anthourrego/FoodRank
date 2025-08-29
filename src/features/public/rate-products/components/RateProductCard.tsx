@@ -464,13 +464,16 @@ export function RateProductCard({
                           {!hasVoted && (
                             <Button
                               onClick={confirmVote}
-                              className="bg-red-600 hover:bg-red-700"
+                              className="bg-red-600 hover:bg-red-700 w-full"
                               size="sm"
                               disabled={
                                 userRating === 0 || alreadyVoted || hasVoted
                               }
                             >
                               Confirmar Calificación
+                              <Star
+                                className="fill-yellow-400 text-yellow-400"
+                              />
                             </Button>
                           )}
                           {hasVoted && (
