@@ -229,7 +229,7 @@ export function RateProductCard({
           <h3 className="text-xl font-bold text-gray-900 leading-tight">
             {product.name}
           </h3>
-          <span className="text-sm font-semibold text-gray-500">
+          <span className="text-sm font-semibold text-gray-500 uppercase">
             {product.restaurant?.name}
           </span>
           <Separator />
@@ -279,14 +279,14 @@ export function RateProductCard({
 
             <div className="space-y-4 animate-in slide-in-from-top-2">
               <div className="">
-                <h4 className="font-semibold text-gray-900 mb-3">
+                <h4 className="font-semibold text-gray-900 mb-1">
                   Información del Restaurante
                 </h4>
 
                 <div className="space-y-4">
                   {/* Sedes */}
                   <div>
-                    <div className="flex items-center gap-2 text-sm mb-2">
+                    <div className="flex items-center gap-2 text-sm mb-1">
                       <MapPin className="w-4 h-4 text-muted-foreground" />
                       <span className="text-muted-foreground font-medium">
                         Sede
@@ -296,7 +296,7 @@ export function RateProductCard({
                         :
                       </span>
                     </div>
-                    <div className="grid grid-cols-2 gap-2  overflow-auto h-34">
+                    <div className="grid grid-cols-2 gap-2  overflow-auto h-22">
                       {product.restaurant?.restaurant_branches.map(
                         (location, index) => (
                           <div className="flex  flex-col   p-2" key={index}>

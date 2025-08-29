@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import logo from '../assets/images/logo.png';
+import logo from '../assets/images/logo.webp';
 
 export function Header() {
   return (
