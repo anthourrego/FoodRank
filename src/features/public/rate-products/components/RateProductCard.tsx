@@ -97,14 +97,29 @@ export function RateProductCard({
       setShowScrollIndicator(isMobile && hasContentBelow);
     };
 
+    // Ejecutar inmediatamente
     checkScrollPosition();
+
+    // Ejecutar después de un pequeño delay para asegurar que el contenido esté renderizado
+    const timeoutId = setTimeout(() => {
+      checkScrollPosition();
+    }, 100);
+
+    // También ejecutar después de que las imágenes se carguen
+    const imageLoadTimeout = setTimeout(() => {
+      checkScrollPosition();
+    }, 500);
 
     window.addEventListener("scroll", checkScrollPosition);
     window.addEventListener("resize", checkScrollPosition);
+    window.addEventListener("load", checkScrollPosition);
 
     return () => {
+      clearTimeout(timeoutId);
+      clearTimeout(imageLoadTimeout);
       window.removeEventListener("scroll", checkScrollPosition);
       window.removeEventListener("resize", checkScrollPosition);
+      window.removeEventListener("load", checkScrollPosition);
     };
   }, [showRating, alreadyVoted]);
 
@@ -514,7 +529,7 @@ export function RateProductCard({
       
       {showScrollIndicator && (
         <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <div className="bg-slate-200/50 backdrop-blur-sm  px-3 py-3 rounded-lg  flex flex-col items-center">
+          <div className="bg-slate-200/40  px-3 py-3 rounded-lg  flex flex-col items-center">
             <div className="relative h-4 w-6 flex flex-col items-center justify-center">
               
               <ChevronDown
