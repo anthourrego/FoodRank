@@ -325,7 +325,7 @@ export function RateProductCard({
                     <div className="grid grid-cols-2 gap-2  overflow-auto h-22">
                       {product.restaurant?.restaurant_branches.map(
                         (location, index) => (
-                          <div className="flex  flex-col   p-2" key={index}>
+                          <div className="flex flex-col p-2" key={index}>
                             <Badge
                               key={index}
                               variant="outline"
