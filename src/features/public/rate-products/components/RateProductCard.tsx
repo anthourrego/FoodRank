@@ -10,6 +10,7 @@ import {
   Star,
   MessageCircleMore,
   ChevronDown,
+  Loader2,
 } from "lucide-react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { StarRating } from "@/components/StarRating";
@@ -46,6 +47,7 @@ export function RateProductCard({
 }: ProductCardProps) {
   const [userRating, setUserRating] = useState<number>(0);
   const [comment, setComment] = useState<string>("");
+  const [loadingVoting, setLoadingVoting] = useState<boolean>(false);
   const [hasVoted, setHasVoted] = useState(false);
   const [alreadyVoted, setAlreadyVoted] = useState(false);
   const [showScrollIndicator, setShowScrollIndicator] = useState(false);
@@ -132,6 +134,7 @@ export function RateProductCard({
     if (alreadyVoted || userRating === 0) return;
 
     try {
+      setLoadingVoting(true)
       const deviceId = await getUniqueDeviceId();
       const detailed = await deviceFingerprint.getDetailedFingerprint();
       const publicIp = await getPublicIp();
@@ -158,6 +161,9 @@ export function RateProductCard({
           renderer: detailed.webglRenderer,
         },
         audioFingerprint: detailed.audioFingerprint,
+        ip: publicIp,
+        event_product_id: eventProductId,
+        event_product_branch_id: 1
         /* geo: {
           latitude,
           longitude,
@@ -180,7 +186,7 @@ export function RateProductCard({
       };
 
       const reviewService = new ReviewService();
-      const result = await reviewService.saveReview({
+      const result: any = await reviewService.saveReview({
         event_product_id: eventProductId,
         product_id: product.id,
         event_product_branch_id: 1,
@@ -200,16 +206,19 @@ export function RateProductCard({
         );
         setHasVoted(true);
         setAlreadyVoted(true);
-        toast.success("Gracias, Hemos recibido tu calificación", {
+        toast.success("Gracias, " + result.data.message, {
           icon: (
             <Star className="w-5 h-5 text-yellow-400" fill="currentColor" />
           ),
         });
         navigate("/rate-product");
       }
+      setLoadingVoting(false)
     } catch (error) {
+      setLoadingVoting(false)
       console.warn("Error registrando voto con fingerprint:", error);
     }
+    setLoadingVoting(false)
   };
 
   return (
@@ -477,19 +486,23 @@ export function RateProductCard({
                             />
                           </div>
                           {!hasVoted && (
-                            <Button
-                              onClick={confirmVote}
-                              className="bg-red-600 hover:bg-red-700 w-full"
-                              size="sm"
-                              disabled={
-                                userRating === 0 || alreadyVoted || hasVoted
-                              }
-                            >
-                              Confirmar Calificación
-                              <Star
-                                className="fill-yellow-400 text-yellow-400"
-                              />
-                            </Button>
+                            loadingVoting ? (
+                              <Loader2 className="animate-spin text-red-600" />
+                            ) : (
+                              <Button
+                                onClick={confirmVote}
+                                className="bg-red-600 hover:bg-red-700 w-full"
+                                size="sm"
+                                disabled={
+                                  userRating === 0 || alreadyVoted || hasVoted
+                                }
+                              >
+                                Confirmar Calificación
+                                <Star
+                                  className="fill-yellow-400 text-yellow-400"
+                                />
+                              </Button>
+                            )
                           )}
                           {hasVoted && (
                             <div className="text-center">
@@ -526,18 +539,18 @@ export function RateProductCard({
         </CardContent>
       </div>
 
-      
+
       {showScrollIndicator && (
         <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <div className="bg-slate-200/40  px-3 py-3 rounded-lg  flex flex-col items-center">
             <div className="relative h-4 w-6 flex flex-col items-center justify-center">
-              
+
               <ChevronDown
                 className="w-5 h-5 text-red-600 absolute cascade-arrow-1"
                 strokeWidth={2.5}
               />
 
-              
+
               <ChevronDown
                 className="w-5 h-5 text-red-500 absolute cascade-arrow-2"
                 strokeWidth={2.5}
