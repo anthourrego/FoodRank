@@ -10,6 +10,7 @@ import { PrivateLayout } from "@/layout/PrivateLayout";
 const Login = lazy(() => import('@/features/public/auth/page/Login'))
 const RateProducts = lazy(() => import('@/features/public/rate-products/page/RateProducts'))
 const RateProductsVoting = lazy(() => import('@/features/public/rate-products-voting/page/RateProductsVoting'))
+const Ranking = lazy(() => import('@/features/public/ranking/Ranking'))
 
 export function AppRouter() {
   return (
@@ -22,6 +23,7 @@ export function AppRouter() {
             <Route path='/rate-product' element={<RateProducts/>} />
             <Route path='/rate-product/:productId' element={<RateProductsVoting/>} />
             <Route path='/qr' element={<GenerateQr />} />
+            <Route path='/r4nk1ngh1dd3n' element={<Ranking />} />
           </Route>
         </RoutesNotFound>
       </BrowserRouter>
