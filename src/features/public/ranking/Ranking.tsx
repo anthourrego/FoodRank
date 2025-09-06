@@ -500,6 +500,15 @@ const getRankBadge = (position: number) => {
                   <span className="font-semibold text-gray-900">Total de votos:</span>
                   <span className="font-bold text-xl text-gray-900">{selectedProduct?.total_reviews}</span>
                 </div>
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold text-gray-900">Total de comentarios:</span>
+                  <span className="font-bold text-xl text-gray-900">{selectedProduct?.total_comments}</span>
+                </div>
+              </div>
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                <Button onClick={() => navigate(`/raking/product-event/${selectedProduct?.event_product_id}`)} variant="default">
+                  Ver más
+                </Button>
               </div>
             </div>
           </div>

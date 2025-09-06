@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route } from "react-router";
 import { RoutesNotFound } from "./NotFound";
 import GenerateQr from "@/features/public/qr/GenerateQr";
 import { PrivateLayout } from "@/layout/PrivateLayout";
+import { RankingProductEvent } from "@/features/public/ranking-product-event/RankingProductEvent";
 
 
 
@@ -24,6 +25,7 @@ export function AppRouter() {
             <Route path='/rate-product/:productId' element={<RateProductsVoting/>} />
             <Route path='/qr' element={<GenerateQr />} />
             <Route path='/r4nk1ngh1dd3n' element={<Ranking />} />
+            <Route path='/raking/product-event/:productEventId' element={<RankingProductEvent />} />
           </Route>
         </RoutesNotFound>
       </BrowserRouter>
