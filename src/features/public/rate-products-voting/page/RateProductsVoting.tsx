@@ -21,6 +21,7 @@ function RateProductsVoting() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [eventProductId, setEventProductId] = useState<number|null>(null);
+  const [branchesRestaurantEvent, setBranchesRestaurentEvent] = useState<any>(null);
   const navigate = useNavigate();
 
   const { filterProductToRate } = useFilterProductsEvents()
@@ -43,6 +44,9 @@ function RateProductsVoting() {
         if (productFind) {
           const [eventProduct] = productFind
           const productToRating = eventProduct?.restaurant_product
+          const branchEventProductId = eventProduct?.branchs_product.find((bp: any) => bp.restaurant_branch_id == dataScan.branch_id)?.id
+          
+          setBranchesRestaurentEvent(branchEventProductId)
           setProduct(productToRating);
           setEventProductId(eventProduct.id)
         } else {
@@ -75,7 +79,7 @@ function RateProductsVoting() {
     <div className="bg-white bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] p-4">
 
       <div className="max-w-md mx-auto ">
-        <RateProductCard product={product} showRating={true} selected={true} eventId={dataScan?.event_id} eventProductId={eventProductId} />
+        <RateProductCard product={product} showRating={true} selected={true} eventId={dataScan?.event_id} eventProductId={eventProductId} branchId={branchesRestaurantEvent}  />
       </div>
     </div>
   );

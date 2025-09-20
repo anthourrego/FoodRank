@@ -37,6 +37,7 @@ interface ProductCardProps {
   selected?: boolean;
   eventId?: number | string | null | undefined;
   eventProductId?: number | null | undefined;
+  branchId?: number | null | undefined;
 }
 
 export function RateProductCard({
@@ -44,6 +45,7 @@ export function RateProductCard({
   showRating = false,
   eventId = null,
   eventProductId = null,
+  branchId = null,
 }: ProductCardProps) {
   const [userRating, setUserRating] = useState<number>(0);
   const [comment, setComment] = useState<string>("");
@@ -163,7 +165,7 @@ export function RateProductCard({
         audioFingerprint: detailed.audioFingerprint,
         ip: publicIp,
         event_product_id: eventProductId,
-        event_product_branch_id: 1
+        event_product_branch_id: branchId
         /* geo: {
           latitude,
           longitude,
@@ -189,7 +191,7 @@ export function RateProductCard({
       const result: any = await reviewService.saveReview({
         event_product_id: eventProductId,
         product_id: product.id,
-        event_product_branch_id: 1,
+        event_product_branch_id: branchId,
         event_id: eventId,
         rating: userRating,
         comment,
@@ -323,7 +325,7 @@ export function RateProductCard({
                     <div className="grid grid-cols-2 gap-2  overflow-auto h-22">
                       {product.restaurant?.restaurant_branches.map(
                         (location, index) => (
-                          <div className="flex  flex-col   p-2" key={index}>
+                          <div className="flex flex-col p-2" key={index}>
                             <Badge
                               key={index}
                               variant="outline"
