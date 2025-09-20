@@ -5,6 +5,7 @@ import GenerateQr from "@/features/public/qr/GenerateQr";
 import { PrivateLayout } from "@/layout/PrivateLayout";
 import { RankingProductEvent } from "@/features/public/ranking-product-event/RankingProductEvent";
 import { Loader2 } from "lucide-react";
+import AuthProvider from "@/features/public/auth/context/AuthProvider";
 
 const Login = lazy(() => import("@/features/public/auth/page/Login"));
 const RateProducts = lazy(
@@ -24,25 +25,30 @@ export function AppRouter() {
         </div>
       }
     >
-      <BrowserRouter>
-        <RoutesNotFound>
-          <Route path="/login" element={<Login />} />
-          <Route element={<PrivateLayout />}>
-            <Route path="/" element={<Navigate to="/rate-product" replace />} />
-            <Route path="/rate-product" element={<RateProducts />} />
-            <Route
-              path="/rate-product/:productId"
-              element={<RateProductsVoting />}
-            />
-            <Route path="/qr" element={<GenerateQr />} />
-            <Route path="/r4nk1ngh1dd3n" element={<Ranking />} />
-            <Route
-              path="/raking/product-event/:productEventId"
-              element={<RankingProductEvent />}
-            />
-          </Route>
-        </RoutesNotFound>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <RoutesNotFound>
+            <Route path="/login" element={<Login />} />
+            <Route element={<PrivateLayout />}>
+              <Route
+                path="/"
+                element={<Navigate to="/rate-product" replace />}
+              />
+              <Route path="/rate-product" element={<RateProducts />} />
+              <Route
+                path="/rate-product/:productId"
+                element={<RateProductsVoting />}
+              />
+              <Route path="/qr" element={<GenerateQr />} />
+              <Route path="/r4nk1ngh1dd3n" element={<Ranking />} />
+              <Route
+                path="/raking/product-event/:productEventId"
+                element={<RankingProductEvent />}
+              />
+            </Route>
+          </RoutesNotFound>
+        </BrowserRouter>
+      </AuthProvider>
     </Suspense>
   );
 }

@@ -24,7 +24,7 @@ const { logout } = useAuth();
             <Link to="/">
               <img src={logo} alt="Food Rank" className="h-12 w-auto" />
             </Link>
-            <div className="ml-5" onClick={logout}>
+            <div className="ml-5 cursor-pointer" onClick={logout}>
               <LogOut />
             </div>
           </div>

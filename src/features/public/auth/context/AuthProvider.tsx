@@ -24,12 +24,9 @@ export default function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
       const storedToken = localStorage.getItem("foodranktoken");
-      console.log("storedToken ->", storedToken);
-
       if (storedToken) {
         try {
           const validation = await validateToken();
-          console.log("validation ->", validation);
           if (validation.valid) {
             setToken(storedToken);
             setUser(validation.user);
@@ -93,6 +90,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
       setUser(null);
       setToken(null);
       localStorage.removeItem("foodranktoken");
+      location.assign("/login");
     } catch (error) {
       console.error("Error during logout:", error);
     }

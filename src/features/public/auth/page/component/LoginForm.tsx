@@ -106,7 +106,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ submit, loading, errors }) => {
       <button
         type="submit"
         disabled={loading}
-        className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-orange-800 to-red-800 text-white py-3 px-4 rounded-lg font-medium hover:from-orange-600 hover:to-red-600 focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+        className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-orange-800 to-red-800 text-white py-3 px-4 rounded-lg font-medium hover:from-orange-700 hover:to-red-600 focus:ring-2 focus:ring-orange-700 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
       >
         {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
         <LogIn />
