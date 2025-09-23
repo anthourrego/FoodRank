@@ -15,6 +15,7 @@ const RateProductsVoting = lazy(
   () => import("@/features/public/rate-products-voting/page/RateProductsVoting")
 );
 const Ranking = lazy(() => import("@/features/public/ranking/Ranking"));
+const Restaurant = lazy(() => import("@/features/public/restaurant/page/RestaurantPage"));
 
 export function AppRouter() {
   return (
@@ -39,6 +40,7 @@ export function AppRouter() {
                 path="/rate-product/:productId"
                 element={<RateProductsVoting />}
               />
+              <Route path="/restaurants" element={<Restaurant />} />
               <Route path="/qr" element={<GenerateQr />} />
               <Route path="/r4nk1ngh1dd3n" element={<Ranking />} />
               <Route
