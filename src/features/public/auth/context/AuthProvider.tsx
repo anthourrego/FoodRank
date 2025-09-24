@@ -20,11 +20,11 @@ interface AuthProviderProps {
 export default function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const onLoginUser = useAuthStore((state) => state.onLoginUser);
   const onLogoutUser = useAuthStore((state) => state.onLogout);
 
-  useEffect(() => {
+ /*  useEffect(() => {
     const initAuth = async (): Promise<void> => {
       const storedToken = localStorage.getItem("foodranktoken");
       if (storedToken) {
@@ -53,7 +53,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     };
 
     initAuth();
-  }, []);
+  }, []); */
 
   const validateToken = async () => {
     try {
@@ -78,7 +78,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
       setToken(token);
 
       localStorage.setItem("foodranktoken", token);
-      location.assign("/rate-product");
+      location.assign("/home");
 
       return { success: true };
     } catch (error) {
