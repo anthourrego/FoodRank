@@ -10,7 +10,7 @@ import {
   type User,
   type LoginResponse,
 } from "./AuthContext";
-import { Loader2 } from "lucide-react";
+import { Loading } from "@/components/ui/loading";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -107,9 +107,10 @@ export default function AuthProvider({ children }: AuthProviderProps) {
   return (
     <AuthContext.Provider value={value}>
       {loading ? (
-        <div className="min-h-screen flex items-center justify-center">
-          <Loader2 className="animate-spin w-12 h-12 text-red-800" />
-        </div>
+        <Loading
+          classNameLoader="w-12 h-12"
+          className="min-h-screen flex items-center justify-center"
+        />
       ) : (
         children
       )}
