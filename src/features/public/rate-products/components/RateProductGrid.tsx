@@ -1,7 +1,7 @@
 
 import { RateProductCard } from "./RateProductCard"
 
-import { useProductsEvents } from "../../hooks/useProductsEvent";
+import { useProductsEvents } from "../../../../hooks/useProductsEvent";
 import type { EventsProduct } from "../../models/EventsProducts";
 
 export function RateProductGrid() {

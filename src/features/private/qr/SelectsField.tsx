@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { ChevronDown, MapPin, User, Calendar, Send } from 'lucide-react';
-import { useProductsEvents } from '../hooks/useProductsEvent';
+
 import type { IDataQr } from './GenerateQr';
+import { useProductsEvents } from '@/hooks/useProductsEvent';
 
 interface Option {
     value: string;

@@ -1,7 +1,11 @@
 import { Link } from "react-router";
 import logo from '../assets/images/logo.webp';
+import { LogOut } from "lucide-react";
+import { useAuth } from "@/features/public/auth/context/AuthContext";
 
 export function Header() {
+const { logout } = useAuth();
+
   return (
     <header className="bg-red-800/80 backdrop-blur-sm text-white sticky top-0 z-50">
       <div className="container mx-auto px-4">
@@ -20,6 +24,9 @@ export function Header() {
             <Link to="/">
               <img src={logo} alt="Food Rank" className="h-12 w-auto" />
             </Link>
+            <div className="ml-5 cursor-pointer" onClick={logout}>
+              <LogOut />
+            </div>
           </div>
         </div>
       </div>

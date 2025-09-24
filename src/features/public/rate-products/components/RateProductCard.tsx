@@ -27,7 +27,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { ReviewService } from "../../service/reviewService";
+import { ReviewService } from "../../../../services/reviewService";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router";
 

@@ -1,6 +1,6 @@
 
 
-import { findProductEvents } from "../service/productEventsService"
+import { findProductEvents } from "../../../services/productEventsService"
 import type { IDataQr } from "../qr/GenerateQr"
 
 export const useFilterProductsEvents = () => {
