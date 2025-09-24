@@ -99,19 +99,12 @@ export const RestaurantRow: React.FC<RestaurantRowProps> = ({
               : "bg-red-100 text-red-800"
           }`}
         >
-          {restaurant.status_text}
+          {restaurant.is_active ? "Activo" : "Inactivo"}
         </span>
       </td>
 
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
         <div className="flex space-x-2">
-          <button
-            onClick={() => onEdit(restaurant)}
-            className="text-blue-600 hover:text-blue-900 transition-colors"
-            title="Editar"
-          >
-            <Edit size={16} />
-          </button>
           <button
             onClick={() => onToggleStatus(restaurant)}
             className={`transition-colors ${
@@ -122,6 +115,13 @@ export const RestaurantRow: React.FC<RestaurantRowProps> = ({
             title={restaurant.is_active ? "Desactivar" : "Activar"}
           >
             <Power size={16} />
+          </button>
+          <button
+            onClick={() => onEdit(restaurant)}
+            className="text-blue-600 hover:text-blue-900 transition-colors"
+            title="Editar"
+          >
+            <Edit size={16} />
           </button>
           <button
             onClick={() => onDelete(restaurant)}

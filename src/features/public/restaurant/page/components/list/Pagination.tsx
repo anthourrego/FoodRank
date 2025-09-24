@@ -32,7 +32,6 @@ export const Pagination: React.FC<PaginationProps> = ({ pagination, onPageChange
 
   return (
     <div className="flex items-center justify-between px-4 py-3 bg-white border-t border-gray-200 sm:px-6">
-      {/* Mobile pagination */}
       <div className="flex justify-between flex-1 sm:hidden">
         <button
           onClick={() => onPageChange(Math.max(1, current_page - 1))}
@@ -50,7 +49,6 @@ export const Pagination: React.FC<PaginationProps> = ({ pagination, onPageChange
         </button>
       </div>
 
-      {/* Desktop pagination */}
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
           <p className="text-sm text-gray-700">
@@ -74,7 +72,7 @@ export const Pagination: React.FC<PaginationProps> = ({ pagination, onPageChange
               onClick={() => onPageChange(page)}
               className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                 page === current_page
-                  ? "bg-blue-600 text-white"
+                  ? "bg-red-800/80 text-white"
                   : "text-gray-700 bg-white border border-gray-300 hover:bg-gray-50"
               }`}
             >

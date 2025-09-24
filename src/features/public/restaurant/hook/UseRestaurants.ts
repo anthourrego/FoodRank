@@ -65,7 +65,6 @@ const useRestaurants = (): UseRestaurantsReturn => {
     }
   }, []);
 
-  // Fetch cities
   const fetchCities = useCallback(async () => {
     try {
       const data: City[] = await restaurantService.getCities();
@@ -75,7 +74,6 @@ const useRestaurants = (): UseRestaurantsReturn => {
     }
   }, []);
 
-  // Create restaurant
   const createRestaurant = async (restaurantData: CreateRestaurantData): Promise<ApiResponse<Restaurant>> => {
     setLoading(true);
     setError(null);
@@ -94,7 +92,6 @@ const useRestaurants = (): UseRestaurantsReturn => {
     }
   };
 
-  // Update restaurant
   const updateRestaurant = async (
     id: number, 
     restaurantData: Partial<CreateRestaurantData>
@@ -116,7 +113,6 @@ const useRestaurants = (): UseRestaurantsReturn => {
     }
   };
 
-  // Delete restaurant
   const deleteRestaurant = async (id: number): Promise<ApiResponse<null>> => {
     setLoading(true);
     setError(null);
@@ -135,7 +131,6 @@ const useRestaurants = (): UseRestaurantsReturn => {
     }
   };
 
-  // Toggle restaurant status
   const toggleRestaurantStatus = async (id: number): Promise<ApiResponse<Restaurant>> => {
     setLoading(true);
     setError(null);
@@ -154,7 +149,6 @@ const useRestaurants = (): UseRestaurantsReturn => {
     }
   };
 
-  // Get single restaurant
   const getRestaurant = async (id: number): Promise<ApiResponse<Restaurant>> => {
     setLoading(true);
     setError(null);

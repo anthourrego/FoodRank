@@ -39,7 +39,7 @@ const RestaurantPage: React.FC = () => {
     sort_by: "created_at",
     sort_order: "desc",
     page: 1,
-    per_page: 15,
+    per_page: 3,
   });
 
   useEffect(() => {
@@ -52,6 +52,10 @@ const RestaurantPage: React.FC = () => {
     },
     []
   );
+
+  const handleClearFIlters = useCallback(() => {
+    setFilters({});
+  }, []);
 
   const handlePageChange = useCallback((page: number) => {
     setFilters((prev) => ({ ...prev, page }));
@@ -69,14 +73,6 @@ const RestaurantPage: React.FC = () => {
 
   const handleDeleteRestaurant = useCallback(
     async (restaurant: Restaurant) => {
-      if (
-        !window.confirm(
-          `¿Estás seguro de que quieres eliminar el restaurante "${restaurant.name}"?`
-        )
-      ) {
-        return;
-      }
-
       const result = await deleteRestaurant(restaurant.id);
       showNotification(
         result.success ? "success" : "error",
@@ -146,11 +142,12 @@ const RestaurantPage: React.FC = () => {
           filters={filters}
           cities={cities}
           onFiltersChange={handleFiltersChange}
+          handleClearFIlters={handleClearFIlters}
         />
 
         <button
           onClick={handleCreateRestaurant}
-          className="flex items-center px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+          className="flex items-center px-4 py-2 text-white bg-red-800/80 rounded-lg transition-colors"
         >
           <Plus size={20} className="mr-2" />
           Nuevo Restaurante

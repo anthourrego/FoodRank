@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AlertCircle } from "lucide-react";
 import type { Restaurant } from "../../../types/restaurant.types";
 import { RestaurantRow } from "./RestaurantRow";
 import { Pagination } from "./Pagination";
-import { LoadingSpinner } from "./LoadingSpinner";
+import { Modal } from "@/components/ui/modal";
+import { Button } from "@/components/ui/button";
+import { Loading } from "@/components/ui/loading";
 
 interface RestaurantTableProps {
   restaurants: Restaurant[];
@@ -32,7 +34,16 @@ export const RestaurantTable: React.FC<RestaurantTableProps> = ({
   onToggleStatus,
   onPageChange,
 }) => {
-  if (loading) return <LoadingSpinner />;
+  const [currentRestaurant, setCurrentRestaurant] = useState<Restaurant>();
+  const [openModalDelete, setOpenModalDelete] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (currentRestaurant) {
+      setOpenModalDelete(true);
+    }
+  }, [currentRestaurant]);
+
+  if (loading) return <Loading className="flex justify-center" classNameLoader="w-8 h-8" />;
 
   if (error) {
     return (
@@ -74,7 +85,7 @@ export const RestaurantTable: React.FC<RestaurantTableProps> = ({
                 key={restaurant.id}
                 restaurant={restaurant}
                 onEdit={onEdit}
-                onDelete={onDelete}
+                onDelete={(restaurante) => setCurrentRestaurant(restaurante)}
                 onToggleStatus={onToggleStatus}
               />
             ))}
@@ -93,6 +104,33 @@ export const RestaurantTable: React.FC<RestaurantTableProps> = ({
       {restaurants.length > 0 && (
         <Pagination pagination={pagination} onPageChange={onPageChange} />
       )}
+
+      <Modal
+        isOpen={openModalDelete}
+        onClose={() => setOpenModalDelete(!openModalDelete)}
+        title="Acción"
+      >
+        <div>
+          <p>{`¿Estás seguro de que quieres eliminar el restaurante "${currentRestaurant?.name}"?`}</p>
+
+          <div className="flex justify-end mt-3 gap-3">
+            <Button onClick={() => setOpenModalDelete(!openModalDelete)}>
+              Cancelar
+            </Button>
+            <Button
+              onClick={() => {
+                if (currentRestaurant) {
+                  onDelete(currentRestaurant);
+                  setOpenModalDelete(false)
+                }
+              }}
+              className="bg-red-800/80"
+            >
+              Aceptar
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
