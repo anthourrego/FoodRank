@@ -23,7 +23,7 @@ import { Separator } from "@/components/ui/separator";
 
 
 
-export function RankingProductEvent() {
+function RankingProductEvent() {
   const { productEventId } = useParams();
   const { rankingEventProduct, getRanking } = useRankingEventProduct();
 
@@ -176,3 +176,5 @@ export function RankingProductEvent() {
     </div>
   );
 }
+
+export default RankingProductEvent
