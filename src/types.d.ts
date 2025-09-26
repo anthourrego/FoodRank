@@ -10,3 +10,8 @@ interface Product {
 }
 
 
+interface OptionItem{
+  value:string|number,
+  label:string
+  data?:unknown
+}
