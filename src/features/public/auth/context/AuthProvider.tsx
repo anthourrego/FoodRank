@@ -72,7 +72,6 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     try {
       const response = await loginService(email, password);
       const { user, token } = response.data;
-      console.log(user, token);
       onLoginUser({ userName: user.name, userId: user.id, token });
       setUser(user);
       setToken(token);

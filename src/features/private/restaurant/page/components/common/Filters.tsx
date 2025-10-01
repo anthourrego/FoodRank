@@ -9,13 +9,15 @@ interface SearchAndFiltersProps {
   cities: City[];
   onFiltersChange: (filters: Partial<RestaurantFilters>) => void;
   handleClearFIlters: () => void;
+  canOrderBy: boolean;
 }
 
 export const SearchAndFilters: React.FC<SearchAndFiltersProps> = ({
   filters,
   cities,
   onFiltersChange,
-  handleClearFIlters
+  handleClearFIlters,
+  canOrderBy = true,
 }) => {
   const [showFilters, setShowFilters] = useState(false);
 
@@ -112,26 +114,32 @@ export const SearchAndFilters: React.FC<SearchAndFiltersProps> = ({
             </select>
           </div>
 
-          <div className="mt-3">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Ordenar por
-            </label>
-            <select
-              value={filters.sort_by}
-              onChange={(e) => handleFilterChange("sort_by", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="created_at">Fecha de creación</option>
-              <option value="name">Nombre</option>
-              <option value="updated_at">Última actualización</option>
-            </select>
-          </div>
+          {canOrderBy && (
+            <div className="mt-3">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Ordenar por
+              </label>
+              <select
+                value={filters.sort_by}
+                onChange={(e) => handleFilterChange("sort_by", e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="created_at">Fecha de creación</option>
+                <option value="name">Nombre</option>
+                <option value="updated_at">Última actualización</option>
+              </select>
+            </div>
+          )}
 
           <div className="flex justify-end mt-3 gap-3">
-            <Button onClick={() => {
-              handleClearFIlters()
-              setShowFilters(!showFilters)
-            }}>Limpiar</Button>
+            <Button
+              onClick={() => {
+                handleClearFIlters();
+                setShowFilters(!showFilters);
+              }}
+            >
+              Limpiar
+            </Button>
             <Button
               onClick={() => setShowFilters(!showFilters)}
               className="bg-red-800/80"
