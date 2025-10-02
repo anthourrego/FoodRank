@@ -4,8 +4,8 @@ export interface RestaurantBranch {
   id: number;
   address: string;
   phone: string;
-  latitude?: string | null;
-  longitude?: string | null;
+  latitude?: number;
+  longitude?: number;
   is_active: boolean;
   city_id: number;
   restaurant_id: number;

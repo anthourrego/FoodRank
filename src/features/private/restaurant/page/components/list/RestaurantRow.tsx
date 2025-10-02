@@ -135,7 +135,7 @@ export const RestaurantRow: React.FC<RestaurantRowProps> = ({
           <button
             onClick={() => navigate(`/home/restaurants/${restaurant.id}/branchs`)}
             className="text-blue-600 hover:text-blue-900 transition-colors cursor-pointer"
-            title="Eliminar"
+            title="Sucursales"
           >
             <Store size={16} />
           </button>

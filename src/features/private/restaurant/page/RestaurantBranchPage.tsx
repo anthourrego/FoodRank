@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Plus } from "lucide-react";
+import { AlertCircle, Plus } from "lucide-react";
 import type {
   RequestRestaurantBranch,
   RestaurantBranch,
@@ -13,8 +13,13 @@ import { RestaurantBranchTable } from "./components/list-branchs/BranchsTable";
 import { SearchAndFilters } from "./components/common/Filters";
 import type { RestaurantFilters } from "../types/restaurant.types";
 import useRestaurants from "../hook/UseRestaurants";
+import { useParams } from "react-router";
 
 const RestaurantBranchesPage: React.FC = () => {
+  const { restaurantId } = useParams();
+
+  console.log(restaurantId);
+
   const { restaurants, cities, fetchRestaurants } = useRestaurants();
 
   const [branches, setBranches] = useState<RestaurantBranch[]>([]);
@@ -25,12 +30,17 @@ const RestaurantBranchesPage: React.FC = () => {
     null
   );
 
+  const currentRestaurant = restaurants.find(
+    (restaurant) => restaurant.id == +(restaurantId || 0)
+  );
+
   const [filters, setFilters] = useState<RequestRestaurantBranch>({
     search: "",
     is_active: undefined,
     city_id: undefined,
     page: 1,
     per_page: 3,
+    restaurant_id: restaurantId ? +restaurantId : 0
   });
 
   const [pagination, setPagination] = useState({
@@ -45,7 +55,6 @@ const RestaurantBranchesPage: React.FC = () => {
     fetchRestaurants({ page: 1, per_page: 500 });
   }, [fetchRestaurants]);
 
-  // Cargar datos iniciales
   useEffect(() => {
     loadBranches();
   }, [filters]);
@@ -143,11 +152,26 @@ const RestaurantBranchesPage: React.FC = () => {
     setFilters({});
   }, []);
 
+  if (!restaurantId) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div
+          className={`mb-6 p-4 rounded-md flex items-center animate-fade-in bg-red-50 text-red-800 border border-red-200`}
+        >
+          <AlertCircle size={20} className="mr-2 flex-shrink-0" />
+          <span className="flex-1">
+            No se encontro restaurante seleccionado
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Sucursales de Restaurantes
+          Sucursales de {currentRestaurant?.name}
         </h1>
       </div>
 
@@ -187,6 +211,7 @@ const RestaurantBranchesPage: React.FC = () => {
           cities={cities}
           onSubmit={handleSubmit}
           onCancel={handleCancelForm}
+          restaurantId={+restaurantId}
         />
       )}
     </div>

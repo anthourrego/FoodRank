@@ -4,7 +4,7 @@ import { Modal } from "@/components/ui/modal";
 import { FormField } from "./form/FormField";
 import { SelectField } from "./form/SelectField";
 import type { RestaurantBranch } from "../../types/restaurant-branch.types";
-import useGeolocation from "@/hooks/useGeoloation";
+import MapPicker from "./form/MapPcikers";
 
 interface RestaurantBranchFormProps {
   branch?: RestaurantBranch | null;
@@ -13,14 +13,14 @@ interface RestaurantBranchFormProps {
   onSubmit: (data: RestaurantBranchFormData) => Promise<void>;
   onCancel: () => void;
   loading?: boolean;
+  restaurantId: number;
 }
 
 export interface RestaurantBranchFormData {
   address: string;
   phone: string;
-  latitude: string;
-  longitude: string;
-  is_active: boolean;
+  latitude: number;
+  longitude: number;
   city_id: number;
   restaurant_id: number;
 }
@@ -28,9 +28,8 @@ export interface RestaurantBranchFormData {
 const initialFormData: RestaurantBranchFormData = {
   address: "",
   phone: "",
-  latitude: "",
-  longitude: "",
-  is_active: true,
+  latitude: 0,
+  longitude: 0,
   city_id: 0,
   restaurant_id: 0,
 };
@@ -42,10 +41,12 @@ export const RestaurantBranchForm: React.FC<RestaurantBranchFormProps> = ({
   onSubmit,
   onCancel,
   loading = false,
+  restaurantId,
 }) => {
-
-  const [formData, setFormData] =
-    useState<RestaurantBranchFormData>(initialFormData);
+  const [formData, setFormData] = useState<RestaurantBranchFormData>({
+    ...initialFormData,
+    restaurant_id: restaurantId,
+  });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -55,42 +56,27 @@ export const RestaurantBranchForm: React.FC<RestaurantBranchFormProps> = ({
       setFormData({
         address: branch.address || "",
         phone: branch.phone || "",
-        latitude: branch.latitude || "",
-        longitude: branch.longitude || "",
-        is_active: branch.is_active ?? true,
+        latitude: branch.latitude || 0,
+        longitude: branch.longitude || 0,
         city_id: branch.city_id || 0,
         restaurant_id: branch.restaurant_id || 0,
       });
     }
   }, [branch]);
 
-  const validateField = (name: string, value: any): string => {
+  const validateField = (name: string, value: number | string): string => {
     switch (name) {
       case "address":
-        if (!value || value.trim() === "") return "La dirección es requerida";
-        if (value.length < 5)
+        if (typeof value === "string" && (!value || value.trim() === ""))
+          return "La dirección es requerida";
+        if (typeof value === "string" && value.length < 5)
           return "La dirección debe tener al menos 5 caracteres";
         break;
       case "phone":
-        if (!value || value.trim() === "") return "El teléfono es requerido";
-        if (!/^[0-9+\-\s()]+$/.test(value))
+        if (typeof value === "string" && (!value || value.trim() === ""))
+          return "El teléfono es requerido";
+        if (typeof value === "string" && !/^[0-9+\-\s()]+$/.test(value))
           return "Formato de teléfono inválido";
-        break;
-      case "latitude":
-        if (
-          value &&
-          !/^-?([0-9]{1,2}|1[0-7][0-9]|180)(\.[0-9]{1,10})?$/.test(value)
-        ) {
-          return "Latitud inválida";
-        }
-        break;
-      case "longitude":
-        if (
-          value &&
-          !/^-?([0-9]{1,2}|1[0-7][0-9]|180)(\.[0-9]{1,10})?$/.test(value)
-        ) {
-          return "Longitud inválida";
-        }
         break;
       case "city_id":
         if (!value || value === 0) return "La ciudad es requerida";
@@ -108,20 +94,14 @@ export const RestaurantBranchForm: React.FC<RestaurantBranchFormProps> = ({
     >
   ) => {
     const { name, value, type } = e.target;
-    const checked = (e.target as HTMLInputElement).checked;
 
     setFormData((prev) => ({
       ...prev,
-      [name]:
-        type === "checkbox"
-          ? checked
-          : type === "number" || name.includes("_id")
-          ? Number(value)
-          : value,
+      [name]: type === "number" || name.includes("_id") ? Number(value) : value,
     }));
 
     if (touched[name]) {
-      const error = validateField(name, type === "checkbox" ? checked : value);
+      const error = validateField(name, value);
       setErrors((prev) => ({
         ...prev,
         [name]: error,
@@ -164,8 +144,6 @@ export const RestaurantBranchForm: React.FC<RestaurantBranchFormProps> = ({
       phone: true,
       city_id: true,
       restaurant_id: true,
-      latitude: true,
-      longitude: true,
     });
 
     return Object.keys(newErrors).length === 0;
@@ -210,23 +188,15 @@ export const RestaurantBranchForm: React.FC<RestaurantBranchFormProps> = ({
       required: true,
       placeholder: "+57 300 123 4567",
     },
-    {
-      id: "latitude",
-      name: "latitude",
-      label: "Latitud",
-      type: "text",
-      value: formData.latitude,
-      placeholder: "4.7110",
-    },
-    {
-      id: "longitude",
-      name: "longitude",
-      label: "Longitud",
-      type: "text",
-      value: formData.longitude,
-      placeholder: "-74.0721",
-    },
   ];
+
+  const handleLocationSelect = (lat: number, lng: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      latitude: lat,
+      longitude: lng,
+    }));
+  };
 
   return (
     <Modal
@@ -247,6 +217,7 @@ export const RestaurantBranchForm: React.FC<RestaurantBranchFormProps> = ({
             options={restaurants}
             placeholder="Seleccionar restaurante"
             required
+            disabled={true}
           />
 
           <FormField
@@ -278,38 +249,7 @@ export const RestaurantBranchForm: React.FC<RestaurantBranchFormProps> = ({
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField
-              {...formFields[2]}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={getFieldError("latitude")}
-            />
-
-            <FormField
-              {...formFields[3]}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={getFieldError("longitude")}
-            />
-          </div>
-
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="is_active"
-              name="is_active"
-              checked={formData.is_active}
-              onChange={handleChange}
-              className="h-4 w-4 text-red-800 focus:ring-red-800 border-gray-300 rounded"
-            />
-            <label
-              htmlFor="is_active"
-              className="ml-2 block text-sm text-gray-900"
-            >
-              Sucursal activa
-            </label>
-          </div>
+          <MapPicker onLocationSelect={handleLocationSelect} height="300px" />
         </form>
 
         <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 mt-4">
