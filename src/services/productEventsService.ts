@@ -1,5 +1,6 @@
+import type { IDataQr } from "@/features/private/qr/GenerateQr"
 import axios from "axios"
-import type { IDataQr } from "../qr/GenerateQr"
+
 
 const urlBack = import.meta.env.VITE_URL_BACK
 const getProductsEvents = async () => {

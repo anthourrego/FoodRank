@@ -1,5 +1,4 @@
-
-import apiClient from "@/services/axios";
+import apiClient from "@/api/axiosInstance";
 import {
   type Restaurant,
   type City,
