@@ -9,7 +9,7 @@ import type {
 import RestaurantForm from "./components/RestaurantForm";
 import { useNotification } from "../hook/UseNotification";
 import { Notification } from "./components/list/Notification";
-import { SearchAndFilters } from "./components/list/Filters";
+import { SearchAndFilters } from "./components/common/Filters";
 import { RestaurantTable } from "./components/list/RestaurantTable";
 
 const RestaurantPage: React.FC = () => {
@@ -130,9 +130,6 @@ const RestaurantPage: React.FC = () => {
         <h1 className="text-3xl font-bold text-gray-900">
           Gestión de Restaurantes
         </h1>
-        <p className="mt-2 text-gray-600">
-          Administra los restaurantes de la plataforma
-        </p>
       </header>
 
       <Notification notification={notification} onClose={hideNotification} />
@@ -143,6 +140,7 @@ const RestaurantPage: React.FC = () => {
           cities={cities}
           onFiltersChange={handleFiltersChange}
           handleClearFIlters={handleClearFIlters}
+          canOrderBy={true}
         />
 
         <button

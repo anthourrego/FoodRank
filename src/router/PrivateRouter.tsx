@@ -8,6 +8,7 @@ const Ranking = lazy(() => import("@/features/private/ranking/Ranking"));
 const GenerateQr = lazy(() => import("@/features/private/qr/GenerateQr"));
 const RankingProductEvent = lazy(() => import("@/features/private/ranking-product-event/RankingProductEvent"));
 const Restaurant = lazy(() => import("@/features/private/restaurant/page/RestaurantPage"));
+const RestaurantBranch = lazy(() => import("@/features/private/restaurant/page/RestaurantBranchPage"));
 const Configuration = lazy(() => import("@/features/private/configuration/page/Configuration"));
 
 const privateRouter = () => {
@@ -25,6 +26,7 @@ const privateRouter = () => {
           element={<RankingProductEvent />}
         />
         <Route path="/restaurants" element={<Restaurant />} />
+        <Route path="/restaurants/:restaurantId/branchs" element={<RestaurantBranch />} />
         <Route path="/configuration" element={<Configuration />} />
       </Route>
     </RoutesNotFound>

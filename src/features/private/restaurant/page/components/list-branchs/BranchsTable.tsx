@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { AlertCircle } from "lucide-react";
-import type { Restaurant } from "../../../types/restaurant.types";
-import { RestaurantRow } from "./RestaurantRow";
-import { Pagination } from "../common/Pagination";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Loading } from "@/components/ui/loading";
+import type { RestaurantBranch } from "../../../types/restaurant-branch.types";
+import { RestaurantBranchRow } from "./RestauranrBranchRow";
+import { Pagination } from "../common/Pagination";
 
-interface RestaurantTableProps {
-  restaurants: Restaurant[];
+interface RestaurantBranchTableProps {
+  branches: RestaurantBranch[];
   loading: boolean;
   error: string | null;
   pagination: {
@@ -18,14 +18,14 @@ interface RestaurantTableProps {
     to: number;
     total: number;
   };
-  onEdit: (restaurant: Restaurant) => void;
-  onDelete: (restaurant: Restaurant) => void;
-  onToggleStatus: (restaurant: Restaurant) => void;
+  onEdit: (branch: RestaurantBranch) => void;
+  onDelete: (branch: RestaurantBranch) => void;
+  onToggleStatus: (branch: RestaurantBranch) => void;
   onPageChange: (page: number) => void;
 }
 
-export const RestaurantTable: React.FC<RestaurantTableProps> = ({
-  restaurants,
+export const RestaurantBranchTable: React.FC<RestaurantBranchTableProps> = ({
+  branches,
   loading,
   error,
   pagination,
@@ -34,14 +34,14 @@ export const RestaurantTable: React.FC<RestaurantTableProps> = ({
   onToggleStatus,
   onPageChange,
 }) => {
-  const [currentRestaurant, setCurrentRestaurant] = useState<Restaurant>();
+  const [currentBranch, setCurrentBranch] = useState<RestaurantBranch>();
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false);
 
   useEffect(() => {
-    if (currentRestaurant) {
+    if (currentBranch) {
       setOpenModalDelete(true);
     }
-  }, [currentRestaurant]);
+  }, [currentBranch]);
 
   if (loading) return <Loading className="flex justify-center" classNameLoader="w-8 h-8" />;
 
@@ -66,7 +66,10 @@ export const RestaurantTable: React.FC<RestaurantTableProps> = ({
                 Restaurante
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Contacto
+                Dirección
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Teléfono
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Ciudad
@@ -80,12 +83,12 @@ export const RestaurantTable: React.FC<RestaurantTableProps> = ({
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {restaurants.map((restaurant) => (
-              <RestaurantRow
-                key={restaurant.id}
-                restaurant={restaurant}
+            {branches.map((branch) => (
+              <RestaurantBranchRow
+                key={branch.id}
+                branch={branch}
                 onEdit={onEdit}
-                onDelete={(restaurante) => setCurrentRestaurant(restaurante)}
+                onDelete={(branchItem) => setCurrentBranch(branchItem)}
                 onToggleStatus={onToggleStatus}
               />
             ))}
@@ -93,40 +96,43 @@ export const RestaurantTable: React.FC<RestaurantTableProps> = ({
         </table>
       </div>
 
-      {restaurants.length === 0 && (
+      {branches.length === 0 && (
         <div className="text-center py-12">
           <p className="text-gray-500 text-lg">
-            No se encontraron restaurantes
+            No se encontraron sucursales
           </p>
         </div>
       )}
 
-      {restaurants.length > 0 && (
+      {branches.length > 0 && (
         <Pagination pagination={pagination} onPageChange={onPageChange} />
       )}
 
       <Modal
         isOpen={openModalDelete}
         onClose={() => setOpenModalDelete(!openModalDelete)}
-        title="Acción"
+        title="Eliminar Sucursal"
       >
         <div>
-          <p>{`¿Estás seguro de que quieres eliminar el restaurante "${currentRestaurant?.name}"?`}</p>
+          <p>{`¿Estás seguro de que quieres eliminar la sucursal ubicada en "${currentBranch?.address}"?`}</p>
+          <p className="text-sm text-gray-500 mt-2">
+            Esta acción no se puede deshacer.
+          </p>
 
-          <div className="flex justify-end mt-3 gap-3">
+          <div className="flex justify-end mt-4 gap-3">
             <Button onClick={() => setOpenModalDelete(!openModalDelete)}>
               Cancelar
             </Button>
             <Button
               onClick={() => {
-                if (currentRestaurant) {
-                  onDelete(currentRestaurant);
-                  setOpenModalDelete(false)
+                if (currentBranch) {
+                  onDelete(currentBranch);
+                  setOpenModalDelete(false);
                 }
               }}
               className="bg-red-800/80"
             >
-              Aceptar
+              Eliminar
             </Button>
           </div>
         </div>

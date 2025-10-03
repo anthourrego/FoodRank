@@ -1,6 +1,7 @@
 import React from 'react';
-import { MapPin, Mail, Phone, Globe, Instagram, Facebook, Edit, Power, Trash2 } from 'lucide-react';
+import { MapPin, Mail, Phone, Globe, Instagram, Facebook, Edit, Power, Trash2, Store } from 'lucide-react';
 import type { Restaurant } from '../../../types/restaurant.types';
+import { useNavigate } from 'react-router';
 
 interface RestaurantRowProps {
   restaurant: Restaurant;
@@ -15,6 +16,7 @@ export const RestaurantRow: React.FC<RestaurantRowProps> = ({
   onDelete,
   onToggleStatus,
 }) => {
+   const navigate = useNavigate();
   return (
     <tr className="hover:bg-gray-50 transition-colors">
       <td className="px-6 py-4">
@@ -107,7 +109,7 @@ export const RestaurantRow: React.FC<RestaurantRowProps> = ({
         <div className="flex space-x-2">
           <button
             onClick={() => onToggleStatus(restaurant)}
-            className={`transition-colors ${
+            className={`transition-colors cursor-pointer ${
               restaurant.is_active
                 ? "text-red-600 hover:text-red-900"
                 : "text-green-600 hover:text-green-900"
@@ -118,17 +120,24 @@ export const RestaurantRow: React.FC<RestaurantRowProps> = ({
           </button>
           <button
             onClick={() => onEdit(restaurant)}
-            className="text-blue-600 hover:text-blue-900 transition-colors"
+            className="text-blue-600 hover:text-blue-900 transition-colors cursor-pointer"
             title="Editar"
           >
             <Edit size={16} />
           </button>
           <button
             onClick={() => onDelete(restaurant)}
-            className="text-red-600 hover:text-red-900 transition-colors"
+            className="text-red-600 hover:text-red-900 transition-colors cursor-pointer"
             title="Eliminar"
           >
             <Trash2 size={16} />
+          </button>
+          <button
+            onClick={() => navigate(`/home/restaurants/${restaurant.id}/branchs`)}
+            className="text-blue-600 hover:text-blue-900 transition-colors cursor-pointer"
+            title="Sucursales"
+          >
+            <Store size={16} />
           </button>
         </div>
       </td>
