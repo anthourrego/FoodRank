@@ -6,11 +6,11 @@ import { lazy } from "react";
 
 const Ranking = lazy(() => import("@/features/private/ranking/Ranking"));
 const GenerateQr = lazy(() => import("@/features/private/qr/GenerateQr"));
-const RankingProductEvent = lazy(
-  () => import("@/features/private/ranking-product-event/RankingProductEvent")
-);
+const RankingProductEvent = lazy(() => import("@/features/private/ranking-product-event/RankingProductEvent"));
 const Restaurant = lazy(() => import("@/features/private/restaurant/page/RestaurantPage"));
 const RestaurantBranch = lazy(() => import("@/features/private/restaurant/page/RestaurantBranchPage"));
+const Configuration = lazy(() => import("@/features/private/configuration/page/Configuration"));
+
 const privateRouter = () => {
   return (
     <RoutesNotFound>
@@ -20,13 +20,14 @@ const privateRouter = () => {
           element={<Navigate to={`/home/restaurants`} />}
         />
         <Route path="/qr" element={<GenerateQr />} />
-        <Route path="/r4nk1ngh1dd3n" element={<Ranking />} />
+        <Route path="/ranking" element={<Ranking />} />
         <Route
           path="/raking/product-event/:productEventId"
           element={<RankingProductEvent />}
         />
         <Route path="/restaurants" element={<Restaurant />} />
         <Route path="/restaurants/:restaurantId/branchs" element={<RestaurantBranch />} />
+        <Route path="/configuration" element={<Configuration />} />
       </Route>
     </RoutesNotFound>
   );

@@ -17,6 +17,18 @@ const { logout } = useAuth();
             <Link to="/rate-product" className="hover:text-red-200 transition-colors">
               Participantes
             </Link>
+            <Link to="/home/restaurants" className="hover:text-red-200 transition-colors">
+              Restaurantes
+            </Link>
+            <Link to="/home/ranking" className="hover:text-red-200 transition-colors">
+              Ranking
+            </Link>
+            <Link to="/home/qr" className="hover:text-red-200 transition-colors">
+              Generar QR
+            </Link>
+            <Link to="/home/configuration" className="hover:text-red-200 transition-colors">
+              Configuración
+            </Link>
           
           </nav>
 

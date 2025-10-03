@@ -1,8 +1,7 @@
-import apiClient from "./axios";
+import apiClient from "@/api/axiosInstance";
 
 
 const urlBack = import.meta.env.VITE_URL_BACK;
-
 const login = async (email: string, password: string) => {
   try {
     const response = await apiClient.post(`${urlBack}auth/login`, {
