@@ -61,7 +61,7 @@ export const RestaurantBranchRow: React.FC<RestaurantBranchRowProps> = ({
       <td className="px-6 py-4 whitespace-nowrap">
         <button
           onClick={() => onToggleStatus(branch)}
-          className={`inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium transition-colors ${
+          className={`inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer ${
             branch.is_active
               ? "bg-green-100 text-green-800 hover:bg-green-200"
               : "bg-red-100 text-red-800 hover:bg-red-200"

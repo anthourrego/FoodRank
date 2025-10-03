@@ -18,8 +18,6 @@ import { useParams } from "react-router";
 const RestaurantBranchesPage: React.FC = () => {
   const { restaurantId } = useParams();
 
-  console.log(restaurantId);
-
   const { restaurants, cities, fetchRestaurants } = useRestaurants();
 
   const [branches, setBranches] = useState<RestaurantBranch[]>([]);
@@ -40,7 +38,7 @@ const RestaurantBranchesPage: React.FC = () => {
     city_id: undefined,
     page: 1,
     per_page: 3,
-    restaurant_id: restaurantId ? +restaurantId : 0
+    restaurant_id: restaurantId ? +restaurantId : 0,
   });
 
   const [pagination, setPagination] = useState({
@@ -74,7 +72,6 @@ const RestaurantBranchesPage: React.FC = () => {
       });
     } catch (err: unknown) {
       console.log(err);
-      // toast.error("Error al cargar las sucursales");
     } finally {
       setLoading(false);
     }
@@ -84,19 +81,14 @@ const RestaurantBranchesPage: React.FC = () => {
     try {
       if (selectedBranch) {
         await restaurantBranchService.update(selectedBranch.id, data);
-        // toast.success("Sucursal actualizada exitosamente");
       } else {
         await restaurantBranchService.create(data);
-        // toast.success("Sucursal creada exitosamente");
       }
       setShowForm(false);
       setSelectedBranch(null);
       loadBranches();
     } catch (err: unknown) {
       console.log(err);
-      // const errorMsg = err.response?.data?.message || "Error al guardar la sucursal";
-      // toast.error(errorMsg);
-      // throw err;
     }
   };
 
@@ -108,26 +100,23 @@ const RestaurantBranchesPage: React.FC = () => {
   const handleDelete = async (branch: RestaurantBranch) => {
     try {
       await restaurantBranchService.delete(branch.id);
-      // toast.success("Sucursal eliminada exitosamente");
       loadBranches();
     } catch (err: unknown) {
       console.log(err);
-      // toast.error(err.response?.data?.message || "Error al eliminar la sucursal");
     }
   };
 
   const handleToggleStatus = async (branch: RestaurantBranch) => {
     try {
       await restaurantBranchService.toggleStatus(branch.id);
-      // toast.success("Estado actualizado exitosamente");
       loadBranches();
     } catch (err: unknown) {
       console.log(err);
-      // toast.error(err.response?.data?.message || "Error al actualizar el estado");
     }
   };
 
   const handlePageChange = (page: number) => {
+    setFilters({ ...filters, page: page });
     setPagination((prev) => ({ ...prev, current_page: page }));
   };
 
@@ -149,7 +138,11 @@ const RestaurantBranchesPage: React.FC = () => {
   );
 
   const handleClearFIlters = useCallback(() => {
-    setFilters({});
+    setFilters({
+      restaurant_id: restaurantId ? +restaurantId : 0,
+      per_page: 3,
+      page: 1
+    });
   }, []);
 
   if (!restaurantId) {
