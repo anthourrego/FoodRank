@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { AlertCircle } from "lucide-react";
+import type { ProductRestaurant } from "../../../types/products-restaurant.types";
+import { ProductsRestaurantRow } from "./ProductsRestaurantRow";
+import { Pagination } from "../common/Pagination";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Loading } from "@/components/ui/loading";
-import type { RestaurantBranch } from "../../../types/restaurant-branch.types";
-import { RestaurantBranchRow } from "./RestauranrBranchRow";
-import { Pagination } from "../common/Pagination";
 
-interface RestaurantBranchTableProps {
-  branches: RestaurantBranch[];
+interface ProductsRestaurantTableProps {
+  products: ProductRestaurant[];
   loading: boolean;
   error: string | null;
   pagination: {
@@ -18,14 +18,14 @@ interface RestaurantBranchTableProps {
     to: number;
     total: number;
   };
-  onEdit: (branch: RestaurantBranch) => void;
-  onDelete: (branch: RestaurantBranch) => void;
-  onToggleStatus: (branch: RestaurantBranch) => void;
+  onEdit: (product: ProductRestaurant) => void;
+  onDelete: (product: ProductRestaurant) => void;
+  onToggleStatus: (product: ProductRestaurant) => void;
   onPageChange: (page: number) => void;
 }
 
-export const RestaurantBranchTable: React.FC<RestaurantBranchTableProps> = ({
-  branches,
+export const ProductsRestaurantTable: React.FC<ProductsRestaurantTableProps> = ({
+  products,
   loading,
   error,
   pagination,
@@ -34,14 +34,14 @@ export const RestaurantBranchTable: React.FC<RestaurantBranchTableProps> = ({
   onToggleStatus,
   onPageChange,
 }) => {
-  const [currentBranch, setCurrentBranch] = useState<RestaurantBranch>();
+  const [currentProduct, setCurrentProduct] = useState<ProductRestaurant>();
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false);
 
   useEffect(() => {
-    if (currentBranch) {
+    if (currentProduct) {
       setOpenModalDelete(true);
     }
-  }, [currentBranch]);
+  }, [currentProduct]);
 
   if (loading) return <Loading className="flex justify-center" classNameLoader="w-8 h-8" />;
 
@@ -63,16 +63,10 @@ export const RestaurantBranchTable: React.FC<RestaurantBranchTableProps> = ({
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Producto
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Restaurante
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Dirección
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Teléfono
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Ciudad
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Estado
@@ -83,12 +77,12 @@ export const RestaurantBranchTable: React.FC<RestaurantBranchTableProps> = ({
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {branches.map((branch) => (
-              <RestaurantBranchRow
-                key={branch.id}
-                branch={branch}
+            {products.map((product) => (
+              <ProductsRestaurantRow
+                key={product.id}
+                product={product}
                 onEdit={onEdit}
-                onDelete={(branchItem) => setCurrentBranch(branchItem)}
+                onDelete={(producto) => setCurrentProduct(producto)}
                 onToggleStatus={onToggleStatus}
               />
             ))}
@@ -96,43 +90,40 @@ export const RestaurantBranchTable: React.FC<RestaurantBranchTableProps> = ({
         </table>
       </div>
 
-      {branches.length === 0 && (
+      {products.length === 0 && (
         <div className="text-center py-12">
           <p className="text-gray-500 text-lg">
-            No se encontraron sucursales
+            No se encontraron productos
           </p>
         </div>
       )}
 
-      {branches.length > 0 && (
+      {products.length > 0 && (
         <Pagination pagination={pagination} onPageChange={onPageChange} />
       )}
 
       <Modal
         isOpen={openModalDelete}
         onClose={() => setOpenModalDelete(!openModalDelete)}
-        title="Eliminar Sucursal"
+        title="Acción"
       >
         <div>
-          <p>{`¿Estás seguro de que quieres eliminar la sucursal ubicada en "${currentBranch?.address}"?`}</p>
-          <p className="text-sm text-gray-500 mt-2">
-            Esta acción no se puede deshacer.
-          </p>
+          <p>{`¿Estás seguro de que quieres eliminar el producto "${currentProduct?.name}"?`}</p>
 
-          <div className="flex justify-end mt-4 gap-3">
+          <div className="flex justify-end mt-3 gap-3">
             <Button variant={'secondary'} onClick={() => setOpenModalDelete(!openModalDelete)}>
               Cancelar
             </Button>
             <Button
               onClick={() => {
-                if (currentBranch) {
-                  onDelete(currentBranch);
-                  setOpenModalDelete(false);
+                if (currentProduct) {
+                  onDelete(currentProduct);
+                  setOpenModalDelete(false)
                 }
               }}
               className="bg-red-800/80"
             >
-              Eliminar
+              Aceptar
             </Button>
           </div>
         </div>

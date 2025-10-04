@@ -1,20 +1,23 @@
 import React, { useState } from "react";
 import { Search, Filter } from "lucide-react";
-import type { RestaurantFilters, City } from "../../../types/restaurant.types";
+import type {
+  ProductRestaurantFilters,
+  Restaurant,
+} from "../../../types/products-restaurant.types";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 
 interface SearchAndFiltersProps {
-  filters: RestaurantFilters;
-  cities: City[];
-  onFiltersChange: (filters: Partial<RestaurantFilters>) => void;
+  filters: ProductRestaurantFilters;
+  restaurants: Restaurant[];
+  onFiltersChange: (filters: Partial<ProductRestaurantFilters>) => void;
   handleClearFIlters: () => void;
   canOrderBy: boolean;
 }
 
 export const SearchAndFilters: React.FC<SearchAndFiltersProps> = ({
   filters,
-  cities,
+  restaurants,
   onFiltersChange,
   handleClearFIlters,
   canOrderBy = true,
@@ -25,7 +28,10 @@ export const SearchAndFilters: React.FC<SearchAndFiltersProps> = ({
     onFiltersChange({ search: e.target.value });
   };
 
-  const handleFilterChange = (key: keyof RestaurantFilters, value: unknown) => {
+  const handleFilterChange = (
+    key: keyof ProductRestaurantFilters,
+    value: unknown
+  ) => {
     onFiltersChange({ [key]: value });
   };
 
@@ -39,7 +45,7 @@ export const SearchAndFilters: React.FC<SearchAndFiltersProps> = ({
           />
           <input
             type="text"
-            placeholder="Buscar restaurantes..."
+            placeholder="Buscar productos..."
             value={filters.search || ""}
             onChange={handleSearchChange}
             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
@@ -93,22 +99,22 @@ export const SearchAndFilters: React.FC<SearchAndFiltersProps> = ({
 
           <div className="mt-3">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Ciudad
+              Restaurante
             </label>
             <select
-              value={filters.city_id || ""}
+              value={filters.restaurant_id || ""}
               onChange={(e) =>
                 handleFilterChange(
-                  "city_id",
+                  "restaurant_id",
                   e.target.value ? parseInt(e.target.value) : undefined
                 )
               }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="">Todas las ciudades</option>
-              {cities.map((city) => (
-                <option key={city.id} value={city.id}>
-                  {city.name}
+              <option value="">Todos los restaurantes</option>
+              {restaurants.map((restaurant) => (
+                <option key={restaurant.id} value={restaurant.id}>
+                  {restaurant.name}
                 </option>
               ))}
             </select>
