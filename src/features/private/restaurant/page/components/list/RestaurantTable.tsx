@@ -114,7 +114,7 @@ export const RestaurantTable: React.FC<RestaurantTableProps> = ({
           <p>{`¿Estás seguro de que quieres eliminar el restaurante "${currentRestaurant?.name}"?`}</p>
 
           <div className="flex justify-end mt-3 gap-3">
-            <Button onClick={() => setOpenModalDelete(!openModalDelete)}>
+            <Button variant={'secondary'} onClick={() => setOpenModalDelete(!openModalDelete)}>
               Cancelar
             </Button>
             <Button
