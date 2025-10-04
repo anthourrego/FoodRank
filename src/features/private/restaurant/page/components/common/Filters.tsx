@@ -133,6 +133,7 @@ export const SearchAndFilters: React.FC<SearchAndFiltersProps> = ({
 
           <div className="flex justify-end mt-3 gap-3">
             <Button
+              variant={"secondary"}
               onClick={() => {
                 handleClearFIlters();
                 setShowFilters(!showFilters);

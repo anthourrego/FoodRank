@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Search, Filter } from "lucide-react";
-import type { ProductRestaurantFilters, Restaurant } from "../../../types/products-restaurant.types";
+import type {
+  ProductRestaurantFilters,
+  Restaurant,
+} from "../../../types/products-restaurant.types";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 
@@ -25,7 +28,10 @@ export const SearchAndFilters: React.FC<SearchAndFiltersProps> = ({
     onFiltersChange({ search: e.target.value });
   };
 
-  const handleFilterChange = (key: keyof ProductRestaurantFilters, value: unknown) => {
+  const handleFilterChange = (
+    key: keyof ProductRestaurantFilters,
+    value: unknown
+  ) => {
     onFiltersChange({ [key]: value });
   };
 
@@ -133,6 +139,7 @@ export const SearchAndFilters: React.FC<SearchAndFiltersProps> = ({
 
           <div className="flex justify-end mt-3 gap-3">
             <Button
+              variant={"secondary"}
               onClick={() => {
                 handleClearFIlters();
                 setShowFilters(!showFilters);
