@@ -14,6 +14,9 @@ const RateProductsVoting = lazy(
 const RateProducts = lazy(
   () => import("@/features/public/rate-products/page/RateProducts")
 );
+const Events = lazy(
+  () => import("@/features/public/events/page/index")
+);
 
 export function AppRouter() {
   return (
@@ -30,7 +33,8 @@ export function AppRouter() {
           <RoutesNotFound>
             <Route path="/" element={<Navigate to="/rate-product" replace />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/rate-product" element={<RateProducts />} />
+            <Route path="/events" element={<Events />} />
+            <Route path="/events-products/:eventId" element={<RateProducts />} />
             <Route
               path="/rate-product/:productId"
               element={<RateProductsVoting />}

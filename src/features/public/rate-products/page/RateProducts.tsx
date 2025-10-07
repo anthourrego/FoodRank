@@ -1,68 +1,32 @@
-import { useState, useEffect } from "react";
 import { RateProductGrid } from "../components/RateProductGrid"
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import { ChevronDown } from "lucide-react";
-import image_2 from "@/assets/images/image_ads2.webp";
-import image_1 from "@/assets/images/image_ads1.webp";
+
+import { useCheckIsMobile } from "@/hooks/useCheckIsMobile";
+import { useParams } from "react-router";
+import { useQueryServiceEvents } from "@/hooks/useQueryServiceEvents";
+import LoadingProduct from "../../rate-products-voting/page/LoadingProduct";
 
 
 function RateProducts(){ 
-  const [showScrollIndicator, setShowScrollIndicator] = useState(false);
+  const {eventId} = useParams()
+  const {showScrollIndicator} = useCheckIsMobile()
+  const {GetProductsByEvent} = useQueryServiceEvents()
+  const {data: productsByEvent, isLoading: isLoadingProductsByEvent, error: errorProductsByEvent, isError: isErrorProductsByEvent, isSuccess: isSuccessProductsByEvent} = GetProductsByEvent(Number(eventId))
 
-  useEffect(() => {
-    // Verificar si el dispositivo es móvil
-    const isMobile = window.innerWidth <= 768;
-    
-    if (!isMobile) {
-      setShowScrollIndicator(false);
-      return;
-    }
 
-    const checkScrollPosition = () => {
-      const scrollTop =
-        window.pageYOffset || document.documentElement.scrollTop;
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
+  if(isLoadingProductsByEvent){
+    return <LoadingProduct />
+  }
 
-      // Mostrar indicador si hay contenido debajo
-      const hasContentBelow = scrollTop + windowHeight < documentHeight - 100;
 
-      setShowScrollIndicator(isMobile && hasContentBelow);
-    };
 
-    // Ejecutar inmediatamente
-    checkScrollPosition();
-
-    // Ejecutar después de un pequeño delay para asegurar que el contenido esté renderizado
-    const timeoutId = setTimeout(() => {
-      checkScrollPosition();
-    }, 100);
-
-    // También ejecutar después de que las imágenes se carguen
-    const imageLoadTimeout = setTimeout(() => {
-      checkScrollPosition();
-    }, 500);
-
-    window.addEventListener("scroll", checkScrollPosition);
-    window.addEventListener("resize", checkScrollPosition);
-    window.addEventListener("load", checkScrollPosition);
-
-    return () => {
-      clearTimeout(timeoutId);
-      clearTimeout(imageLoadTimeout);
-      window.removeEventListener("scroll", checkScrollPosition);
-      window.removeEventListener("resize", checkScrollPosition);
-      window.removeEventListener("load", checkScrollPosition);
-    };
-  }, []);
-  
   return(
     <div className="w-full h-full overflow-auto bg-white bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]">
       
-      <LazyLoadImage src={image_2} alt="Evento" />
-      <RateProductGrid/>
       
-      <LazyLoadImage src={image_1} alt="Evento" />
+      <RateProductGrid productsEvents={productsByEvent?.data || []} />
+      
+      
 
       {/* Scroll Indicator */}
       {showScrollIndicator && (
