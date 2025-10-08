@@ -1,53 +1,58 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Plus } from "lucide-react";
-import useRestaurants from "../hook/UseRestaurants";
+import useProductsRestaurant from "../hook/UseProductsRestaurant";
 import type {
-  CreateRestaurantData,
-  Restaurant,
-  RestaurantFilters,
-} from "../types/restaurant.types";
-import RestaurantForm from "./components/RestaurantForm";
+  CreateProductRestaurantData,
+  ProductRestaurant,
+  ProductRestaurantFilters,
+} from "../types/products-restaurant.types";
+import ProductsRestaurantForm from "./components/ProductsRestaurantForm";
 import { useNotification } from "../hook/UseNotification";
 import { Notification } from "./components/list/Notification";
 import { SearchAndFilters } from "./components/common/Filters";
-import { RestaurantTable } from "./components/list/RestaurantTable";
+import { ProductsRestaurantTable } from "./components/list/ProductsRestaurantTable";
+import useRestaurants from "../../restaurant/hook/UseRestaurants";
 
-const RestaurantPage: React.FC = () => {
+const ProductsRestaurantPage: React.FC = () => {
   const {
-    restaurants,
-    cities,
+    products,
     loading,
     error,
     pagination,
-    fetchRestaurants,
-    createRestaurant,
-    updateRestaurant,
-    deleteRestaurant,
-    toggleRestaurantStatus,
-  } = useRestaurants();
+    fetchProducts,
+    createProduct,
+    updateProduct,
+    deleteProduct,
+    toggleProductStatus,
+  } = useProductsRestaurant();
 
   const { notification, showNotification, hideNotification } =
     useNotification();
+    const { restaurants, fetchRestaurants } = useRestaurants();
 
   const [showForm, setShowForm] = useState(false);
-  const [selectedRestaurant, setSelectedRestaurant] =
-    useState<Restaurant | null>(null);
-  const [filters, setFilters] = useState<RestaurantFilters>({
+  const [selectedProduct, setSelectedProduct] =
+    useState<ProductRestaurant | null>(null);
+  const [filters, setFilters] = useState<ProductRestaurantFilters>({
     search: "",
     is_active: undefined,
-    city_id: undefined,
+    restaurant_id: undefined,
     sort_by: "created_at",
     sort_order: "desc",
     page: 1,
-    per_page: 3,
+    per_page: 10,
   });
 
   useEffect(() => {
-    fetchRestaurants(filters);
-  }, [fetchRestaurants, filters]);
+      fetchRestaurants({ page: 1, per_page: 500 });
+    }, [fetchRestaurants]);
+
+  useEffect(() => {
+    fetchProducts(filters);
+  }, [fetchProducts, filters]);
 
   const handleFiltersChange = useCallback(
-    (newFilters: Partial<RestaurantFilters>) => {
+    (newFilters: Partial<ProductRestaurantFilters>) => {
       setFilters((prev) => ({ ...prev, ...newFilters, page: 1 }));
     },
     []
@@ -61,32 +66,32 @@ const RestaurantPage: React.FC = () => {
     setFilters((prev) => ({ ...prev, page }));
   }, []);
 
-  const handleCreateRestaurant = useCallback(() => {
-    setSelectedRestaurant(null);
+  const handleCreateProduct = useCallback(() => {
+    setSelectedProduct(null);
     setShowForm(true);
   }, []);
 
-  const handleEditRestaurant = useCallback((restaurant: Restaurant) => {
-    setSelectedRestaurant(restaurant);
+  const handleEditProduct = useCallback((product: ProductRestaurant) => {
+    setSelectedProduct(product);
     setShowForm(true);
   }, []);
 
-  const handleDeleteRestaurant = useCallback(
-    async (restaurant: Restaurant) => {
-      const result = await deleteRestaurant(restaurant.id);
+  const handleDeleteProduct = useCallback(
+    async (product: ProductRestaurant) => {
+      const result = await deleteProduct(product.id);
       showNotification(
         result.success ? "success" : "error",
         result.success
-          ? result.message || "Restaurante eliminado correctamente"
-          : result.error || "Error al eliminar el restaurante"
+          ? result.message || "Producto eliminado correctamente"
+          : result.error || "Error al eliminar el producto"
       );
     },
-    [deleteRestaurant, showNotification]
+    [deleteProduct, showNotification]
   );
 
   const handleToggleStatus = useCallback(
-    async (restaurant: Restaurant) => {
-      const result = await toggleRestaurantStatus(restaurant.id);
+    async (product: ProductRestaurant) => {
+      const result = await toggleProductStatus(product.id);
       showNotification(
         result.success ? "success" : "error",
         result.success
@@ -94,19 +99,19 @@ const RestaurantPage: React.FC = () => {
           : result.error || "Error al actualizar el estado"
       );
     },
-    [toggleRestaurantStatus, showNotification]
+    [toggleProductStatus, showNotification]
   );
 
   const handleFormSubmit = useCallback(
-    async (formData: CreateRestaurantData) => {
+    async (formData: CreateProductRestaurantData) => {
       try {
-        const result = selectedRestaurant
-          ? await updateRestaurant(selectedRestaurant.id, formData)
-          : await createRestaurant(formData);
+        const result = selectedProduct
+          ? await updateProduct(selectedProduct.id, formData)
+          : await createProduct(formData);
 
         if (result.success) {
           setShowForm(false);
-          setSelectedRestaurant(null);
+          setSelectedProduct(null);
           showNotification("success", result.message || "Operación exitosa");
         } else {
           showNotification("error", result.error || "Error en la operación");
@@ -116,19 +121,19 @@ const RestaurantPage: React.FC = () => {
         console.error(err);
       }
     },
-    [selectedRestaurant, updateRestaurant, createRestaurant, showNotification]
+    [selectedProduct, updateProduct, createProduct, showNotification]
   );
 
   const handleFormCancel = useCallback(() => {
     setShowForm(false);
-    setSelectedRestaurant(null);
+    setSelectedProduct(null);
   }, []);
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <header className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">
-          Gestión de Restaurantes
+          Gestión de Productos
         </h1>
       </header>
 
@@ -137,36 +142,36 @@ const RestaurantPage: React.FC = () => {
       <div className="mb-6 flex flex-col sm:flex-row gap-4">
         <SearchAndFilters
           filters={filters}
-          cities={cities}
+          restaurants={restaurants}
           onFiltersChange={handleFiltersChange}
           handleClearFIlters={handleClearFIlters}
           canOrderBy={true}
         />
 
         <button
-          onClick={handleCreateRestaurant}
+          onClick={handleCreateProduct}
           className="flex items-center px-4 py-2 text-white bg-red-800/80 rounded-lg transition-colors"
         >
           <Plus size={20} className="mr-2" />
-          Nuevo Restaurante
+          Nuevo Producto
         </button>
       </div>
 
-      <RestaurantTable
-        restaurants={restaurants}
+      <ProductsRestaurantTable
+        products={products}
         loading={loading}
         error={error}
         pagination={pagination}
-        onEdit={handleEditRestaurant}
-        onDelete={handleDeleteRestaurant}
+        onEdit={handleEditProduct}
+        onDelete={handleDeleteProduct}
         onToggleStatus={handleToggleStatus}
         onPageChange={handlePageChange}
       />
 
       {showForm && (
-        <RestaurantForm
-          restaurant={selectedRestaurant}
-          cities={cities}
+        <ProductsRestaurantForm
+          product={selectedProduct}
+          restaurants={restaurants}
           onSubmit={handleFormSubmit}
           onCancel={handleFormCancel}
           loading={loading}
@@ -176,4 +181,4 @@ const RestaurantPage: React.FC = () => {
   );
 };
 
-export default RestaurantPage;
+export default ProductsRestaurantPage;

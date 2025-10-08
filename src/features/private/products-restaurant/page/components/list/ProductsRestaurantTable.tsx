@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { AlertCircle } from "lucide-react";
-import type { Restaurant } from "../../../types/restaurant.types";
-import { RestaurantRow } from "./RestaurantRow";
+import type { ProductRestaurant } from "../../../types/products-restaurant.types";
+import { ProductsRestaurantRow } from "./ProductsRestaurantRow";
 import { Pagination } from "../common/Pagination";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Loading } from "@/components/ui/loading";
 
-interface RestaurantTableProps {
-  restaurants: Restaurant[];
+interface ProductsRestaurantTableProps {
+  products: ProductRestaurant[];
   loading: boolean;
   error: string | null;
   pagination: {
@@ -18,14 +18,14 @@ interface RestaurantTableProps {
     to: number;
     total: number;
   };
-  onEdit: (restaurant: Restaurant) => void;
-  onDelete: (restaurant: Restaurant) => void;
-  onToggleStatus: (restaurant: Restaurant) => void;
+  onEdit: (product: ProductRestaurant) => void;
+  onDelete: (product: ProductRestaurant) => void;
+  onToggleStatus: (product: ProductRestaurant) => void;
   onPageChange: (page: number) => void;
 }
 
-export const RestaurantTable: React.FC<RestaurantTableProps> = ({
-  restaurants,
+export const ProductsRestaurantTable: React.FC<ProductsRestaurantTableProps> = ({
+  products,
   loading,
   error,
   pagination,
@@ -34,14 +34,14 @@ export const RestaurantTable: React.FC<RestaurantTableProps> = ({
   onToggleStatus,
   onPageChange,
 }) => {
-  const [currentRestaurant, setCurrentRestaurant] = useState<Restaurant>();
+  const [currentProduct, setCurrentProduct] = useState<ProductRestaurant>();
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false);
 
   useEffect(() => {
-    if (currentRestaurant) {
+    if (currentProduct) {
       setOpenModalDelete(true);
     }
-  }, [currentRestaurant]);
+  }, [currentProduct]);
 
   if (loading) return <Loading className="flex justify-center" classNameLoader="w-8 h-8" />;
 
@@ -63,13 +63,10 @@ export const RestaurantTable: React.FC<RestaurantTableProps> = ({
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Producto
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Restaurante
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Contacto
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Ciudad
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Estado
@@ -80,12 +77,12 @@ export const RestaurantTable: React.FC<RestaurantTableProps> = ({
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {restaurants.map((restaurant) => (
-              <RestaurantRow
-                key={restaurant.id}
-                restaurant={restaurant}
+            {products.map((product) => (
+              <ProductsRestaurantRow
+                key={product.id}
+                product={product}
                 onEdit={onEdit}
-                onDelete={(restaurante) => setCurrentRestaurant(restaurante)}
+                onDelete={(producto) => setCurrentProduct(producto)}
                 onToggleStatus={onToggleStatus}
               />
             ))}
@@ -93,15 +90,15 @@ export const RestaurantTable: React.FC<RestaurantTableProps> = ({
         </table>
       </div>
 
-      {restaurants.length === 0 && (
+      {products.length === 0 && (
         <div className="text-center py-12">
           <p className="text-gray-500 text-lg">
-            No se encontraron restaurantes
+            No se encontraron productos
           </p>
         </div>
       )}
 
-      {restaurants.length > 0 && (
+      {products.length > 0 && (
         <Pagination pagination={pagination} onPageChange={onPageChange} />
       )}
 
@@ -111,7 +108,7 @@ export const RestaurantTable: React.FC<RestaurantTableProps> = ({
         title="Acción"
       >
         <div>
-          <p>{`¿Estás seguro de que quieres eliminar el restaurante "${currentRestaurant?.name}"?`}</p>
+          <p>{`¿Estás seguro de que quieres eliminar el producto "${currentProduct?.name}"?`}</p>
 
           <div className="flex justify-end mt-3 gap-3">
             <Button variant={'secondary'} onClick={() => setOpenModalDelete(!openModalDelete)}>
@@ -119,8 +116,8 @@ export const RestaurantTable: React.FC<RestaurantTableProps> = ({
             </Button>
             <Button
               onClick={() => {
-                if (currentRestaurant) {
-                  onDelete(currentRestaurant);
+                if (currentProduct) {
+                  onDelete(currentProduct);
                   setOpenModalDelete(false)
                 }
               }}
