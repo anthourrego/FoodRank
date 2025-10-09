@@ -213,7 +213,7 @@ export function RateProductCard({
             <Star className="w-5 h-5 text-yellow-400" fill="currentColor" />
           ),
         });
-        navigate("/rate-product");
+        navigate("/events-products/" + eventId);
       }
       setLoadingVoting(false)
     } catch (error) {

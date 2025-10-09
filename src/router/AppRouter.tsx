@@ -31,7 +31,7 @@ export function AppRouter() {
       <AuthProvider>
         <BrowserRouter>
           <RoutesNotFound>
-            <Route path="/" element={<Navigate to="/rate-product" replace />} />
+            <Route path="/" element={<Navigate to="/events" replace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/events" element={<Events />} />
             <Route path="/events-products/:eventId" element={<RateProducts />} />
