@@ -59,7 +59,8 @@ function Events() {
     return <Navigate to={`/events-products/${eventsData?.data[0].id}`} />
   } */
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 ">
+      <div className="container mx-auto px-4 py-8">
 
       <Header activeEventsCount={eventsData?.data?.length || 0} />
       <FiltersEvents searchTerm={searchTerm} setSearchTerm={setSearchTerm} cities={citiesEvents} selectedCity={selectedCity} setSelectedCity={setSelectedCity} />
@@ -70,6 +71,7 @@ function Events() {
         </p>
       </div>
       <ListEvents filteredEvents={filteredEvents} />
+      </div>
 
 
     </div>
