@@ -122,8 +122,10 @@ const useRestaurants = (): UseRestaurantsReturn => {
       
       await fetchRestaurants();
       return { success: true, data: null, message: data.message };
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error desconocido';
+    } catch (err: unknown) {
+      const errorMessage = (err && typeof err === 'object' && 'error' in err) 
+        ? (err as { error: string }).error 
+        : 'Error desconocido';
       setError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {

@@ -14,6 +14,7 @@ import { SearchAndFilters } from "./components/common/Filters";
 import type { RestaurantFilters } from "../types/restaurant.types";
 import useRestaurants from "../hook/UseRestaurants";
 import { useParams } from "react-router";
+import { toast } from "sonner";
 
 const RestaurantBranchesPage: React.FC = () => {
   const { restaurantId } = useParams();
@@ -81,8 +82,10 @@ const RestaurantBranchesPage: React.FC = () => {
     try {
       if (selectedBranch) {
         await restaurantBranchService.update(selectedBranch.id, data);
+        toast.success("Sucursal modificada correctamente");
       } else {
         await restaurantBranchService.create(data);
+        toast.success("Sucursal creada correctamente");
       }
       setShowForm(false);
       setSelectedBranch(null);
@@ -101,6 +104,7 @@ const RestaurantBranchesPage: React.FC = () => {
     try {
       await restaurantBranchService.delete(branch.id);
       loadBranches();
+      toast.success("Sucursal eliminada correctamente");
     } catch (err: unknown) {
       console.log(err);
     }
@@ -110,6 +114,7 @@ const RestaurantBranchesPage: React.FC = () => {
     try {
       await restaurantBranchService.toggleStatus(branch.id);
       loadBranches();
+      toast.success("Estado modificado correctamente");
     } catch (err: unknown) {
       console.log(err);
     }

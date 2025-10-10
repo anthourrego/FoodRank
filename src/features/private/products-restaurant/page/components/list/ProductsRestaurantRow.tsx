@@ -1,5 +1,5 @@
 import React from 'react';
-import { Edit, Power, Trash2, Image } from 'lucide-react';
+import { Edit, Trash2, Image } from 'lucide-react';
 import type { ProductRestaurant } from '../../../types/products-restaurant.types';
 
 interface ProductsRestaurantRowProps {
@@ -50,30 +50,20 @@ export const ProductsRestaurantRow: React.FC<ProductsRestaurantRowProps> = ({
       </td>
 
       <td className="px-6 py-4 whitespace-nowrap">
-        <span
-          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+        <button
+          onClick={() => onToggleStatus(product)}
+          className={`inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer ${
             product.is_active
-              ? "bg-green-100 text-green-800"
-              : "bg-red-100 text-red-800"
+              ? "bg-green-100 text-green-800 hover:bg-green-200"
+              : "bg-red-100 text-red-800 hover:bg-red-200"
           }`}
         >
-          {product.is_active ? "Activo" : "Inactivo"}
-        </span>
+          {product.is_active ? "Activa" : "Inactiva"}
+        </button>
       </td>
 
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
         <div className="flex space-x-2">
-          <button
-            onClick={() => onToggleStatus(product)}
-            className={`transition-colors cursor-pointer ${
-              product.is_active
-                ? "text-red-600 hover:text-red-900"
-                : "text-green-600 hover:text-green-900"
-            }`}
-            title={product.is_active ? "Desactivar" : "Activar"}
-          >
-            <Power size={16} />
-          </button>
           <button
             onClick={() => onEdit(product)}
             className="text-blue-600 hover:text-blue-900 transition-colors cursor-pointer"
