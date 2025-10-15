@@ -38,7 +38,7 @@ export function FormInput<T extends FieldValues>({
         <FormItem className={cn("min-w-auto", className)}>
           <FormLabel className="text-slate-500 text-xs truncate" htmlFor={name}>
             {label}
-            {required && <span className="text-red-500 ml-1">*</span>}
+            {required && <span className="text-red-500 ml-1">*</span> } <FormMessage className="text-red-500 text-xs mt-1" />
           </FormLabel>
           <FormControl>
             <Input
@@ -53,7 +53,7 @@ export function FormInput<T extends FieldValues>({
               )}
             />
           </FormControl>
-          <FormMessage className="text-red-500 text-xs mt-1" />
+          
         </FormItem>
       )}
     />

@@ -19,6 +19,7 @@ interface Props<T extends FieldValues> {
   name: FieldPath<T>;
   className?: string;
   onValueChange?: (value: string) => void;
+  restProps?: React.HTMLAttributes<HTMLDivElement>;
 }
 
 export function FormSelect<T extends FieldValues>({
@@ -30,6 +31,7 @@ export function FormSelect<T extends FieldValues>({
   options,
   className = "",
   onValueChange,
+  ...restProps
 }: Props<T>) {
   const {
     formState: { errors },
@@ -38,6 +40,7 @@ export function FormSelect<T extends FieldValues>({
     <FormField
       control={control}
       name={name}
+      {...restProps}
       render={({ field }) => (
         <FormItem className={cn(" min-w-auto", className)}>
           <FormLabel className="text-slate-500 text-xs flex flex-row">

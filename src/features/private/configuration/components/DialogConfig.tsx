@@ -19,26 +19,45 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { FormInput } from "@/components/form/FormInput";
 import { FormSelect } from "@/components/form/FormSelect";
-import { useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import type { UseMutationResult } from "@tanstack/react-query";
+import { Separator } from "@/components/ui/separator";
+import { useQueryServiceEvents } from "@/hooks/useQueryServiceEvents";
+import { Loading } from "@/components/ui/loading";
 
 interface DialogConfigProps {
   openDialogConfig: boolean;
   setOpenDialogConfig: (open: boolean) => void;
   fnSubmit: UseMutationResult<TypeFormSchemaConfiguration, Error, TypeFormSchemaConfiguration>;
 }
-export const DialogConfig = ({
+
+// Componente interno que maneja la lógica del formulario
+const DialogConfigInternal = ({
   openDialogConfig,
   setOpenDialogConfig,
   fnSubmit,
 }: DialogConfigProps) => {
-  const [selectedType, setSelectedType] = useState<string>("text");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
-  
-  
+  const { GetEvents } = useQueryServiceEvents()
+  const { data: eventsData, isLoading: isLoadingEvents } = GetEvents()
 
-  
+  const [eventsList, setEventsList] = useState<OptionItem[]>([])
+  useEffect(() => {
+    if (eventsData?.data?.length > 0) {
+      setEventsList(eventsData.data.map((event: { id: string; name: string }) => {
+        return {
+          value: event.id,
+          label: event.name,
+          data: event
+        }
+      }))
+    }
+  }, [eventsData])
+
+
+
+
 
 
   const form = useForm<TypeFormSchemaConfiguration>({
@@ -51,7 +70,7 @@ export const DialogConfig = ({
     /* if(data.type === "image" && data.imageFile){
       form.setValue("value", data.imageFile.name);
     } */
-    fnSubmit.mutate(data,{
+    fnSubmit.mutate(data, {
       onSuccess: () => {
         setOpenDialogConfig(false);
       },
@@ -108,7 +127,6 @@ export const DialogConfig = ({
   };
 
   const handleTypeChange = (value: string) => {
-    setSelectedType(value);
     // Limpiar archivo seleccionado cuando cambie el tipo
     if (value !== "image") {
       setSelectedFile(null);
@@ -117,17 +135,50 @@ export const DialogConfig = ({
     }
   };
 
+  const handleKeyChange = (value: string) => {
+    // Establecer tipo automáticamente según la clave seleccionada
+    if (value === "topBanner" || value === "bottomBanner") {
+      form.setValue("type", "image");
+    } else if (value === "title" || value === "description") {
+      form.setValue("type", "text");
+    }
+  };
+
   const optionsType = [
     { value: "text", label: "Texto" },
     { value: "image", label: "Imagen" },
-    { value: "boolean", label: "Booleano" },
-    { value: "number", label: "Número" },
+/*     { value: "boolean", label: "Booleano" },
+    { value: "number", label: "Número" }, */
   ];
 
   const optionsKey = [
     { value: "topBanner", label: "Banner superior" },
     { value: "bottomBanner", label: "Banner inferior" },
+    { value: "title", label: "Título" },
+    { value: "description", label: "Descripción" },
+
   ];
+
+  if(isLoadingEvents){
+    return (
+      <Dialog open={openDialogConfig} onOpenChange={setOpenDialogConfig}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Nueva Configuración</DialogTitle>
+            <DialogDescription>
+              Cargando lista de eventos...
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex items-center justify-center p-8">
+            <div className="text-center flex flex-col items-center justify-center">
+              <Loading />
+              <p className="mt-2 text-sm text-gray-600">Cargando eventos...</p>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   return (
     <Dialog open={openDialogConfig} onOpenChange={setOpenDialogConfig}>
@@ -142,7 +193,17 @@ export const DialogConfig = ({
                 dato.
               </DialogDescription>
             </DialogHeader>
+
+            <Separator className="my-4" />
             <div className="grid gap-4 mb-4">
+              <FormSelect
+                control={form.control}
+                required={true}
+                label="Configuracion del evento"
+                options={eventsList}
+                name="eventId"
+
+              />
               <div className="grid gap-3">
                 <FormSelect
                   control={form.control}
@@ -150,11 +211,26 @@ export const DialogConfig = ({
                   label="Nombre"
                   options={optionsKey}
                   name="key"
-
+                  onValueChange={(value) => handleKeyChange(value)}
                 />
               </div>
               <div className="grid gap-3">
-                {selectedType === "image" ? (
+                <FormInput
+                  control={form.control}
+                  required={true}
+                  label="Tipo"
+                  name="type"
+                  readOnly={true}
+                  type="text"
+                  className="text-slate-500"
+                  placeholder="Tipo"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  El tipo se establece automáticamente según la configuración seleccionada
+                </p>
+              </div>
+              <div className="grid gap-3">
+                {form.watch("type") === "image" ? (
                   <FormField
                     control={form.control}
                     name="imageFile"
@@ -205,22 +281,13 @@ export const DialogConfig = ({
                     control={form.control}
                     required={true}
                     label="Valor"
-                    type={selectedType === "number" ? "number" : "text"}
+                    type={form.watch("type") === "number" ? "number" : "text"}
                     name="value"
                     placeholder="Valor"
                   />
                 )}
               </div>
-              <div className="grid gap-3">
-                <FormSelect
-                  control={form.control}
-                  required={true}
-                  label="Tipo"
-                  name="type"
-                  options={optionsType}
-                  onValueChange={(value) => handleTypeChange(value)}
-                />
-              </div>
+              
               <div className="grid gap-3">
                 <FormInput
                   control={form.control}
@@ -242,5 +309,27 @@ export const DialogConfig = ({
         </Form>
       </DialogContent>
     </Dialog>
+  );
+};
+
+// Componente lazy wrapper que solo carga cuando es necesario
+export const DialogConfig = ({
+  openDialogConfig,
+  setOpenDialogConfig,
+  fnSubmit,
+}: DialogConfigProps) => {
+  // Solo renderizar cuando el diálogo esté abierto
+  if (!openDialogConfig) {
+    return null;
+  }
+
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center p-8">Cargando configuración...</div>}>
+      <DialogConfigInternal
+        openDialogConfig={openDialogConfig}
+        setOpenDialogConfig={setOpenDialogConfig}
+        fnSubmit={fnSubmit}
+      />
+    </Suspense>
   );
 };

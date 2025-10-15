@@ -1,11 +1,12 @@
 import { DataTable } from "@/components/ui/data-table";
 import { columns } from "../components/columnsTableConfig";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import { DialogConfig } from "../components/DialogConfig";
+import { ListTree, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { ConfigurationModel } from "../models/Configuration";
 import { useQueryServiceConfig } from "../hook/useQueryServiceConfig";
+import { Separator } from "@/components/ui/separator";
+import { DialogConfig } from "../components/DialogConfig";
 
 function Configuration() {
   const [openDialogConfig, setOpenDialogConfig] = useState(false);
@@ -16,36 +17,14 @@ function Configuration() {
 
   const { data: configurations } = GetConfigurations;
 
-  
+
   useEffect(() => {
-    if(configurations &&configurations.success && configurations.data?.length > 0){
+    if (configurations && configurations.success && configurations.data?.length > 0) {
       setConfigurationsList(configurations.data);
     }
   }, [configurations]);
 
 
-/*   const data = [
-    {
-      id: "1",
-      key: "key",
-      value: "value",
-      type: "text" as const,
-      description: "description",
-      isActive: true,
-      status: "success" as const,
-      email: "admin@example.com",
-    },
-    {
-      id: "2",
-      key: "key2",
-      value: "value2",
-      type: "image" as const,
-      description: "description2",
-      isActive: false,
-      status: "pending" as const,
-      email: "admin@example.com",
-    },
-  ] */
 
   const btnCreate = (
     <Button variant="default" className="h-full" onClick={() => setOpenDialogConfig(true)}>
@@ -57,12 +36,19 @@ function Configuration() {
     <div className="p-6 max-w-7xl mx-auto">
       <section>
         <div>
-        <h1 className="text-3xl font-bold text-gray-900">
-          Gestión de Configuración
-        </h1>
-        <p className="mt-2 text-gray-600">
-          Administra la configuración de la plataforma
-        </p>
+          <h2 className="text-3xl font-bold text-slate-800">
+            Gestión de Configuración
+          </h2>
+          <p className="mt-2 text-gray-600">
+            Administra la configuración de la plataforma
+          </p>
+        </div>
+        <Separator className="my-4" />
+        <div className="flex items-center gap-2">
+          <ListTree className="w-6 h-6 text-slate-700" />
+          <h2 className="text-xl font-bold text-slate-700">
+            Configuración de Eventos
+          </h2>
         </div>
         <div className="container mx-auto py-10">
           <DataTable columns={columns} data={configurationsList} btnCreate={btnCreate} />
