@@ -24,11 +24,17 @@ export const useQueryServiceConfig = () => {
     queryFn: ({signal}) => configurationService.getConfigurations({signal}),
   })
 
+  const GetConfigurationEvent = (eventId: number) => useQuery({
+    queryKey: ['configuration-event', eventId],
+    queryFn: ({signal}) => configurationService.showConfigurationEvent({signal, eventId}),
+    enabled: eventId !== undefined && eventId !== null,
+  })
 
 
 
   return {
     mutateCreateConfiguration,
     GetConfigurations,
+    GetConfigurationEvent
   }
 }

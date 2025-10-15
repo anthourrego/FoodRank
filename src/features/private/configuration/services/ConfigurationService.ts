@@ -20,6 +20,11 @@ export class ConfigurationService {
         return response.data
     }
 
+    async showConfigurationEvent({signal, eventId}: {signal: AbortSignal, eventId: number}) {
+        const response = await this.apiClient.get(`${this.endpoint}/event/${eventId}`, {signal})
+        return response.data
+    }
+
 
 
 }

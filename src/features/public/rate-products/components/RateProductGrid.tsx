@@ -10,9 +10,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import type { ConfigurationModel } from "@/features/private/configuration/models/Configuration";
 
 interface RateProductGridProps {
   productsEvents: EventsProduct[]
+  configurationEvent: ConfigurationModel[] | null
 }
 
 
@@ -34,7 +36,7 @@ function CartEmpty() {
   )
 }
 
-export function RateProductGrid({productsEvents}: RateProductGridProps) {
+export function RateProductGrid({productsEvents, configurationEvent}: RateProductGridProps) {
 
   if(productsEvents.length === 0){
     return <CartEmpty />
@@ -42,13 +44,14 @@ export function RateProductGrid({productsEvents}: RateProductGridProps) {
 
   return (
     <>
-    <LazyLoadImage src={image_2} alt="Evento" />
+    
+    <LazyLoadImage src={`${import.meta.env.VITE_URL_RESOURCE}${configurationEvent?.find((config) => config.key === 'topBanner')?.value}`} alt="Evento" className="object-cover h-32 w-full"  />
     <section className="py-16   ">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Hamburguesas Participantes</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">{configurationEvent?.find((config) => config.key === 'title')?.value}</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Descubre, visita y califica las mejores hamburguesas. Tu opinión cuenta para elegir al ganador.
+            {configurationEvent?.find((config) => config.key === 'description')?.value}
           </p>
         </div>
 
@@ -68,7 +71,7 @@ export function RateProductGrid({productsEvents}: RateProductGridProps) {
         </div>
       </div>
     </section>
-    <LazyLoadImage src={image_1} alt="Evento" />
+    <LazyLoadImage src={`${import.meta.env.VITE_URL_RESOURCE}${configurationEvent?.find((config) => config.key === 'bottomBanner')?.value}`} alt="Evento" className="object-cover h-32 w-full" />
     </>
   )
 }
