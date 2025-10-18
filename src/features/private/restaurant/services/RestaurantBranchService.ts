@@ -1,4 +1,5 @@
-import apiClient from "@/services/axios";
+
+import apiClient from "@/services/axiosOld";
 import type { RestaurantBranchFormData } from "../page/components/RestaurantBranchForm";
 import type {
   RequestRestaurantBranch,
