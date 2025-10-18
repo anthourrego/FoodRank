@@ -9,10 +9,28 @@ import { Trophy, Medal, Award, Star, Crown, ArrowLeft, Sparkles, BarChart3 } fro
 import { useNavigate } from "react-router"
 import { LazyLoadImage } from "react-lazy-load-image-component"
 import { useRanking } from "./hooks/useRanking"
+import { useQueryServiceEvents } from "@/hooks/useQueryServiceEvents"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 
 
 
+
+type RankingItem = {
+  product_name: string
+  product_image: string
+  avg_rating: number
+  total_reviews: number
+  total_comments?: number
+  restaurant_name: string
+  detail?: Record<string, number>
+  event_product_id?: number
+}
+
+type EventSummary = {
+  id: number
+  name: string
+}
 
 const getRankIcon = (position: number) => {
   switch (position) {
@@ -79,17 +97,28 @@ const getRankBadge = (position: number) => {
 
  function Ranking() {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedProduct, setSelectedProduct] = useState<any>(null)
+  const [selectedProduct, setSelectedProduct] = useState<RankingItem | null>(null)
+  const [selectedEventId, setSelectedEventId] = useState<number | null>(null)
 
   const navigate = useNavigate()
 
   const { ranking, getRanking } = useRanking()
+  const { GetEvents } = useQueryServiceEvents()
+  const { data: eventsData } = GetEvents()
 
   useEffect(() => {
-    getRanking(1)
-  }, [])
+    if (!selectedEventId && eventsData?.data?.length > 0) {
+      setSelectedEventId(eventsData.data[0].id)
+    }
+  }, [eventsData, selectedEventId])
 
-  const handleProductClick = (product: any) => {
+  useEffect(() => {
+    if (selectedEventId) {
+      getRanking(selectedEventId)
+    }
+  }, [selectedEventId, getRanking])
+
+  const handleProductClick = (product: RankingItem) => {
     setSelectedProduct(product)
     setIsModalOpen(true)
   }
@@ -116,7 +145,7 @@ const getRankBadge = (position: number) => {
               </div>
             </div>
             <h1 className="text-5xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
-              Carnaval Burger 2025
+              Ranking del Evento
             </h1>
             <div className="relative">
               <Crown className="w-10 h-10 text-yellow-500" />
@@ -126,11 +155,26 @@ const getRankBadge = (position: number) => {
             </div>
           </div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Descubre cuáles son las hamburguesas mejor calificadas por nuestros usuarios
+            Descubre cuáles son las hamburguesas mejor calificadas por nuestros usuarios en el evento seleccionado
           </p>
 
           <div className="mt-8">
-            
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+              <div className="w-full md:w-80">
+                <Select value={selectedEventId?.toString() || ""} onValueChange={(value) => setSelectedEventId(Number(value))}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecciona evento" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {eventsData?.data?.map((event: EventSummary) => (
+                      <SelectItem key={event.id} value={event.id.toString()}>
+                        {event.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
               <Button
               onClick={() => navigate('/')}
                 variant="outline"
@@ -139,7 +183,7 @@ const getRankBadge = (position: number) => {
                 <ArrowLeft className="w-4 h-4" />
                 Volver al listado
               </Button>
-            
+            </div>
           </div>
         </div>
 
@@ -475,7 +519,7 @@ const getRankBadge = (position: number) => {
                 Distribución de votos
               </h4>
               <div className="space-y-3">
-                {Object.entries(selectedProduct.detail).map(([stars, votes]: [string, any]) => (
+                {Object.entries(selectedProduct.detail).map(([stars, votes]: [string, number]) => (
                   <div key={stars} className="flex items-center gap-4">
                     <div className="flex items-center gap-1 w-16">
                       <span className="text-sm font-medium text-gray-600">{stars}</span>

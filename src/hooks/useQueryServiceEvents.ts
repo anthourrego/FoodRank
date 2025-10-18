@@ -1,7 +1,8 @@
 import apiClient from "@/api/axiosInstance"
+import type { TypeFormSchemaManageEvents } from "@/features/private/manage-events/models/FormSchemaManageEvents"
 
 import { EventsServices } from "@/services/EventsServices"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
 
 export const useQueryServiceEvents = () => {
@@ -20,9 +21,17 @@ export const useQueryServiceEvents = () => {
     queryFn: ({signal}) => eventsService.getProductsByEvent({signal, eventId}),
   })
 
+  const createEventMutation = useMutation({
+    mutationFn:(data:TypeFormSchemaManageEvents)=>eventsService.createEvent(data),
+    onSuccess:()=>{
+      queryClient.invalidateQueries({ queryKey: ['events-active'] })
+    }
+  })
+
 
   return {
     GetEvents,
-    GetProductsByEvent
+    GetProductsByEvent,
+    createEventMutation
   }
 }

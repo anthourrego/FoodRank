@@ -4,8 +4,37 @@ import { Loading } from "@/components/ui/loading"
 import { useEffect, useState } from "react"
 import { FiltersEvents } from "../components/FiltersEvents"
 import { ListEvents } from "../components/ListEvents"
-import { Navigate } from "react-router"
+import { Footer } from "@/components/footer"
+import { Link } from "react-router"
+import logo from '@/assets/images/logo.webp'
 
+
+function TopBar() {
+  return (
+    <header className="bg-red-800/80 backdrop-blur-sm text-white sticky top-0 z-50">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          <nav className="flex items-center space-x-8">
+            <Link to="/events" className="hover:text-red-200 transition-colors">
+              Eventos
+            </Link>
+          </nav>
+          <div className="flex items-center">
+            <Link to="/events">
+              <img src={logo} alt="Food Rank" className="h-12 w-auto" />
+            </Link>
+          </div>
+        </div>
+      </div>
+    </header>
+  )
+}
+
+type EventItem = {
+  id: number
+  name: string
+  city: { id: number; name: string }
+}
 
 function Events() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -13,11 +42,11 @@ function Events() {
   const [selectedCity, setSelectedCity] = useState<number>(0)
   const [filteredEvents, setFilteredEvents] = useState<OptionItem[]>([])
   const { GetEvents } = useQueryServiceEvents()
-  const { data: eventsData, isLoading: isLoadingEvents, error: errorEvents, isError: isErrorEvents, isSuccess: isSuccessEvents } = GetEvents()
+  const { data: eventsData, isLoading: isLoadingEvents } = GetEvents()
 
   useEffect(() => {
     if (eventsData?.data?.length > 0) {
-      const listCities = eventsData.data.map((event) => {
+      const listCities = eventsData.data.map((event: EventItem) => {
         return {
           value: event.city.id,
           label: event.city.name,
@@ -25,8 +54,8 @@ function Events() {
         }
       })
       //eliminar duplicados
-      const uniqueCities = listCities.filter((city, index, self) =>
-        index === self.findIndex((t) => t.value === city.value)
+      const uniqueCities = listCities.filter((city: OptionItem, index: number, self: OptionItem[]) =>
+        index === self.findIndex((t: OptionItem) => t.value === city.value)
       )
       setCitiesEvents(uniqueCities)
     }
@@ -34,7 +63,7 @@ function Events() {
 
   useEffect(() => {
     if (eventsData?.data?.length > 0) {
-      const filteredEvents = eventsData.data.filter((event) => {
+      const filteredEvents = eventsData.data.filter((event: EventItem) => {
         if (selectedCity === 0 && searchTerm === "") {
           return true
         }
@@ -60,6 +89,7 @@ function Events() {
   } */
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 ">
+      <TopBar />
       <div className="container mx-auto px-4 py-8">
 
       <Header activeEventsCount={eventsData?.data?.length || 0} />
@@ -72,8 +102,7 @@ function Events() {
       </div>
       <ListEvents filteredEvents={filteredEvents} />
       </div>
-
-
+      <Footer />
     </div>
   )
 }

@@ -14,7 +14,7 @@ const { logout } = useAuth();
             <Link to='/' className="hover:text-red-200 transition-colors">
               Inicio
             </Link>
-            <Link to="/events" className="hover:text-red-200 transition-colors">
+            <Link to="/home/manage-events" className="hover:text-red-200 transition-colors">
               Eventos
             </Link>
             <Link to="/home/restaurants" className="hover:text-red-200 transition-colors">
