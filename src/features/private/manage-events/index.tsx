@@ -18,7 +18,7 @@ import { useQueryServiceCities } from "@/hooks/useQueryCities.ts"
 type City = { id: number; name: string }
 
 function ManageEvents() {
-  const queryClient = useQueryClient()
+  
   const [open, setOpen] = useState(false)
   const [cities,setCities] =  useState<City[]>([])
   const [editing, setEditing] = useState<EventRow | null>(null)
@@ -28,10 +28,10 @@ function ManageEvents() {
     defaultValues: defaultFormSchemaManageEvents,
   })
 
-  const {GetEvents,createEventMutation} =useQueryServiceEvents()
+  const {GetAllEvents,createEventMutation,updateEventMutation} =useQueryServiceEvents()
   const {GetCities} = useQueryServiceCities()
 
-  const {data:dataListEvent,isLoading} = GetEvents()
+  const {data:dataListEvent,isLoading} = GetAllEvents()
   const {data:dataCities} = GetCities()
 
 
@@ -47,22 +47,7 @@ function ManageEvents() {
 
 
 
-  const updateMutation = useMutation({
-    mutationFn: (payload: TypeFormSchemaManageEvents) => eventsService.updateEvent(payload.id!, {
-      name: payload.name,
-      description: payload.description,
-      start_date: payload.start_date,
-      end_date: payload.end_date,
-      is_active: payload.is_active,
-      city_id: payload.city_id,
-    }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["events-active-admin"] })
-      setOpen(false)
-      setEditing(null)
-      form.reset()
-    }
-  })
+
 
   const onOpenNew = () => {
     setEditing(null)
@@ -89,7 +74,13 @@ function ManageEvents() {
 
   const onSubmit = (data: TypeFormSchemaManageEvents) => {
     if (editing) {
-      updateMutation.mutate(data)
+      updateEventMutation.mutate(data,{
+        onSuccess:()=>{
+          setOpen(false)
+          form.reset()
+          setEditing(null)
+        }
+      })
     } else {      
       createEventMutation.mutate(data,{
         onSuccess:()=>{
@@ -120,7 +111,7 @@ function ManageEvents() {
           editing={editing}
           form={form}
           onSubmit={onSubmit}
-          isSubmitting={createEventMutation.isPending || updateMutation.isPending || createEventMutation.isLoading}
+          isSubmitting={createEventMutation.isPending || updateEventMutation.isPending}
           cities={cities}
         />
       </div>

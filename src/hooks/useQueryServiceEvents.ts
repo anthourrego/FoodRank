@@ -16,6 +16,11 @@ export const useQueryServiceEvents = () => {
     queryFn: ({signal}) => eventsService.getEvents({signal}),
   })
 
+  const GetAllEvents = () => useQuery({
+    queryKey: ['all-events'],
+    queryFn: ({signal}) => eventsService.getAllEvents({signal}),
+  })
+
   const GetProductsByEvent = (eventId: number) => useQuery({
     queryKey: ['products-by-event', eventId],
     queryFn: ({signal}) => eventsService.getProductsByEvent({signal, eventId}),
@@ -24,7 +29,14 @@ export const useQueryServiceEvents = () => {
   const createEventMutation = useMutation({
     mutationFn:(data:TypeFormSchemaManageEvents)=>eventsService.createEvent(data),
     onSuccess:()=>{
-      queryClient.invalidateQueries({ queryKey: ['events-active'] })
+      queryClient.invalidateQueries({ queryKey: ['all-events'] })
+    }
+  })
+
+  const updateEventMutation = useMutation({
+    mutationFn:(data:TypeFormSchemaManageEvents)=>eventsService.updateEvent(data),
+    onSuccess:()=>{
+      queryClient.invalidateQueries({ queryKey: ['all-events'] })
     }
   })
 
@@ -32,6 +44,8 @@ export const useQueryServiceEvents = () => {
   return {
     GetEvents,
     GetProductsByEvent,
-    createEventMutation
+    GetAllEvents,
+    createEventMutation,
+    updateEventMutation,
   }
 }

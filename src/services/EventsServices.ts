@@ -17,6 +17,11 @@ export class EventsServices {
         return response.data
     }
 
+    async getAllEvents({signal}: {signal: AbortSignal}) {
+        const response = await this.apiClient.get(`${this.endpoint}`, {signal})
+        return response.data
+    }
+
     async getProductsByEvent({signal, eventId}: {signal: AbortSignal, eventId: number}) {
         const response = await this.apiClient.get(`${this.endpoint}/products-event/${eventId}`, {signal})
         return response.data
@@ -27,15 +32,8 @@ export class EventsServices {
         return response.data
     }
 
-    async updateEvent(id: number, data: Partial<{
-        name: string
-        description: string
-        start_date: string
-        end_date: string
-        is_active: boolean
-        city_id: number
-    }>) {
-        const response = await this.apiClient.put(`${this.endpoint}/${id}`, data)
+    async updateEvent(data: TypeFormSchemaManageEvents) {
+        const response = await this.apiClient.put(`${this.endpoint}/${data.id}`, data)
         return response.data
     }
 
