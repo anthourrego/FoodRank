@@ -67,8 +67,8 @@ export function EventDialog({ open, setOpen, editing, form, onSubmit, isSubmitti
               control={form.control}
               name="is_active"
               label="Estado"
-              options={[{ label: "Activo", value: "true" }, { label: "Inactivo", value: "false" }]}
-              onValueChange={(value) => form.setValue("is_active", value === "true")}
+              options={[{ label: "Activo", value: true }, { label: "Inactivo", value: false }]}
+              onValueChange={(value) => form.setValue("is_active", value === true)}
               
             />
             <DialogFooter>
