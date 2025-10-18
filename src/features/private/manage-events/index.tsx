@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState, useCallback } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Card, CardContent } from "@/components/ui/card"
@@ -12,7 +12,7 @@ import { useQueryServiceCities } from "@/hooks/useQueryCities.ts"
 
 
 
-// EventFormData ahora es TypeFormSchemaManageEvents
+
 
 type City = { id: number; name: string }
 
@@ -31,33 +31,31 @@ function ManageEvents() {
   const {GetCities} = useQueryServiceCities()
 
   const {data:dataListEvent,isLoading} = GetAllEvents()
+  
   const {data:dataCities} = GetCities()
-
 
   const events: EventRow[] = useMemo(() => dataListEvent?.data ?? [], [dataListEvent])
   
-
   useEffect(()=>{
-    
-    if(dataCities){
+    if(open && dataCities){
       setCities(dataCities)
     }
-  },[dataCities])
+  },[open, dataCities])
 
 
 
 
 
-  const onOpenNew = () => {
+  const onOpenNew = useCallback(() => {
     setEditing(null)
     form.reset({
       ...defaultFormSchemaManageEvents,
-      city_id: cities[0]?.id ?? 0,
+      city_id: cities[0]?.id.toString() ?? "",
     })
     setOpen(true)
-  }
+  }, [form, cities])
 
-  const onOpenEdit = (row: EventRow) => {
+  const onOpenEdit = useCallback((row: EventRow) => {
     setEditing(row)
     form.reset({
       id: row.id,
@@ -66,12 +64,12 @@ function ManageEvents() {
       start_date: row.start_date?.slice(0,16) ?? "",
       end_date: row.end_date?.slice(0,16) ?? "",
       is_active: Boolean(row.is_active),
-      city_id: row.city?.id ?? 0,
+      city_id: row.city?.id.toString() ?? "",
     })
     setOpen(true)
-  }
+  }, [form])
 
-  const onSubmit = (data: TypeFormSchemaManageEvents) => {
+  const onSubmit = useCallback((data: TypeFormSchemaManageEvents) => {
     if (editing) {
       updateEventMutation.mutate(data,{
         onSuccess:()=>{
@@ -88,7 +86,7 @@ function ManageEvents() {
         }
       })
     }
-  }
+  }, [editing, updateEventMutation, createEventMutation, form])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
