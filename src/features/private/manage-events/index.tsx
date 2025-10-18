@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Card, CardContent } from "@/components/ui/card"
@@ -66,7 +65,7 @@ function ManageEvents() {
       description: row.description,
       start_date: row.start_date?.slice(0,16) ?? "",
       end_date: row.end_date?.slice(0,16) ?? "",
-      is_active: row.is_active,
+      is_active: Boolean(row.is_active),
       city_id: row.city?.id ?? 0,
     })
     setOpen(true)

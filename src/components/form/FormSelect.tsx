@@ -36,6 +36,9 @@ export function FormSelect<T extends FieldValues>({
   const {
     formState: { errors },
   } = useForm();
+  
+  
+ 
   return (
     <FormField
       control={control}
@@ -52,20 +55,21 @@ export function FormSelect<T extends FieldValues>({
             )}
           </FormLabel>
           <Select
+            {...field}
             onValueChange={(value) => {
               field.onChange(value);
               if (onValueChange) onValueChange(value);
             }}
-            defaultValue={field.value}
+            value={String(field.value)}
             aria-invalid={errors.typeDocument ? "true" : "false"}
-            {...field}
+            
           >
             <FormControl>
               <SelectTrigger className="w-full truncate">
                 <span className=" text-slate-500 truncate">
                   <span className="capitalize">
                     {" "}
-                    {options?.find((item) => item.value == field.value)
+                    {options?.find((item) => String(item.value) === String(field.value))
                       ?.label || labelItemUnselected}
                   </span>
                 </span>

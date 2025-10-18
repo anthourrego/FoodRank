@@ -1,9 +1,7 @@
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import type { EventRow } from ".."
+import { Form } from "@/components/ui/form"
+import type { EventRow } from "../models/EventRow"
 import type { TypeFormSchemaManageEvents } from "../models/FormSchemaManageEvents"
 import type { UseFormReturn } from "react-hook-form"
 import { FormInput } from "@/components/form/FormInput"
@@ -67,8 +65,8 @@ export function EventDialog({ open, setOpen, editing, form, onSubmit, isSubmitti
               control={form.control}
               name="is_active"
               label="Estado"
-              options={[{ label: "Activo", value: true }, { label: "Inactivo", value: false }]}
-              onValueChange={(value) => form.setValue("is_active", value === true)}
+              options={[{ label: "Activo", value: "true" }, { label: "Inactivo", value: "false" }]}
+              onValueChange={(value) => form.setValue("is_active", value === "true")}
               
             />
             <DialogFooter>
