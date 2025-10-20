@@ -12,6 +12,7 @@ const RestaurantBranch = lazy(() => import("@/features/private/restaurant/page/R
 const ProductsRestaurant = lazy(() => import("@/features/private/products-restaurant/page/ProductsRestaurantPage"));
 const Configuration = lazy(() => import("@/features/private/configuration/page/Configuration"));
 const ManageEvents = lazy(() => import("@/features/private/manage-events/index"));
+const ParticipantsPage = lazy(() => import("@/features/private/manage-events/participants/ParticipantsPage"));
 
 const privateRouter = () => {
   return (
@@ -32,6 +33,7 @@ const privateRouter = () => {
         <Route path="/products-restaurant" element={<ProductsRestaurant />} />
         <Route path="/configuration" element={<Configuration />} />
         <Route path="/manage-events" element={<ManageEvents />} />
+        <Route path="/manage-events/:eventId/participants" element={<ParticipantsPage />} />
       </Route>
     </RoutesNotFound>
   );

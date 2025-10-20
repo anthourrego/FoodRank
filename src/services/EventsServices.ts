@@ -27,6 +27,16 @@ export class EventsServices {
         return response.data
     }
 
+    async addProductToEvent(eventId: number, productId: number) {
+        const response = await this.apiClient.post(`${this.endpoint}/products-event/${eventId}`, { product_id: productId })
+        return response.data
+    }
+
+    async removeProductFromEvent(eventId: number, productId: number) {
+        const response = await this.apiClient.delete(`${this.endpoint}/products-event/${eventId}/${productId}`)
+        return response.data
+    }
+
     async createEvent(data: TypeFormSchemaManageEvents) {
         const response = await this.apiClient.post(`${this.endpoint}`, data)
         return response.data

@@ -6,11 +6,12 @@ interface EventsTableProps {
   isLoading: boolean
   events: EventRow[]
   onEdit: (row: EventRow) => void
+  onAssignParticipants: (row: EventRow) => void
 }
 
-export function EventsTable({ isLoading, events, onEdit }: EventsTableProps) {
+export function EventsTable({ isLoading, events, onEdit, onAssignParticipants }: EventsTableProps) {
   const data = Array.isArray(events) ? events : []
-  return <DataTable columns={columnsEvents(onEdit)} data={isLoading ? [] : data} />
+  return <DataTable columns={columnsEvents(onEdit, onAssignParticipants)} data={isLoading ? [] : data} />
 }
 
 

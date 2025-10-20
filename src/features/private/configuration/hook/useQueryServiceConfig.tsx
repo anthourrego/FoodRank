@@ -19,7 +19,7 @@ export const useQueryServiceConfig = () => {
     }
   })
 
-  const GetConfigurations = useQuery({
+  const GetConfigurations = ()=>useQuery({
     queryKey: ['configurations'],
     queryFn: ({signal}) => configurationService.getConfigurations({signal}),
   })

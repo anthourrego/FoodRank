@@ -9,6 +9,7 @@ import { FormSchemaManageEvents, type TypeFormSchemaManageEvents, defaultFormSch
 import { useQueryServiceEvents } from "@/hooks/useQueryServiceEvents.ts"
 import type { EventRow } from "./models/EventRow.ts"
 import { useQueryServiceCities } from "@/hooks/useQueryCities.ts"
+import { useNavigate } from "react-router"
 
 
 
@@ -21,6 +22,7 @@ function ManageEvents() {
   const [open, setOpen] = useState(false)
   const [cities,setCities] =  useState<City[]>([])
   const [editing, setEditing] = useState<EventRow | null>(null)
+  const navigate = useNavigate()
   
   const form = useForm<TypeFormSchemaManageEvents>({
     resolver: zodResolver(FormSchemaManageEvents),
@@ -69,6 +71,10 @@ function ManageEvents() {
     setOpen(true)
   }, [form])
 
+  const onAssignParticipants = useCallback((row: EventRow) => {
+    navigate(`/home/manage-events/${row.id}/participants`)
+  }, [navigate])
+
   const onSubmit = useCallback((data: TypeFormSchemaManageEvents) => {
     if (editing) {
       updateEventMutation.mutate(data,{
@@ -98,7 +104,7 @@ function ManageEvents() {
 
         <Card>
           <CardContent className="p-0">
-            <EventsTable isLoading={isLoading} events={events} onEdit={onOpenEdit} />
+            <EventsTable isLoading={isLoading} events={events} onEdit={onOpenEdit} onAssignParticipants={onAssignParticipants} />
           </CardContent>
         </Card>
 

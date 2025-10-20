@@ -44,12 +44,15 @@ export function RateProductGrid({productsEvents, configurationEvent}: RateProduc
 
   return (
     <>
-    
-    <LazyLoadImage src={`${import.meta.env.VITE_URL_RESOURCE}${configurationEvent?.find((config) => config.key === 'topBanner')?.value}`} alt="Evento" className="object-cover h-32 w-full"  />
+    {
+      configurationEvent && (
+        <LazyLoadImage src={`${import.meta.env.VITE_URL_RESOURCE}${configurationEvent?.find((config) => config.key === 'topBanner')?.value}`} alt="Evento" className="object-cover h-32 w-full"  />
+      )
+    }
     <section className="py-16   ">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">{configurationEvent?.find((config) => config.key === 'title')?.value}</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">{configurationEvent?.find((config) => config.key === 'title')?.value || 'Productos del Evento'}</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             {configurationEvent?.find((config) => config.key === 'description')?.value}
           </p>
@@ -71,7 +74,10 @@ export function RateProductGrid({productsEvents, configurationEvent}: RateProduc
         </div>
       </div>
     </section>
-    <LazyLoadImage src={`${import.meta.env.VITE_URL_RESOURCE}${configurationEvent?.find((config) => config.key === 'bottomBanner')?.value}`} alt="Evento" className="object-cover h-32 w-full" />
+    {
+      configurationEvent && (
+        <LazyLoadImage src={`${import.meta.env.VITE_URL_RESOURCE}${configurationEvent?.find((config) => config.key === 'bottomBanner')?.value}`} alt="Evento" className="object-cover h-32 w-full" />
+      )}
     </>
-  )
+  );
 }

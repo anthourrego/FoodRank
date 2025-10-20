@@ -26,6 +26,20 @@ export const useQueryServiceEvents = () => {
     queryFn: ({signal}) => eventsService.getProductsByEvent({signal, eventId}),
   })
 
+  const addProductToEventMutation = (eventId: number) => useMutation({
+    mutationFn:(productId: number)=>eventsService.addProductToEvent(eventId, productId),
+    onSuccess:()=>{
+      queryClient.invalidateQueries({ queryKey: ['products-by-event', eventId] })
+    }
+  })
+
+  const removeProductFromEventMutation = (eventId: number) => useMutation({
+    mutationFn:(productId: number)=>eventsService.removeProductFromEvent(eventId, productId),
+    onSuccess:()=>{
+      queryClient.invalidateQueries({ queryKey: ['products-by-event', eventId] })
+    }
+  })
+
   const createEventMutation = useMutation({
     mutationFn:(data:TypeFormSchemaManageEvents)=>eventsService.createEvent(data),
     onSuccess:()=>{
@@ -47,5 +61,7 @@ export const useQueryServiceEvents = () => {
     GetAllEvents,
     createEventMutation,
     updateEventMutation,
+    addProductToEventMutation,
+    removeProductFromEventMutation,
   }
 }

@@ -4,7 +4,10 @@ import type { EventRow } from ".."
 import { ArrowUpDown, ListTree } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
-export const columnsEvents = (onEdit: (row: EventRow) => void): ColumnDef<EventRow>[] => [
+export const columnsEvents = (
+  onEdit: (row: EventRow) => void,
+  onAssignParticipants: (row: EventRow) => void
+): ColumnDef<EventRow>[] => [
   {
     accessorKey: "name",
     header: ({ column }) => (
@@ -61,8 +64,7 @@ export const columnsEvents = (onEdit: (row: EventRow) => void): ColumnDef<EventR
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
             <DropdownMenuItem onClick={() => onEdit(ev)}>Editar</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem disabled>Ver detalles</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onAssignParticipants(ev)}>Asignar participantes</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
