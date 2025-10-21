@@ -26,15 +26,22 @@ export const useQueryServiceEvents = () => {
     queryFn: ({signal}) => eventsService.getProductsByEvent({signal, eventId}),
   })
 
-  const addProductToEventMutation = (eventId: number) => useMutation({
+  const useAddProductToEventMutation = (eventId: number) => useMutation({
     mutationFn:(productId: number)=>eventsService.addProductToEvent(eventId, productId),
     onSuccess:()=>{
       queryClient.invalidateQueries({ queryKey: ['products-by-event', eventId] })
     }
   })
 
-  const removeProductFromEventMutation = (eventId: number) => useMutation({
+  const useRemoveProductFromEventMutation = (eventId: number) => useMutation({
     mutationFn:(productId: number)=>eventsService.removeProductFromEvent(eventId, productId),
+    onSuccess:()=>{
+      queryClient.invalidateQueries({ queryKey: ['products-by-event', eventId] })
+    }
+  })
+
+  const useSaveBranchesForProductEventMutation = (eventId: number, productId: number) => useMutation({
+    mutationFn:(branchIds: number[])=>eventsService.saveBranchesForProductEvent(eventId, productId, branchIds),
     onSuccess:()=>{
       queryClient.invalidateQueries({ queryKey: ['products-by-event', eventId] })
     }
@@ -61,7 +68,8 @@ export const useQueryServiceEvents = () => {
     GetAllEvents,
     createEventMutation,
     updateEventMutation,
-    addProductToEventMutation,
-    removeProductFromEventMutation,
+    useAddProductToEventMutation,
+    useRemoveProductFromEventMutation,
+    useSaveBranchesForProductEventMutation,
   }
 }

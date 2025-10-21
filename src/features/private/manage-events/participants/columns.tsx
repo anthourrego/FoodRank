@@ -6,6 +6,7 @@ import type { EventsProduct } from "@/features/public/models/EventsProducts"
 
 export const columns = (
   onRemove: (row: EventsProduct) => void,
+  onAssignBranches: (row: EventsProduct) => void,
 ): ColumnDef<EventsProduct>[] => [
   {
     accessorKey: "restaurant_product.name",
@@ -30,6 +31,7 @@ export const columns = (
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+            <DropdownMenuItem onClick={() => onAssignBranches(item)}>Sucursales</DropdownMenuItem>
             <DropdownMenuItem onClick={() => onRemove(item)}>Eliminar participante</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

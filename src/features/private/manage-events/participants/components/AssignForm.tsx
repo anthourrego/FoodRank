@@ -9,8 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { productsRestaurantService } from "@/features/private/products-restaurant/services/ProductsRestaurantService"
 import { useQuery } from "@tanstack/react-query"
 import { useQueryServiceEvents } from "@/hooks/useQueryServiceEvents"
-import { useNotification } from "@/features/private/restaurant/hook/UseNotification"
 import { toast } from "sonner"
+import type { ProductRestaurantListResponse, ProductRestaurant } from "@/features/private/products-restaurant/types/products-restaurant.types"
 
 const schema = z.object({
   product_id: z.string().min(1, "Seleccione un producto"),
@@ -24,19 +24,19 @@ interface Props {
 
 export function AssignForm({ eventId }: Props) {
   const form = useForm<FormData>({ resolver: zodResolver(schema), defaultValues: { product_id: "" } })
-  const { addProductToEventMutation } = useQueryServiceEvents()
-  const addMutation = addProductToEventMutation(eventId)
+  const { useAddProductToEventMutation } = useQueryServiceEvents()
+  const addMutation = useAddProductToEventMutation(eventId)
 
 
 
-  const { data: productsResp } = useQuery({
+  const { data: productsResp } = useQuery<ProductRestaurantListResponse>({
     queryKey: ["products-restaurant", { page: 1 }],
     queryFn: () => productsRestaurantService.getProductsRestaurant({ page: 1, per_page: 100 }),
   })
 
   const productsOptions = useMemo(() => {
-    const list = Array.isArray(productsResp?.data) ? productsResp?.data : productsResp?.data?.data
-    return Array.isArray(list) ? list : []
+    const list = productsResp?.data
+    return Array.isArray(list) ? list as ProductRestaurant[] : []
   }, [productsResp])
 
   const [submitting, setSubmitting] = useState(false)
@@ -44,15 +44,8 @@ export function AssignForm({ eventId }: Props) {
   async function onSubmit(values: FormData) {
     setSubmitting(true)
     try {
-      await addMutation.mutateAsync(Number(values.product_id),{
-        onSuccess:()=>{
-          toast.success("Producto asignado correctamente")
-        },
-        onError:(error)=>{
-          console.error(error)
-          toast.error(error.message || "Error al asignar el producto")
-        }
-      })
+      await addMutation.mutateAsync(Number(values.product_id))
+      toast.success("Producto asignado correctamente")
       form.reset({ product_id: "" })
     } finally {
       setSubmitting(false)
@@ -75,7 +68,7 @@ export function AssignForm({ eventId }: Props) {
                       <SelectValue placeholder="Seleccione un producto" />
                     </SelectTrigger>
                     <SelectContent>
-                      {productsOptions?.map((p: any) => (
+                      {productsOptions?.map((p: ProductRestaurant) => (
                         <SelectItem key={p.id} value={String(p.id)}>
                           {p.name}
                         </SelectItem>

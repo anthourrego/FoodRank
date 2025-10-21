@@ -7,13 +7,14 @@ import { DataTable } from "@/components/ui/data-table"
 import type { EventsProduct } from "@/features/public/models/EventsProducts"
 import { columns } from "./columns"
 import { AssignForm } from "./components/AssignForm"
+import { BranchesModal, BranchesModalInternal } from "./components/BranchesModal.tsx"
 
 function ParticipantsPage() {
   const { eventId } = useParams()
   const id = Number(eventId)
-  const { GetProductsByEvent, removeProductFromEventMutation } = useQueryServiceEvents()
+  const { GetProductsByEvent, useRemoveProductFromEventMutation } = useQueryServiceEvents()
   const { data, isLoading } = GetProductsByEvent(id)
-  const removeMutation = removeProductFromEventMutation(id)
+  const removeMutation = useRemoveProductFromEventMutation(id)
   const navigate = useNavigate()
 
   const rows = useMemo(() => Array.isArray(data?.data) ? data.data : [], [data])
@@ -37,15 +38,25 @@ function ParticipantsPage() {
         <Card>
           <CardContent className="p-0">
             <DataTable
-              columns={columns(async (row: EventsProduct) => {
-                const productId = Number(row.product_id)
-                if (!productId) return
-                await removeMutation.mutateAsync(productId)
-              })}
+              columns={columns(
+                async (row: EventsProduct) => {
+                  const productId = Number(row.product_id)
+                  if (!productId) return
+                  await removeMutation.mutateAsync(productId)
+                },
+                (row: EventsProduct) => {
+                  BranchesModal.open({
+                    eventId: row.id,
+                    restaurantId: row.restaurant_product.restaurant.id,
+                    productId: row.product_id,
+                  })
+                }
+              )}
               data={isLoading ? [] : rows}
             />
           </CardContent>
         </Card>
+        <BranchesModalInternal />
       </div>
     </div>
   )

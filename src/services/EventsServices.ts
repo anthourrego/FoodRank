@@ -37,6 +37,11 @@ export class EventsServices {
         return response.data
     }
 
+    async saveBranchesForProductEvent(eventId: number, productId: number, branchIds: number[]) {
+        const response = await this.apiClient.post(`${this.endpoint}/products-event/${eventId}/${productId}/branches`, { branch_ids: branchIds })
+        return response.data
+    }
+
     async createEvent(data: TypeFormSchemaManageEvents) {
         const response = await this.apiClient.post(`${this.endpoint}`, data)
         return response.data
