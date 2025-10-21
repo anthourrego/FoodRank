@@ -7,7 +7,8 @@ import { DataTable } from "@/components/ui/data-table"
 import type { EventsProduct } from "@/features/public/models/EventsProducts"
 import { columns } from "./columns"
 import { AssignForm } from "./components/AssignForm"
-import { BranchesModal, BranchesModalInternal } from "./components/BranchesModal.tsx"
+import { BranchesModalInternal } from "./components/BranchesModal.tsx"
+import { BranchesModal } from "./components/BranchesModalUtils"
 
 function ParticipantsPage() {
   const { eventId } = useParams()
@@ -49,6 +50,7 @@ function ParticipantsPage() {
                     eventId: row.id,
                     restaurantId: row.restaurant_product.restaurant.id,
                     productId: row.product_id,
+                    assignedBranches: row.branchs_product || [],
                   })
                 }
               )}

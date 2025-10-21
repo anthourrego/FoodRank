@@ -1,4 +1,5 @@
 import type { RestaurantProduct } from "./RestaurantProduct";
+import type { EventProductBranch } from "@/models/interfaces";
 
 export interface EventsProduct {
   id:                 number;
@@ -10,4 +11,5 @@ export interface EventsProduct {
   created_at:         Date;
   updated_at:         Date;
   restaurant_product: RestaurantProduct;
+  branchs_product?:   EventProductBranch[];
 }

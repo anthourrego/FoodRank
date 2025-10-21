@@ -3,17 +3,19 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import restaurantBranchService from "@/features/private/restaurant/services/RestaurantBranchService"
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useQueryServiceEvents } from "@/hooks/useQueryServiceEvents"
 import type { RestaurantBranch, RestaurantBranchesResponse } from "@/features/private/restaurant/types/restaurant-branch.types"
+import type { EventProductBranch } from "@/models/interfaces"
+import { setBranchesModalOpen } from "./BranchesModalUtils"
+import { toast } from "sonner"
 
 interface OpenParams {
   eventId: number
   restaurantId: number
   productId: number
+  assignedBranches: EventProductBranch[]
 }
-
-let externalOpen: ((params: OpenParams) => void) | null = null
 
 export function BranchesModalInternal() {
   const [open, setOpen] = useState(false)
@@ -22,22 +24,25 @@ export function BranchesModalInternal() {
 
   const { useSaveBranchesForProductEventMutation } = useQueryServiceEvents()
   const saveMutation = useSaveBranchesForProductEventMutation(params?.eventId ?? 0, params?.productId ?? 0)
+  const queryClient = useQueryClient()
 
   const { data: branchesResp } = useQuery<RestaurantBranchesResponse>({
     enabled: open && !!params?.restaurantId,
     queryKey: ["restaurant-branches", { restaurantId: params?.restaurantId }],
-    queryFn: () => restaurantBranchService.getAll({ restaurant_id: String(params!.restaurantId), per_page: 200 }),
+    queryFn: () => restaurantBranchService.getAll({ restaurant_id: params!.restaurantId, per_page: 200 }),
   })
 
   const branches = useMemo<RestaurantBranch[]>(() => branchesResp?.data ?? [], [branchesResp])
 
   useEffect(() => {
-    externalOpen = (p: OpenParams) => {
+    setBranchesModalOpen((p: OpenParams) => {
       setParams(p)
-      setSelected([])
+      // Inicializar con las sucursales ya asignadas
+      const assignedBranchIds = p.assignedBranches.map(bp => bp.restaurant_branch_id)
+      setSelected(assignedBranchIds)
       setOpen(true)
-    }
-    return () => { externalOpen = null }
+    })
+    return () => { setBranchesModalOpen(null) }
   }, [])
 
   function toggle(id: number, checked: boolean) {
@@ -46,7 +51,15 @@ export function BranchesModalInternal() {
 
   async function onSave() {
     if (!params) return
-    await saveMutation.mutateAsync(selected)
+    await saveMutation.mutateAsync(selected,{
+      onSuccess:()=>{
+        queryClient.invalidateQueries({ queryKey: ['products-by-event', params.eventId] })
+      },
+      onError:(error)=>{
+        toast.error(error.message)
+      }
+
+    })
     setOpen(false)
   }
 
@@ -66,7 +79,7 @@ export function BranchesModalInternal() {
                   checked={selected.includes(b.id)}
                   onChange={(e) => toggle(b.id, e.target.checked)}
                 />
-                <span>{b.address ?? b.name ?? `Sucursal #${b.id}`}</span>
+                <span>{b.address ?? `Sucursal #${b.id}`}</span>
               </label>
             ))}
           </div>
@@ -80,10 +93,5 @@ export function BranchesModalInternal() {
   )
 }
 
-export const BranchesModal = {
-  open(params: OpenParams) {
-    externalOpen?.(params)
-  }
-}
 
 
