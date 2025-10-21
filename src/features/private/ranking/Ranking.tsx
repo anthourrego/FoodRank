@@ -116,7 +116,7 @@ const getRankBadge = (position: number) => {
     if (selectedEventId) {
       getRanking(selectedEventId)
     }
-  }, [selectedEventId, getRanking])
+  }, [selectedEventId])
 
   const handleProductClick = (product: RankingItem) => {
     setSelectedProduct(product)
@@ -128,10 +128,10 @@ const getRankBadge = (position: number) => {
     setSelectedProduct(null)
   }
 
-  if(ranking.length === 0) {
-    return <div>Cargando...</div>
+/*   if(ranking.length === 0) {
+    return <div>Sin datos disponibles para el evento seleccionado</div>
   }
-
+ */
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
       <div className="container mx-auto px-4 py-8">
@@ -187,8 +187,8 @@ const getRankBadge = (position: number) => {
           </div>
         </div>
 
-        
-        <div className="mb-16">
+        {ranking.length > 0 ? (
+<><div className="mb-16">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">🏆 Podium de Ganadores</h2>
             <div className="w-24 h-1 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full mx-auto"></div>
@@ -474,6 +474,14 @@ const getRankBadge = (position: number) => {
             })}
           </div>
         </div>
+</>
+        )
+        : (
+          <div className="text-center py-8">
+            <p className="text-gray-500">No hay datos disponibles para el evento seleccionado</p>
+          </div>
+        )}
+        
       </div>
 
       
