@@ -7,11 +7,10 @@ import type {
   ProductRestaurantFilters,
 } from "../types/products-restaurant.types";
 import ProductsRestaurantForm from "./components/ProductsRestaurantForm";
-import { useNotification } from "../hook/UseNotification";
-import { Notification } from "./components/list/Notification";
 import { SearchAndFilters } from "./components/common/Filters";
 import { ProductsRestaurantTable } from "./components/list/ProductsRestaurantTable";
 import useRestaurants from "../../restaurant/hook/UseRestaurants";
+import { toast } from "sonner";
 
 const ProductsRestaurantPage: React.FC = () => {
   const {
@@ -26,9 +25,7 @@ const ProductsRestaurantPage: React.FC = () => {
     toggleProductStatus,
   } = useProductsRestaurant();
 
-  const { notification, showNotification, hideNotification } =
-    useNotification();
-    const { restaurants, fetchRestaurants } = useRestaurants();
+  const { restaurants, fetchRestaurants } = useRestaurants();
 
   const [showForm, setShowForm] = useState(false);
   const [selectedProduct, setSelectedProduct] =
@@ -40,12 +37,12 @@ const ProductsRestaurantPage: React.FC = () => {
     sort_by: "created_at",
     sort_order: "desc",
     page: 1,
-    per_page: 10,
+    per_page: 5,
   });
 
   useEffect(() => {
-      fetchRestaurants({ page: 1, per_page: 500 });
-    }, [fetchRestaurants]);
+    fetchRestaurants({ page: 1, per_page: 500 });
+  }, [fetchRestaurants]);
 
   useEffect(() => {
     fetchProducts(filters);
@@ -79,27 +76,25 @@ const ProductsRestaurantPage: React.FC = () => {
   const handleDeleteProduct = useCallback(
     async (product: ProductRestaurant) => {
       const result = await deleteProduct(product.id);
-      showNotification(
-        result.success ? "success" : "error",
-        result.success
-          ? result.message || "Producto eliminado correctamente"
-          : result.error || "Error al eliminar el producto"
-      );
+      if (result.success) {
+        toast.success(result.message || "Producto eliminado correctamente");
+      } else {
+        toast.error(result.error || "Error al eliminar el producto");
+      }
     },
-    [deleteProduct, showNotification]
+    [deleteProduct]
   );
 
   const handleToggleStatus = useCallback(
     async (product: ProductRestaurant) => {
       const result = await toggleProductStatus(product.id);
-      showNotification(
-        result.success ? "success" : "error",
-        result.success
-          ? result.message || "Estado actualizado correctamente"
-          : result.error || "Error al actualizar el estado"
-      );
+      if (result.success) {
+        toast.success(result.message || "Estado actualizado correctamente");
+      } else {
+        toast.error(result.error || "Error al actualizar el estado");
+      }
     },
-    [toggleProductStatus, showNotification]
+    [toggleProductStatus]
   );
 
   const handleFormSubmit = useCallback(
@@ -112,16 +107,16 @@ const ProductsRestaurantPage: React.FC = () => {
         if (result.success) {
           setShowForm(false);
           setSelectedProduct(null);
-          showNotification("success", result.message || "Operación exitosa");
+          toast.success(result.message || "Operación exitosa");
         } else {
-          showNotification("error", result.error || "Error en la operación");
+          toast.error(result.error || "Error en la operación");
         }
       } catch (err) {
-        showNotification("error", "Error inesperado");
+        toast.error("Error inesperado");
         console.error(err);
       }
     },
-    [selectedProduct, updateProduct, createProduct, showNotification]
+    [selectedProduct, updateProduct, createProduct]
   );
 
   const handleFormCancel = useCallback(() => {
@@ -136,8 +131,6 @@ const ProductsRestaurantPage: React.FC = () => {
           Gestión de Productos
         </h1>
       </header>
-
-      <Notification notification={notification} onClose={hideNotification} />
 
       <div className="mb-6 flex flex-col sm:flex-row gap-4">
         <SearchAndFilters

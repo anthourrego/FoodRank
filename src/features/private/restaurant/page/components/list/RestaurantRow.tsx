@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Mail, Phone, Globe, Instagram, Facebook, Edit, Power, Trash2, Store } from 'lucide-react';
+import { MapPin, Mail, Phone, Globe, Instagram, Facebook, Edit, Trash2, Store } from 'lucide-react';
 import type { Restaurant } from '../../../types/restaurant.types';
 import { useNavigate } from 'react-router';
 
@@ -94,30 +94,20 @@ export const RestaurantRow: React.FC<RestaurantRowProps> = ({
       </td>
 
       <td className="px-6 py-4 whitespace-nowrap">
-        <span
-          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+        <button
+          onClick={() => onToggleStatus(restaurant)}
+          className={`inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer ${
             restaurant.is_active
-              ? "bg-green-100 text-green-800"
-              : "bg-red-100 text-red-800"
+              ? "bg-green-100 text-green-800 hover:bg-green-200"
+              : "bg-red-100 text-red-800 hover:bg-red-200"
           }`}
         >
-          {restaurant.is_active ? "Activo" : "Inactivo"}
-        </span>
+          {restaurant.is_active ? "Activa" : "Inactiva"}
+        </button>
       </td>
 
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
         <div className="flex space-x-2">
-          <button
-            onClick={() => onToggleStatus(restaurant)}
-            className={`transition-colors cursor-pointer ${
-              restaurant.is_active
-                ? "text-red-600 hover:text-red-900"
-                : "text-green-600 hover:text-green-900"
-            }`}
-            title={restaurant.is_active ? "Desactivar" : "Activar"}
-          >
-            <Power size={16} />
-          </button>
           <button
             onClick={() => onEdit(restaurant)}
             className="text-blue-600 hover:text-blue-900 transition-colors cursor-pointer"

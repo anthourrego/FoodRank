@@ -7,10 +7,9 @@ import type {
   RestaurantFilters,
 } from "../types/restaurant.types";
 import RestaurantForm from "./components/RestaurantForm";
-import { useNotification } from "../hook/UseNotification";
-import { Notification } from "./components/list/Notification";
 import { SearchAndFilters } from "./components/common/Filters";
 import { RestaurantTable } from "./components/list/RestaurantTable";
+import { toast } from "sonner";
 
 const RestaurantPage: React.FC = () => {
   const {
@@ -25,9 +24,6 @@ const RestaurantPage: React.FC = () => {
     deleteRestaurant,
     toggleRestaurantStatus,
   } = useRestaurants();
-
-  const { notification, showNotification, hideNotification } =
-    useNotification();
 
   const [showForm, setShowForm] = useState(false);
   const [selectedRestaurant, setSelectedRestaurant] =
@@ -74,27 +70,25 @@ const RestaurantPage: React.FC = () => {
   const handleDeleteRestaurant = useCallback(
     async (restaurant: Restaurant) => {
       const result = await deleteRestaurant(restaurant.id);
-      showNotification(
-        result.success ? "success" : "error",
-        result.success
-          ? result.message || "Restaurante eliminado correctamente"
-          : result.error || "Error al eliminar el restaurante"
-      );
+      if (result.success) {
+        toast.success(result.message || "Restaurante eliminado correctamente");
+      } else {
+        toast.error(result.error || "Error al eliminar el restaurante");
+      }
     },
-    [deleteRestaurant, showNotification]
+    [deleteRestaurant]
   );
 
   const handleToggleStatus = useCallback(
     async (restaurant: Restaurant) => {
       const result = await toggleRestaurantStatus(restaurant.id);
-      showNotification(
-        result.success ? "success" : "error",
-        result.success
-          ? result.message || "Estado actualizado correctamente"
-          : result.error || "Error al actualizar el estado"
-      );
+      if (result.success) {
+        toast.success(result.message || "Estado actualizado correctamente");
+      } else {
+        toast.error(result.error || "Error al actualizar el estado");
+      }
     },
-    [toggleRestaurantStatus, showNotification]
+    [toggleRestaurantStatus]
   );
 
   const handleFormSubmit = useCallback(
@@ -107,16 +101,16 @@ const RestaurantPage: React.FC = () => {
         if (result.success) {
           setShowForm(false);
           setSelectedRestaurant(null);
-          showNotification("success", result.message || "Operación exitosa");
+          toast.success(result.message || "Operación exitosa");
         } else {
-          showNotification("error", result.error || "Error en la operación");
+          toast.error(result.error || "Error en la operación");
         }
       } catch (err) {
-        showNotification("error", "Error inesperado");
+        toast.error("Error inesperado");
         console.error(err);
       }
     },
-    [selectedRestaurant, updateRestaurant, createRestaurant, showNotification]
+    [selectedRestaurant, updateRestaurant, createRestaurant]
   );
 
   const handleFormCancel = useCallback(() => {
@@ -131,8 +125,6 @@ const RestaurantPage: React.FC = () => {
           Gestión de Restaurantes
         </h1>
       </header>
-
-      <Notification notification={notification} onClose={hideNotification} />
 
       <div className="mb-6 flex flex-col sm:flex-row gap-4">
         <SearchAndFilters
