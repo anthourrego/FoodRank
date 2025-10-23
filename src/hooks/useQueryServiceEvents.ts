@@ -21,9 +21,10 @@ export const useQueryServiceEvents = () => {
     queryFn: ({signal}) => eventsService.getAllEvents({signal}),
   })
 
-  const GetProductsByEvent = (eventId: number) => useQuery({
+  const GetProductsByEvent = (eventId: number, options?: { enabled?: boolean }) => useQuery({
     queryKey: ['products-by-event', eventId],
     queryFn: ({signal}) => eventsService.getProductsByEvent({signal, eventId}),
+    enabled: options?.enabled ?? true,
   })
 
   const useAddProductToEventMutation = (eventId: number) => useMutation({

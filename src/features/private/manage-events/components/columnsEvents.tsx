@@ -6,7 +6,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 
 export const columnsEvents = (
   onEdit: (row: EventRow) => void,
-  onAssignParticipants: (row: EventRow) => void
+  onAssignParticipants: (row: EventRow) => void,
+  generarQr: (row: EventRow) => void
 ): ColumnDef<EventRow>[] => [
   {
     accessorKey: "name",
@@ -65,6 +66,7 @@ export const columnsEvents = (
             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
             <DropdownMenuItem onClick={() => onEdit(ev)}>Editar</DropdownMenuItem>
             <DropdownMenuItem onClick={() => onAssignParticipants(ev)}>Asignar participantes</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => generarQr(ev)}>Generar QR</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )

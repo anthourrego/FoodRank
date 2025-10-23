@@ -22,7 +22,7 @@ const privateRouter = () => {
           path="/"
           element={<Navigate to={`/home/restaurants`} />}
         />
-        <Route path="/qr" element={<GenerateQr />} />
+        <Route path="/qr/:eventId?" element={<GenerateQr />} />
         <Route path="/ranking" element={<Ranking />} />
         <Route
           path="/raking/product-event/:productEventId"

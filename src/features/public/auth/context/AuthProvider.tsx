@@ -77,7 +77,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
       setToken(token);
 
       localStorage.setItem("foodranktoken", token);
-      location.assign("/home");
+      location.assign("/home/manage-events");
 
       return { success: true };
     } catch (error) {

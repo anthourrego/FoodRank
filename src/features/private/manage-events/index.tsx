@@ -94,6 +94,10 @@ function ManageEvents() {
     }
   }, [editing, updateEventMutation, createEventMutation, form])
 
+  const generarQr = useCallback((row: EventRow) => {
+    navigate(`/home/qr/${row.id}`)
+  }, [navigate])
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
       <div className="container mx-auto px-4 py-8">
@@ -104,7 +108,7 @@ function ManageEvents() {
 
         <Card>
           <CardContent className="p-0">
-            <EventsTable isLoading={isLoading} events={events} onEdit={onOpenEdit} onAssignParticipants={onAssignParticipants} />
+            <EventsTable isLoading={isLoading} events={events} onEdit={onOpenEdit} onAssignParticipants={onAssignParticipants} generarQr={generarQr} />
           </CardContent>
         </Card>
 
