@@ -54,9 +54,11 @@ export function BranchesModalInternal() {
     await saveMutation.mutateAsync(selected,{
       onSuccess:()=>{
         queryClient.invalidateQueries({ queryKey: ['products-by-event', params.eventId] })
+        toast.success("Sucursales guardadas correctamente")
       },
       onError:(error)=>{
-        toast.error(error.message)
+        const errorMessage = error instanceof Error ? error.message : "Error al guardar las sucursales";
+        toast.error(errorMessage);
       }
 
     })

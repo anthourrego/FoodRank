@@ -24,6 +24,7 @@ import type { UseMutationResult } from "@tanstack/react-query";
 import { Separator } from "@/components/ui/separator";
 import { useQueryServiceEvents } from "@/hooks/useQueryServiceEvents";
 import { Loading } from "@/components/ui/loading";
+import { toast } from "sonner";
 
 interface DialogConfigProps {
   openDialogConfig: boolean;
@@ -73,9 +74,11 @@ const DialogConfigInternal = ({
     fnSubmit.mutate(data, {
       onSuccess: () => {
         setOpenDialogConfig(false);
+        toast.success("Configuración creada correctamente");
       },
       onError: (error) => {
-        console.log("Error:", error);
+        const errorMessage = error instanceof Error ? error.message : "Error al crear la configuración";
+        toast.error(errorMessage);
       }
     });
 

@@ -2,6 +2,7 @@ import apiClient from "@/api/axiosInstance"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { ConfigurationService } from "../services/ConfigurationService"
 import type { TypeFormSchemaConfiguration } from "../models/FormSchemaConfiguration"
+import { toast } from "sonner"
 
 export const useQueryServiceConfig = () => {
   const queryClient = useQueryClient()
@@ -15,7 +16,8 @@ export const useQueryServiceConfig = () => {
       queryClient.invalidateQueries({ queryKey: ['configurations'] })
     },
     onError: (error) => {
-      console.log(error)
+      const errorMessage = error instanceof Error ? error.message : "Error al crear la configuración"
+      toast.error(errorMessage)
     }
   })
 

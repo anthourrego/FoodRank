@@ -10,6 +10,7 @@ import { useQueryServiceEvents } from "@/hooks/useQueryServiceEvents.ts"
 import type { EventRow } from "./models/EventRow.ts"
 import { useQueryServiceCities } from "@/hooks/useQueryCities.ts"
 import { useNavigate } from "react-router"
+import { toast } from "sonner"
 
 
 
@@ -82,6 +83,11 @@ function ManageEvents() {
           setOpen(false)
           form.reset()
           setEditing(null)
+          toast.success("Evento actualizado correctamente")
+        },
+        onError:(error)=>{
+          const errorMessage = error instanceof Error ? error.message : "Error al actualizar el evento"
+          toast.error(errorMessage)
         }
       })
     } else {      
@@ -89,6 +95,11 @@ function ManageEvents() {
         onSuccess:()=>{
           setOpen(false)
           form.reset()
+          toast.success("Evento creado correctamente")
+        },
+        onError:(error)=>{
+          const errorMessage = error instanceof Error ? error.message : "Error al crear el evento"
+          toast.error(errorMessage)
         }
       })
     }

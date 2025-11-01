@@ -44,9 +44,18 @@ export function AssignForm({ eventId }: Props) {
   async function onSubmit(values: FormData) {
     setSubmitting(true)
     try {
-      await addMutation.mutateAsync(Number(values.product_id))
-      toast.success("Producto asignado correctamente")
-      form.reset({ product_id: "" })
+      await addMutation.mutateAsync(Number(values.product_id), {
+        onSuccess: () => {
+          toast.success("Producto asignado correctamente");
+          form.reset({ product_id: "" });
+        },
+        onError: (error) => {
+          const errorMessage = error instanceof Error ? error.message : "Error al asignar el producto";
+          toast.error(errorMessage);
+        }
+      });
+    } catch {
+      // Error ya manejado en onError
     } finally {
       setSubmitting(false)
     }

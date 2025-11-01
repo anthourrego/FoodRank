@@ -9,6 +9,7 @@ import { columns } from "./columns"
 import { AssignForm } from "./components/AssignForm"
 import { BranchesModalInternal } from "./components/BranchesModal.tsx"
 import { BranchesModal } from "./components/BranchesModalUtils"
+import { toast } from "sonner"
 
 function ParticipantsPage() {
   const { eventId } = useParams()
@@ -43,7 +44,19 @@ function ParticipantsPage() {
                 async (row: EventsProduct) => {
                   const productId = Number(row.product_id)
                   if (!productId) return
-                  await removeMutation.mutateAsync(productId)
+                  try {
+                    await removeMutation.mutateAsync(productId, {
+                      onSuccess: () => {
+                        toast.success("Producto eliminado del evento correctamente");
+                      },
+                      onError: (error) => {
+                        const errorMessage = error instanceof Error ? error.message : "Error al eliminar el producto del evento";
+                        toast.error(errorMessage);
+                      }
+                    });
+                  } catch {
+                    // Error ya manejado en onError
+                  }
                 },
                 (row: EventsProduct) => {
                   BranchesModal.open({
