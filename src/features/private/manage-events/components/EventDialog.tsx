@@ -2,12 +2,14 @@
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
+import { X, Save } from "lucide-react"
 import type { EventRow } from "../models/EventRow"
 import type { TypeFormSchemaManageEvents } from "../models/FormSchemaManageEvents"
 import type { UseFormReturn } from "react-hook-form"
 import { memo, useState, useEffect } from "react"
 import { FormInput } from "@/components/form/FormInput"
 import { FormSelect } from "@/components/form/FormSelect"
+import { FormTextarea } from "@/components/form/FormTextarea";
 import { FormCombobox } from "@/components/form/FormCombobox";
 
 interface EventDialogProps {
@@ -44,21 +46,29 @@ return (
         <DialogTitle>{editing ? "Editar evento" : "Nuevo evento"}</DialogTitle>
       </DialogHeader>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
           <FormInput
             control={form.control}
             name="name"
+            required={true}
             label="Nombre"
             type="text"
             placeholder="Nombre"
           />
-          <FormInput
-            control={form.control}
-            name="description"
-            label="Descripción"
-            type="text"
-            placeholder="Descripción"
-          />
+          <div className="space-y-0">
+            <FormTextarea
+              control={form.control}
+              required={true}
+              name="description"
+              label="Descripción"
+              placeholder="Descripción del evento..."
+              maxLength={255}
+              rows={4}
+            />
+            <p className="text-xs text-gray-500 text-right">
+              {form.watch("description")?.length || 0}/255 caracteres
+            </p>
+          </div>
          
           <FormCombobox
             control={form.control}
@@ -72,6 +82,7 @@ return (
           />
           <FormInput
             control={form.control}
+            required={true}
             name="start_date"
             label="Fecha inicio"
             type="datetime-local"
@@ -79,6 +90,7 @@ return (
           />
           <FormInput
             control={form.control}
+            required={true}
             name="end_date"
             label="Fecha fin"
             type="datetime-local"
@@ -93,8 +105,12 @@ return (
 
           />
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="button" variant="outline" onClick={() => setOpen(false)} className="flex items-center gap-2">
+              <X className="h-4 w-4" />
+              Cancelar
+            </Button>
+            <Button type="submit" disabled={isSubmitting} className="flex items-center gap-2">
+              <Save className="h-4 w-4" />
               {editing ? "Guardar cambios" : "Crear evento"}
             </Button>
           </DialogFooter>

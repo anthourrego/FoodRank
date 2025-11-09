@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import type { ColumnDef } from "@tanstack/react-table"
 import type { EventRow } from ".."
-import { ArrowUpDown, ListTree } from "lucide-react"
+import { ArrowUpDown, ListTree, Edit, Users, QrCode } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 export const columnsEvents = (
@@ -64,9 +64,18 @@ export const columnsEvents = (
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => onEdit(ev)}>Editar</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onAssignParticipants(ev)}>Asignar participantes</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => generarQr(ev)}>Generar QR</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onEdit(ev)} className="flex items-center gap-2">
+              <Edit className="h-4 w-4" />
+              Editar
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onAssignParticipants(ev)} className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              Asignar participantes
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => generarQr(ev)} className="flex items-center gap-2">
+              <QrCode className="h-4 w-4" />
+              Generar QR
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )

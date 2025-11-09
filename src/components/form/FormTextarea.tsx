@@ -6,25 +6,22 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { Input } from "../ui/input";
-import { type HTMLInputTypeAttribute } from "react";
+import { Textarea } from "../ui/textarea";
 
 import { cn } from "@/lib/utils";
 interface Props<T extends FieldValues>
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   control: Control<T>;
   required?: boolean;
   label?: string;
-  type: HTMLInputTypeAttribute | undefined;
   placeholder?: string | undefined;
   name: FieldPath<T>;
   className?: string;
 }
-export function FormInput<T extends FieldValues>({
+export function FormTextarea<T extends FieldValues>({
   control,
   required = false,
   label,
-  type,
   placeholder = "",
   name,
   className = "",
@@ -41,20 +38,18 @@ export function FormInput<T extends FieldValues>({
             {required && <span className="text-red-500 ml-1">*</span> }
           </FormLabel>
           <FormControl>
-            <Input
-              type={type}
+            <Textarea
               placeholder={placeholder}
               {...field}
               id={name}
               {...props}
               className={cn(
-                "bg-white placeholder:text-slate-300",
+                "bg-white placeholder:text-slate-300 resize-vertical",
                 fieldState.error && "border-red-500 focus:border-red-500"
               )}
             />
           </FormControl>
           <FormMessage className="text-red-500 text-xs mt-0" />
-          
         </FormItem>
       )}
     />

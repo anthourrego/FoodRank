@@ -53,7 +53,7 @@ export function FormCombobox<T extends FieldValues>({
               fieldState.error ? "border-red-500 focus:border-red-500" : ""
             }
           />
-          <FormMessage className="text-red-500 text-xs mt-1" />
+          <FormMessage className="text-red-500 text-xs mt-0" />
         </FormItem>
       )}
     />

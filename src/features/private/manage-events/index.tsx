@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Plus } from "lucide-react"
 import { EventDialog } from "./components/EventDialog.tsx"
 import { EventsTable } from "./components/EventsTable.tsx"
 import { FormSchemaManageEvents, type TypeFormSchemaManageEvents, defaultFormSchemaManageEvents } from "./models/FormSchemaManageEvents"
@@ -114,7 +115,10 @@ function ManageEvents() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Administración de Eventos</h1>
-          <Button onClick={onOpenNew}>Nuevo Evento</Button>
+          <Button onClick={onOpenNew} className="flex items-center gap-2">
+            <Plus className="h-4 w-4" />
+            Nuevo Evento
+          </Button>
         </div>
 
         <Card>
