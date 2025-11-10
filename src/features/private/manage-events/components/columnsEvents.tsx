@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button"
 import type { ColumnDef } from "@tanstack/react-table"
-import type { EventRow } from ".."
+import type { EventRow } from "../models/EventRow"
 import { ArrowUpDown, ListTree, Edit, Users, QrCode } from "lucide-react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 export const columnsEvents = (
   onEdit: (row: EventRow) => void,
@@ -14,17 +14,23 @@ export const columnsEvents = (
     header: ({ column }) => (
       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Nombre<ArrowUpDown className="ml-2 h-4 w-4" /></Button>
     ),
-    cell: ({ row }) => <div className="text-sm font-medium text-gray-900 capitalize px-6 py-4">{row.original.name}</div>
+    cell: ({ row }) => <div className="text-sm font-medium text-gray-900 capitalize px-6 py-4">{row.original.name}</div>,
+    enableColumnFilter: true,
+    enableGlobalFilter: true,
   },
   {
     accessorKey: "city.name",
     header: "Ciudad",
-    cell: ({ row }) => <div className="px-6 py-4">{row.original.city?.name}</div>
+    cell: ({ row }) => <div className="px-6 py-4">{row.original.city?.name}</div>,
+    enableColumnFilter: true,
+    enableGlobalFilter: true,
   },
   {
     accessorKey: "description",
     header: "Descripción",
-    cell: ({ row }) => <div className="px-6 py-4 max-w-[420px] truncate">{row.original.description}</div>
+    cell: ({ row }) => <div className="px-6 py-4 max-w-[420px] truncate">{row.original.description}</div>,
+    enableColumnFilter: true,
+    enableGlobalFilter: true,
   },
   {
     accessorKey: "start_date",
@@ -47,7 +53,13 @@ export const columnsEvents = (
       <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${row.original.is_active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
         {row.original.is_active ? "Activo" : "Inactivo"}
       </span>
-    )
+    ),
+    enableGlobalFilter: true,
+    filterFn: (row, _columnId, value) => {
+      const isActive = row.original.is_active;
+      const status = isActive ? "activo" : "inactivo";
+      return status.toLowerCase().includes(value.toLowerCase());
+    },
   },
   {
     accessorKey: "actions",

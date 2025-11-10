@@ -36,6 +36,8 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = useState("");
+  
   const table = useReactTable({
     data,
     columns,
@@ -45,9 +47,12 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: "includesString",
     state: {
       columnFilters,
       sorting,
+      globalFilter,
     },
   });
 
@@ -63,11 +68,10 @@ export function DataTable<TData, TValue>({
             type="text"
             name="search"
             id="search"
-          
             placeholder="Buscar..."
-            value={(table.getColumn("key")?.getFilterValue() as string) ?? ""}
+            value={globalFilter ?? ""}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              table.getColumn("key")?.setFilterValue(event.target.value)
+              setGlobalFilter(event.target.value)
             }
             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors h-full"
           />

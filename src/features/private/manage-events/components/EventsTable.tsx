@@ -1,4 +1,4 @@
-import type { EventRow } from ".."
+import type { EventRow } from "../models/EventRow"
 import { DataTable } from "@/components/ui/data-table"
 import { columnsEvents } from "./columnsEvents"
 
