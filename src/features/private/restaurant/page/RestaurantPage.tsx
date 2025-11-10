@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import useRestaurants from "../hook/UseRestaurants";
 import type {
   CreateRestaurantData,
@@ -119,51 +120,50 @@ const RestaurantPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">
-          Gestión de Restaurantes
-        </h1>
-      </header>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold text-gray-900">Gestión de Restaurantes</h1>
+          <Button 
+            onClick={handleCreateRestaurant} 
+            className="flex items-center gap-2 bg-red-800/80 hover:bg-red-800 text-white"
+          >
+            <Plus className="h-4 w-4" />
+            Nuevo Restaurante
+          </Button>
+        </div>
 
-      <div className="mb-6 flex flex-col sm:flex-row gap-4">
-        <SearchAndFilters
-          filters={filters}
-          cities={cities}
-          onFiltersChange={handleFiltersChange}
-          handleClearFIlters={handleClearFIlters}
-          canOrderBy={true}
-        />
+        <div className="mb-6">
+          <SearchAndFilters
+            filters={filters}
+            cities={cities}
+            onFiltersChange={handleFiltersChange}
+            handleClearFIlters={handleClearFIlters}
+            canOrderBy={true}
+          />
+        </div>
 
-        <button
-          onClick={handleCreateRestaurant}
-          className="flex items-center px-4 py-2 text-white bg-red-800/80 rounded-lg transition-colors"
-        >
-          <Plus size={20} className="mr-2" />
-          Nuevo Restaurante
-        </button>
-      </div>
-
-      <RestaurantTable
-        restaurants={restaurants}
-        loading={loading}
-        error={error}
-        pagination={pagination}
-        onEdit={handleEditRestaurant}
-        onDelete={handleDeleteRestaurant}
-        onToggleStatus={handleToggleStatus}
-        onPageChange={handlePageChange}
-      />
-
-      {showForm && (
-        <RestaurantForm
-          restaurant={selectedRestaurant}
-          cities={cities}
-          onSubmit={handleFormSubmit}
-          onCancel={handleFormCancel}
+        <RestaurantTable
+          restaurants={restaurants}
           loading={loading}
+          error={error}
+          pagination={pagination}
+          onEdit={handleEditRestaurant}
+          onDelete={handleDeleteRestaurant}
+          onToggleStatus={handleToggleStatus}
+          onPageChange={handlePageChange}
         />
-      )}
+
+        {showForm && (
+          <RestaurantForm
+            restaurant={selectedRestaurant}
+            cities={cities}
+            onSubmit={handleFormSubmit}
+            onCancel={handleFormCancel}
+            loading={loading}
+          />
+        )}
+      </div>
     </div>
   );
 };

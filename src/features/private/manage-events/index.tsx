@@ -115,7 +115,7 @@ function ManageEvents() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Administración de Eventos</h1>
-          <Button onClick={onOpenNew} className="flex items-center gap-2">
+          <Button onClick={onOpenNew} className="flex items-center gap-2 bg-red-800/80 hover:bg-red-800 text-white">
             <Plus className="h-4 w-4" />
             Nuevo Evento
           </Button>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { AlertCircle, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import type {
   RequestRestaurantBranch,
   RestaurantBranch,
@@ -152,66 +153,69 @@ const RestaurantBranchesPage: React.FC = () => {
 
   if (!restaurantId) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div
-          className={`mb-6 p-4 rounded-md flex items-center animate-fade-in bg-red-50 text-red-800 border border-red-200`}
-        >
-          <AlertCircle size={20} className="mr-2 flex-shrink-0" />
-          <span className="flex-1">
-            No se encontro restaurante seleccionado
-          </span>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
+        <div className="container mx-auto px-4 py-8">
+          <div
+            className={`mb-6 p-4 rounded-md flex items-center animate-fade-in bg-red-50 text-red-800 border border-red-200`}
+          >
+            <AlertCircle size={20} className="mr-2 flex-shrink-0" />
+            <span className="flex-1">
+              No se encontró restaurante seleccionado
+            </span>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Sucursales de {currentRestaurant?.name}
-        </h1>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold text-gray-900">
+            Sucursales de {currentRestaurant?.name}
+          </h1>
+          <Button 
+            onClick={handleNewBranch} 
+            className="flex items-center gap-2 bg-red-800/80 hover:bg-red-800 text-white"
+          >
+            <Plus className="h-4 w-4" />
+            Nueva Sucursal
+          </Button>
+        </div>
 
-      <div className="mb-6 flex flex-col sm:flex-row gap-4">
-        <SearchAndFilters
-          filters={filters}
-          cities={cities}
-          onFiltersChange={handleFiltersChange}
-          handleClearFIlters={handleClearFIlters}
-          canOrderBy={false}
+        <div className="mb-6">
+          <SearchAndFilters
+            filters={filters}
+            cities={cities}
+            onFiltersChange={handleFiltersChange}
+            handleClearFIlters={handleClearFIlters}
+            canOrderBy={false}
+          />
+        </div>
+
+        <RestaurantBranchTable
+          branches={branches}
+          loading={loading}
+          error={error}
+          pagination={pagination}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          onToggleStatus={handleToggleStatus}
+          onPageChange={handlePageChange}
         />
 
-        <button
-          onClick={handleNewBranch}
-          className="flex items-center px-4 py-2 text-white bg-red-800/80 rounded-lg transition-colors"
-        >
-          <Plus size={20} className="mr-2" />
-          Nueva Sucursal
-        </button>
+        {showForm && (
+          <RestaurantBranchForm
+            branch={selectedBranch}
+            restaurants={restaurants}
+            cities={cities}
+            onSubmit={handleSubmit}
+            onCancel={handleCancelForm}
+            restaurantId={+restaurantId}
+          />
+        )}
       </div>
-
-      <RestaurantBranchTable
-        branches={branches}
-        loading={loading}
-        error={error}
-        pagination={pagination}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        onToggleStatus={handleToggleStatus}
-        onPageChange={handlePageChange}
-      />
-
-      {showForm && (
-        <RestaurantBranchForm
-          branch={selectedBranch}
-          restaurants={restaurants}
-          cities={cities}
-          onSubmit={handleSubmit}
-          onCancel={handleCancelForm}
-          restaurantId={+restaurantId}
-        />
-      )}
     </div>
   );
 };
