@@ -48,11 +48,13 @@ export const columnsEvents = (
   },
   {
     accessorKey: "is_active",
-    header: "Activo",
+    header: () => <div className="text-center">Activo</div>,
     cell: ({ row }) => (
-      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${row.original.is_active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
-        {row.original.is_active ? "Activo" : "Inactivo"}
-      </span>
+      <div className="text-center px-6 py-4">
+        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${row.original.is_active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+          {row.original.is_active ? "Activo" : "Inactivo"}
+        </span>
+      </div>
     ),
     enableGlobalFilter: true,
     filterFn: (row, _columnId, value) => {
@@ -63,17 +65,18 @@ export const columnsEvents = (
   },
   {
     accessorKey: "actions",
-    header: "Acciones",
+    header: () => <div className="text-center">Acciones</div>,
     cell: ({ row }) => {
       const ev = row.original
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="h-8 w-8 p-0">
-              <span className="sr-only">Abrir menú</span>
-              <ListTree className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
+        <div className="flex justify-center px-6 py-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="h-8 w-8 p-0">
+                <span className="sr-only">Abrir menú</span>
+                <ListTree className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
             <DropdownMenuItem onClick={() => onEdit(ev)} className="flex items-center gap-2">
@@ -90,6 +93,7 @@ export const columnsEvents = (
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        </div>
       )
     }
   }
