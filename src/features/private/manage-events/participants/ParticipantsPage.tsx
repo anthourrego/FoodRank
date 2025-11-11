@@ -25,7 +25,7 @@ function ParticipantsPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
       <div className="container mx-auto px-4 py-8 space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-gray-900">Participantes del evento</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Participantes del evento -  {rows[0]?.event.name || ''}</h1>
           <Button variant="outline" onClick={() => navigate('/home/manage-events')}>
             Volver
           </Button>

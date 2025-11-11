@@ -44,7 +44,7 @@ export function RateProductGrid({productsEvents, configurationEvent}: RateProduc
     <>
     {
       configurationEvent && (
-        <LazyLoadImage src={`${import.meta.env.VITE_URL_RESOURCE}${configurationEvent?.find((config) => config.key === 'topBanner')?.value || ''}`} alt="Evento" className="object-cover h-32 w-full"  />
+        <LazyLoadImage src={`${import.meta.env.VITE_URL_RESOURCE}${configurationEvent?.find((config) => config.key === 'topBanner')?.value || ''}`} alt="Evento"   />
       )
     }
     <section className="py-16   ">
@@ -74,7 +74,7 @@ export function RateProductGrid({productsEvents, configurationEvent}: RateProduc
     </section>
     {
       configurationEvent && (
-        <LazyLoadImage src={`${import.meta.env.VITE_URL_RESOURCE}${configurationEvent?.find((config) => config.key === 'bottomBanner')?.value}`} alt="Evento" className="object-cover h-32 w-full" />
+        <LazyLoadImage src={`${import.meta.env.VITE_URL_RESOURCE}${configurationEvent?.find((config) => config.key === 'bottomBanner')?.value}`} alt="Evento"  />
       )}
     </>
   );

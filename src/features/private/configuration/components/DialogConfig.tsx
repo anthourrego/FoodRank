@@ -61,6 +61,7 @@ const DialogConfigInternal = ({
 
 
 
+
   const form = useForm<TypeFormSchemaConfiguration>({
     resolver: zodResolver(FormSchemaConfiguration),
     defaultValues: defaultFormSchemaConfiguration,
@@ -73,6 +74,9 @@ const DialogConfigInternal = ({
     } */
     fnSubmit.mutate(data, {
       onSuccess: () => {
+        form.reset(defaultFormSchemaConfiguration);
+        setSelectedFile(null);
+        setPreviewUrl("");
         setOpenDialogConfig(false);
         toast.success("Configuración creada correctamente");
       },
@@ -147,18 +151,11 @@ const DialogConfigInternal = ({
     }
   };
 
-  const optionsType = [
-    { value: "text", label: "Texto" },
-    { value: "image", label: "Imagen" },
-/*     { value: "boolean", label: "Booleano" },
-    { value: "number", label: "Número" }, */
-  ];
+
 
   const optionsKey = [
     { value: "topBanner", label: "Banner superior" },
     { value: "bottomBanner", label: "Banner inferior" },
-    { value: "title", label: "Título" },
-    { value: "description", label: "Descripción" },
 
   ];
 
@@ -230,6 +227,9 @@ const DialogConfigInternal = ({
                 />
                 <p className="text-xs text-gray-500 mt-1">
                   El tipo se establece automáticamente según la configuración seleccionada
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  La resolución recomendada para la imagen es de 1905x440
                 </p>
               </div>
               <div className="grid gap-3">

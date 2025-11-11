@@ -15,12 +15,14 @@ function Configuration() {
 
   const { GetConfigurations, mutateCreateConfiguration } = useQueryServiceConfig();
 
-  const { data: configurations } = GetConfigurations;
-
+  const { data: configurations } = GetConfigurations();
+console.log(configurations)
 
   useEffect(() => {
-    if (configurations && configurations.success && configurations.data?.length > 0) {
+    if (configurations && configurations.success && configurations.data) {
       setConfigurationsList(configurations.data);
+    } else if (configurations && configurations.success && !configurations.data) {
+      setConfigurationsList([]);
     }
   }, [configurations]);
 

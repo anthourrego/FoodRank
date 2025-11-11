@@ -43,6 +43,16 @@ const ImagePreview = ({ imageUrl, fileName }: { imageUrl: string; fileName: stri
 
 export const columns: ColumnDef<ConfigurationModel>[] = [
   {
+    accessorKey: "eventId",
+    header: "Evento",
+    cell: ({ row }) => {
+      const configuration = row.original;
+      return (
+        <div className=" capitalize px-6 py-4">{configuration.event.name}</div>
+      )
+    }
+  },
+  {
     accessorKey: "key",
     header: ({ column }) => {
       return (
@@ -130,7 +140,7 @@ export const columns: ColumnDef<ConfigurationModel>[] = [
       )
     }
   },
-  {
+  /* {
     accessorKey: "actions",
     header: "Acciones",
     cell: ({ row }) => {
@@ -160,6 +170,6 @@ export const columns: ColumnDef<ConfigurationModel>[] = [
         </DropdownMenu>
       )
     },
-  },
+  }, */
 
 ]
