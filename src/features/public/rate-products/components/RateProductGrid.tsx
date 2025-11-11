@@ -4,8 +4,6 @@ import { RateProductCard } from "./RateProductCard"
 
 import type { EventsProduct } from "../../models/EventsProducts";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import image_2 from "@/assets/images/image_ads2.webp";
-import image_1 from "@/assets/images/image_ads1.webp";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
@@ -41,20 +39,20 @@ export function RateProductGrid({productsEvents, configurationEvent}: RateProduc
   if(productsEvents.length === 0){
     return <CartEmpty />
   }
-
+  console.log(productsEvents)
   return (
     <>
     {
       configurationEvent && (
-        <LazyLoadImage src={`${import.meta.env.VITE_URL_RESOURCE}${configurationEvent?.find((config) => config.key === 'topBanner')?.value}`} alt="Evento" className="object-cover h-32 w-full"  />
+        <LazyLoadImage src={`${import.meta.env.VITE_URL_RESOURCE}${configurationEvent?.find((config) => config.key === 'topBanner')?.value || ''}`} alt="Evento" className="object-cover h-32 w-full"  />
       )
     }
     <section className="py-16   ">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">{configurationEvent?.find((config) => config.key === 'title')?.value || 'Productos del Evento'}</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">{productsEvents[0].event.name}</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            {configurationEvent?.find((config) => config.key === 'description')?.value}
+            {productsEvents[0].event.description}
           </p>
         </div>
 

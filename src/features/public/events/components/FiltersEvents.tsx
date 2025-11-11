@@ -45,7 +45,7 @@ export function FiltersEvents({ searchTerm, setSearchTerm, cities, selectedCity,
             <Label className="text-sm font-medium text-gray-700">Ciudad</Label>
             <Select value={selectedCity.toString()} onValueChange={(value) => setSelectedCity(Number(value))}>
               <SelectTrigger>
-                <SelectValue placeholder="Selecciona ciudad" />
+                <SelectValue placeholder="Selecciona ciudad" >{cities.find((c) => c.value === selectedCity)?.label || 'Todos'}</SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {cities.map((city) => (
