@@ -37,8 +37,7 @@ function ParticipantsPage() {
         </CardContent>
 
 
-        <Card>
-          <CardContent className="p-0">
+ 
             <DataTable
               columns={columns(
                 async (row: EventsProduct) => {
@@ -50,7 +49,7 @@ function ParticipantsPage() {
                         toast.success("Producto eliminado del evento correctamente");
                       },
                       onError: (error) => {
-                        const errorMessage = error instanceof Error ? error.message : "Error al eliminar el producto del evento";
+                        const errorMessage =  error?.message || "Error al eliminar el producto del evento";
                         toast.error(errorMessage);
                       }
                     });
@@ -69,8 +68,7 @@ function ParticipantsPage() {
               )}
               data={isLoading ? [] : rows}
             />
-          </CardContent>
-        </Card>
+
         <BranchesModalInternal />
       </div>
     </div>

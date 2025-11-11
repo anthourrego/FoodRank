@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query"
 import { useQueryServiceEvents } from "@/hooks/useQueryServiceEvents"
 import { toast } from "sonner"
 import type { ProductRestaurantListResponse, ProductRestaurant } from "@/features/private/products-restaurant/types/products-restaurant.types"
+import { FormCombobox } from "@/components/form/FormCombobox"
 
 const schema = z.object({
   product_id: z.string().min(1, "Seleccione un producto"),
@@ -35,6 +36,7 @@ export function AssignForm({ eventId }: Props) {
   })
 
   const productsOptions = useMemo(() => {
+    console.log(productsResp?.data)
     const list = productsResp?.data
     return Array.isArray(list) ? list as ProductRestaurant[] : []
   }, [productsResp])
@@ -50,7 +52,7 @@ export function AssignForm({ eventId }: Props) {
           form.reset({ product_id: "" });
         },
         onError: (error) => {
-          const errorMessage = error instanceof Error ? error.message : "Error al asignar el producto";
+          const errorMessage = error?.message || "Error al asignar el producto";
           toast.error(errorMessage);
         }
       });
@@ -65,29 +67,16 @@ export function AssignForm({ eventId }: Props) {
     <Card className="p-4">
       <Form {...form}>
         <form className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end" onSubmit={form.handleSubmit(onSubmit)}>
-          <FormField
+          
+          <FormCombobox
             control={form.control}
+            required={true}
+            label="Producto"
+    
+            items={productsOptions.map((p) => ({ label: p.name + " - " + p.restaurant.name, value: p.id }))}
             name="product_id"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Producto</FormLabel>
-                <FormControl>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccione un producto" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {productsOptions?.map((p: ProductRestaurant) => (
-                        <SelectItem key={p.id} value={String(p.id)}>
-                          {p.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            textUnselected="Seleccione un producto"
+            className="w-full lg:w-full"
           />
           <div>
             <Button type="submit" disabled={submitting || addMutation.isPending}>

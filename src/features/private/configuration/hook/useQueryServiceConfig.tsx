@@ -16,7 +16,7 @@ export const useQueryServiceConfig = () => {
       queryClient.invalidateQueries({ queryKey: ['configurations'] })
     },
     onError: (error) => {
-      const errorMessage = error instanceof Error ? error.message : "Error al crear la configuración"
+      const errorMessage =  error?.message || "Error al crear la configuración"
       toast.error(errorMessage)
     }
   })

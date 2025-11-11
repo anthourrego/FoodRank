@@ -57,7 +57,7 @@ export function BranchesModalInternal() {
         toast.success("Sucursales guardadas correctamente")
       },
       onError:(error)=>{
-        const errorMessage = error instanceof Error ? error.message : "Error al guardar las sucursales";
+        const errorMessage = error?.message || "Error al guardar las sucursales";
         toast.error(errorMessage);
       }
 

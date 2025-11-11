@@ -137,23 +137,121 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Anterior
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Siguiente
-        </Button>
+      <div className="flex items-center justify-between py-4">
+        {/* Información de registros */}
+        <div className="text-sm text-gray-600">
+          {(() => {
+            const filteredRows = table.getFilteredRowModel().rows;
+            const totalRows = filteredRows.length;
+            const pageIndex = table.getState().pagination.pageIndex;
+            const pageSize = table.getState().pagination.pageSize;
+            const startRow = totalRows > 0 ? pageIndex * pageSize + 1 : 0;
+            const endRow = Math.min((pageIndex + 1) * pageSize, totalRows);
+            
+            if (totalRows === 0) {
+              return "No hay resultados";
+            }
+            
+            return `Mostrando ${startRow} a ${endRow} de ${totalRows} resultados`;
+          })()}
+        </div>
+        
+        {/* Controles de paginación */}
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Anterior
+          </Button>
+          
+          {/* Números de página */}
+          <div className="flex items-center space-x-1">
+            {(() => {
+              const pageCount = table.getPageCount();
+              const currentPage = table.getState().pagination.pageIndex;
+              const pages: (number | string)[] = [];
+              
+              // Si hay pocas páginas, mostrar todas
+              if (pageCount <= 7) {
+                for (let i = 0; i < pageCount; i++) {
+                  pages.push(i);
+                }
+              } else {
+                // Mostrar primera página
+                pages.push(0);
+                
+                // Calcular rango de páginas alrededor de la actual
+                let start = Math.max(1, currentPage - 1);
+                let end = Math.min(pageCount - 2, currentPage + 1);
+                
+                // Ajustar si estamos cerca del inicio
+                if (currentPage <= 2) {
+                  end = Math.min(4, pageCount - 2);
+                }
+                
+                // Ajustar si estamos cerca del final
+                if (currentPage >= pageCount - 3) {
+                  start = Math.max(1, pageCount - 5);
+                }
+                
+                // Agregar elipsis y páginas intermedias
+                if (start > 1) {
+                  pages.push("...");
+                }
+                
+                for (let i = start; i <= end; i++) {
+                  pages.push(i);
+                }
+                
+                if (end < pageCount - 2) {
+                  pages.push("...");
+                }
+                
+                // Mostrar última página
+                if (pageCount > 1) {
+                  pages.push(pageCount - 1);
+                }
+              }
+              
+              return pages.map((page, index) => {
+                if (page === "...") {
+                  return (
+                    <span key={`ellipsis-${index}`} className="px-2 text-gray-500">
+                      ...
+                    </span>
+                  );
+                }
+                
+                const pageNumber = page as number;
+                const isActive = pageNumber === currentPage;
+                
+                return (
+                  <Button
+                    key={pageNumber}
+                    variant={isActive ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => table.setPageIndex(pageNumber)}
+                    className={isActive ? "" : ""}
+                  >
+                    {pageNumber + 1}
+                  </Button>
+                );
+              });
+            })()}
+          </div>
+          
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Siguiente
+          </Button>
+        </div>
       </div>
     </div>
   );

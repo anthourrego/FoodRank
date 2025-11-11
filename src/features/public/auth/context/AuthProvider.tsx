@@ -83,7 +83,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Error desconocido",
+        error:  error?.message || "Error desconocido",
       };
     }
   };

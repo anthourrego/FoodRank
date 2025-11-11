@@ -20,31 +20,31 @@ import { toast } from "sonner"
 type City = { id: number; name: string }
 
 function ManageEvents() {
-  
+
   const [open, setOpen] = useState(false)
-  const [cities,setCities] =  useState<City[]>([])
+  const [cities, setCities] = useState<City[]>([])
   const [editing, setEditing] = useState<EventRow | null>(null)
   const navigate = useNavigate()
-  
+
   const form = useForm<TypeFormSchemaManageEvents>({
     resolver: zodResolver(FormSchemaManageEvents),
     defaultValues: defaultFormSchemaManageEvents,
   })
 
-  const {GetAllEvents,createEventMutation,updateEventMutation} =useQueryServiceEvents()
-  const {GetCities} = useQueryServiceCities()
+  const { GetAllEvents, createEventMutation, updateEventMutation } = useQueryServiceEvents()
+  const { GetCities } = useQueryServiceCities()
 
-  const {data:dataListEvent,isLoading} = GetAllEvents()
-  
-  const {data:dataCities} = GetCities()
+  const { data: dataListEvent, isLoading } = GetAllEvents()
+
+  const { data: dataCities } = GetCities()
 
   const events: EventRow[] = useMemo(() => dataListEvent?.data ?? [], [dataListEvent])
-  
-  useEffect(()=>{
-    if(open && dataCities){
+
+  useEffect(() => {
+    if (open && dataCities) {
       setCities(dataCities)
     }
-  },[open, dataCities])
+  }, [open, dataCities])
 
 
 
@@ -65,8 +65,8 @@ function ManageEvents() {
       id: row.id,
       name: row.name,
       description: row.description,
-      start_date: row.start_date?.slice(0,16) ?? "",
-      end_date: row.end_date?.slice(0,16) ?? "",
+      start_date: row.start_date?.slice(0, 16) ?? "",
+      end_date: row.end_date?.slice(0, 16) ?? "",
       is_active: Boolean(row.is_active),
       city_id: row.city?.id.toString() ?? "",
     })
@@ -79,27 +79,27 @@ function ManageEvents() {
 
   const onSubmit = useCallback((data: TypeFormSchemaManageEvents) => {
     if (editing) {
-      updateEventMutation.mutate(data,{
-        onSuccess:()=>{
+      updateEventMutation.mutate(data, {
+        onSuccess: () => {
           setOpen(false)
           form.reset()
           setEditing(null)
           toast.success("Evento actualizado correctamente")
         },
-        onError:(error)=>{
-          const errorMessage = error instanceof Error ? error.message : "Error al actualizar el evento"
+        onError: (error) => {
+          const errorMessage =  error?.message || "Error al actualizar el evento"
           toast.error(errorMessage)
         }
       })
-    } else {      
-      createEventMutation.mutate(data,{
-        onSuccess:()=>{
+    } else {
+      createEventMutation.mutate(data, {
+        onSuccess: () => {
           setOpen(false)
           form.reset()
           toast.success("Evento creado correctamente")
         },
-        onError:(error)=>{
-          const errorMessage = error instanceof Error ? error.message : "Error al crear el evento"
+        onError: (error) => {
+          const errorMessage =  error?.message || "Error al crear el evento"
           toast.error(errorMessage)
         }
       })
@@ -121,11 +121,9 @@ function ManageEvents() {
           </Button>
         </div>
 
-        <Card>
-          <CardContent className="p-0">
-            <EventsTable isLoading={isLoading} events={events} onEdit={onOpenEdit} onAssignParticipants={onAssignParticipants} generarQr={generarQr} />
-          </CardContent>
-        </Card>
+
+        <EventsTable isLoading={isLoading} events={events} onEdit={onOpenEdit} onAssignParticipants={onAssignParticipants} generarQr={generarQr} />
+
 
         <EventDialog
           open={open}
