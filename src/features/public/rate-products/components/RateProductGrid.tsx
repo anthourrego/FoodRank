@@ -43,7 +43,7 @@ export function RateProductGrid({productsEvents, configurationEvent}: RateProduc
   return (
     <>
     {
-      configurationEvent && (
+      configurationEvent?.find((config) => config.key === 'topBanner')?.value && (
         <LazyLoadImage src={`${import.meta.env.VITE_URL_RESOURCE}${configurationEvent?.find((config) => config.key === 'topBanner')?.value || ''}`} alt="Evento"   />
       )
     }
@@ -73,7 +73,7 @@ export function RateProductGrid({productsEvents, configurationEvent}: RateProduc
       </div>
     </section>
     {
-      configurationEvent && (
+      configurationEvent?.find((config) => config.key === 'bottomBanner')?.value && (
         <LazyLoadImage src={`${import.meta.env.VITE_URL_RESOURCE}${configurationEvent?.find((config) => config.key === 'bottomBanner')?.value}`} alt="Evento"  />
       )}
     </>
