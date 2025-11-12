@@ -31,6 +31,7 @@ const useProductsRestaurant = (): UseProductsRestaurantReturn => {
   const [products, setProducts] = useState<ProductRestaurant[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentFilters, setCurrentFilters] = useState<ProductRestaurantFilters>({});
   const [pagination, setPagination] = useState<PaginationData>({
     current_page: 1,
     last_page: 1,
@@ -44,6 +45,7 @@ const useProductsRestaurant = (): UseProductsRestaurantReturn => {
     async (params: ProductRestaurantFilters = {}) => {
       setLoading(true);
       setError(null);
+      setCurrentFilters(params);
 
       try {
         const data: ProductRestaurantListResponse =
@@ -81,7 +83,7 @@ const useProductsRestaurant = (): UseProductsRestaurantReturn => {
         productData
       );
 
-      await fetchProducts();
+      await fetchProducts(currentFilters);
       return { success: true, data: data.product, message: data.message };
     } catch (err) {
       const errorMessage =
@@ -106,7 +108,7 @@ const useProductsRestaurant = (): UseProductsRestaurantReturn => {
         productData
       );
 
-      await fetchProducts();
+      await fetchProducts(currentFilters);
       return { success: true, data: data.product, message: data.message };
     } catch (err) {
       const errorMessage =
@@ -125,7 +127,7 @@ const useProductsRestaurant = (): UseProductsRestaurantReturn => {
     try {
       const data = await productsRestaurantService.deleteProductRestaurant(id);
 
-      await fetchProducts();
+      await fetchProducts(currentFilters);
       return { success: true, data: null, message: data.message };
     } catch (err) {
       const errorMessage =
@@ -147,7 +149,7 @@ const useProductsRestaurant = (): UseProductsRestaurantReturn => {
       const data =
         await productsRestaurantService.toggleProductRestaurantStatus(id);
 
-      await fetchProducts();
+      await fetchProducts(currentFilters);
       return { success: true, data: data.product, message: data.message };
     } catch (err) {
       const errorMessage =

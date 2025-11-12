@@ -18,6 +18,7 @@ interface ProductsRestaurantFormProps {
   onSubmit: (data: CreateProductRestaurantData) => Promise<void>;
   onCancel: () => void;
   loading?: boolean;
+  preselectedRestaurantId?: number;
 }
 
 const ProductsRestaurantForm: React.FC<ProductsRestaurantFormProps> = ({
@@ -26,6 +27,7 @@ const ProductsRestaurantForm: React.FC<ProductsRestaurantFormProps> = ({
   onSubmit,
   onCancel,
   loading = false,
+  preselectedRestaurantId,
 }) => {
   const { validateField, validateForm } = useFormValidation();
 
@@ -34,9 +36,9 @@ const ProductsRestaurantForm: React.FC<ProductsRestaurantFormProps> = ({
       name: product?.name || "",
       description: product?.description || "",
       image_url: product?.image_url || "",
-      restaurant_id: product?.restaurant_id?.toString() || "",
+      restaurant_id: product?.restaurant_id?.toString() || preselectedRestaurantId?.toString() || "",
     }),
-    [product]
+    [product, preselectedRestaurantId]
   );
 
   const [formData, setFormData] = useState<ProductRestaurantFormData>(initialFormData);
@@ -214,7 +216,15 @@ const ProductsRestaurantForm: React.FC<ProductsRestaurantFormProps> = ({
             options={restaurants}
             placeholder="Seleccionar restaurante"
             required
+            disabled={!!preselectedRestaurantId}
           />
+          
+          {/* Mensaje explicativo cuando el restaurante está preseleccionado */}
+          {preselectedRestaurantId && (
+            <p className="text-xs text-blue-600 mt-1 flex items-center">
+              🔒 {product ? 'Restaurante bloqueado por filtro activo' : 'Restaurante preseleccionado desde la vista de restaurantes'}
+            </p>
+          )}
         </form>
 
         <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 mt-4">

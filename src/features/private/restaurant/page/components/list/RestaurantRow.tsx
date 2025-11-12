@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Mail, Phone, Globe, Instagram, Facebook, Edit, Trash2, Store } from 'lucide-react';
+import { MapPin, Mail, Phone, Globe, Instagram, Facebook, Edit, Trash2, Store, Package } from 'lucide-react';
 import type { Restaurant } from '../../../types/restaurant.types';
 import { useNavigate } from 'react-router';
 
@@ -128,6 +128,13 @@ export const RestaurantRow: React.FC<RestaurantRowProps> = ({
             title="Sucursales"
           >
             <Store size={16} />
+          </button>
+          <button
+            onClick={() => navigate(`/home/products-restaurant?restaurant_id=${restaurant.id}`)}
+            className="text-green-600 hover:text-green-900 transition-colors cursor-pointer"
+            title="Productos"
+          >
+            <Package size={16} />
           </button>
         </div>
       </td>

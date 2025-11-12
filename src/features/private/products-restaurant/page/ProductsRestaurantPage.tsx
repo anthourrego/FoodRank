@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Plus } from "lucide-react";
+import { useSearchParams, useNavigate } from "react-router";
 import useProductsRestaurant from "../hook/UseProductsRestaurant";
 import type {
   CreateProductRestaurantData,
@@ -13,6 +14,8 @@ import useRestaurants from "../../restaurant/hook/UseRestaurants";
 import { toast } from "sonner";
 
 const ProductsRestaurantPage: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const {
     products,
     loading,
@@ -30,10 +33,13 @@ const ProductsRestaurantPage: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
   const [selectedProduct, setSelectedProduct] =
     useState<ProductRestaurant | null>(null);
+  
+  // Leer restaurant_id de los parámetros de la URL
+  const restaurantIdParam = searchParams.get('restaurant_id');
   const [filters, setFilters] = useState<ProductRestaurantFilters>({
     search: "",
     is_active: undefined,
-    restaurant_id: undefined,
+    restaurant_id: restaurantIdParam ? parseInt(restaurantIdParam) : undefined,
     sort_by: "created_at",
     sort_order: "desc",
     page: 1,
@@ -56,8 +62,20 @@ const ProductsRestaurantPage: React.FC = () => {
   );
 
   const handleClearFIlters = useCallback(() => {
-    setFilters({});
-  }, []);
+    // Limpiar los parámetros de la URL
+    navigate('/home/products-restaurant', { replace: true });
+    
+    // Resetear los filtros
+    setFilters({
+      search: "",
+      is_active: undefined,
+      restaurant_id: undefined,
+      sort_by: "created_at",
+      sort_order: "desc",
+      page: 1,
+      per_page: 5,
+    });
+  }, [navigate]);
 
   const handlePageChange = useCallback((page: number) => {
     setFilters((prev) => ({ ...prev, page }));
@@ -130,6 +148,23 @@ const ProductsRestaurantPage: React.FC = () => {
         <h1 className="text-3xl font-bold text-gray-900">
           Gestión de Productos
         </h1>
+        
+        {/* Indicador de filtro por restaurante */}
+        {filters.restaurant_id && (
+          <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-center justify-between">
+            <p className="text-sm text-blue-800">
+              📍 Mostrando productos de: <strong>
+                {restaurants.find(r => r.id === filters.restaurant_id)?.name || `Restaurante ID: ${filters.restaurant_id}`}
+              </strong>
+            </p>
+            <button
+              onClick={handleClearFIlters}
+              className="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors"
+            >
+              Ver todos los productos
+            </button>
+          </div>
+        )}
       </header>
 
       <div className="mb-6 flex flex-col sm:flex-row gap-4">
@@ -168,6 +203,7 @@ const ProductsRestaurantPage: React.FC = () => {
           onSubmit={handleFormSubmit}
           onCancel={handleFormCancel}
           loading={loading}
+          preselectedRestaurantId={filters.restaurant_id}
         />
       )}
     </div>
