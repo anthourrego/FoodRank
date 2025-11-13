@@ -39,7 +39,7 @@ const RestaurantBranchesPage: React.FC = () => {
     is_active: undefined,
     city_id: undefined,
     page: 1,
-    per_page: 3,
+    per_page: 10,
     restaurant_id: restaurantId ? +restaurantId : 0,
   });
 
@@ -146,7 +146,7 @@ const RestaurantBranchesPage: React.FC = () => {
   const handleClearFIlters = useCallback(() => {
     setFilters({
       restaurant_id: restaurantId ? +restaurantId : 0,
-      per_page: 3,
+      per_page: 10,
       page: 1
     });
   }, []);

@@ -36,7 +36,7 @@ const RestaurantPage: React.FC = () => {
     sort_by: "created_at",
     sort_order: "desc",
     page: 1,
-    per_page: 3,
+    per_page: 10,
   });
 
   useEffect(() => {
