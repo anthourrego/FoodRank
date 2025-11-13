@@ -1,7 +1,9 @@
 import React from 'react';
-import { MapPin, Mail, Phone, Globe, Instagram, Facebook, Edit, Trash2, Store, Package } from 'lucide-react';
+import { MapPin, Mail, Phone, Globe, Instagram, Facebook, Edit, Trash2, Store, Package, ListTree } from 'lucide-react';
 import type { Restaurant } from '../../../types/restaurant.types';
 import { useNavigate } from 'react-router';
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface RestaurantRowProps {
   restaurant: Restaurant;
@@ -107,35 +109,34 @@ export const RestaurantRow: React.FC<RestaurantRowProps> = ({
       </td>
 
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-        <div className="flex space-x-2">
-          <button
-            onClick={() => onEdit(restaurant)}
-            className="text-blue-600 hover:text-blue-900 transition-colors cursor-pointer"
-            title="Editar"
-          >
-            <Edit size={16} />
-          </button>
-          <button
-            onClick={() => onDelete(restaurant)}
-            className="text-red-600 hover:text-red-900 transition-colors cursor-pointer"
-            title="Eliminar"
-          >
-            <Trash2 size={16} />
-          </button>
-          <button
-            onClick={() => navigate(`/home/restaurants/${restaurant.id}/branchs`)}
-            className="text-blue-600 hover:text-blue-900 transition-colors cursor-pointer"
-            title="Sucursales"
-          >
-            <Store size={16} />
-          </button>
-          <button
-            onClick={() => navigate(`/home/products-restaurant?restaurant_id=${restaurant.id}`)}
-            className="text-green-600 hover:text-green-900 transition-colors cursor-pointer"
-            title="Productos"
-          >
-            <Package size={16} />
-          </button>
+        <div className="flex justify-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="h-8 w-8 p-0">
+                <span className="sr-only">Abrir menú</span>
+                <ListTree className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => onEdit(restaurant)} className="flex items-center gap-2">
+                <Edit className="h-4 w-4" />
+                Editar
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onDelete(restaurant)} className="flex items-center gap-2 text-red-600 hover:text-red-700">
+                <Trash2 className="h-4 w-4" />
+                Eliminar
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate(`/home/restaurants/${restaurant.id}/branchs`)} className="flex items-center gap-2">
+                <Store className="h-4 w-4" />
+                Sucursales
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate(`/home/products-restaurant?restaurant_id=${restaurant.id}`)} className="flex items-center gap-2">
+                <Package className="h-4 w-4" />
+                Productos
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </td>
     </tr>

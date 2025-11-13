@@ -1,6 +1,8 @@
 import React from 'react';
-import { Edit, Trash2, Image } from 'lucide-react';
+import { Edit, Trash2, Image, ListTree } from 'lucide-react';
 import type { ProductRestaurant } from '../../../types/products-restaurant.types';
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface ProductsRestaurantRowProps {
   product: ProductRestaurant;
@@ -63,21 +65,26 @@ export const ProductsRestaurantRow: React.FC<ProductsRestaurantRowProps> = ({
       </td>
 
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-        <div className="flex space-x-2">
-          <button
-            onClick={() => onEdit(product)}
-            className="text-blue-600 hover:text-blue-900 transition-colors cursor-pointer"
-            title="Editar"
-          >
-            <Edit size={16} />
-          </button>
-          <button
-            onClick={() => onDelete(product)}
-            className="text-red-600 hover:text-red-900 transition-colors cursor-pointer"
-            title="Eliminar"
-          >
-            <Trash2 size={16} />
-          </button>
+        <div className="flex justify-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="h-8 w-8 p-0">
+                <span className="sr-only">Abrir menú</span>
+                <ListTree className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => onEdit(product)} className="flex items-center gap-2">
+                <Edit className="h-4 w-4" />
+                Editar
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onDelete(product)} className="flex items-center gap-2 text-red-600 hover:text-red-700">
+                <Trash2 className="h-4 w-4" />
+                Eliminar
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </td>
     </tr>
