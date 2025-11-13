@@ -79,7 +79,7 @@ export function AssignForm({ eventId }: Props) {
             className="w-full lg:w-full"
           />
           <div>
-            <Button type="submit" disabled={submitting || addMutation.isPending}>
+            <Button type="submit" disabled={submitting || addMutation.isPending} className="bg-red-800/80 hover:bg-red-800 text-white">
               {addMutation.isPending ? "Asignando..." : "Asignar"}
             </Button>
           </div>

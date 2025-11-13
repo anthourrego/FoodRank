@@ -80,7 +80,7 @@ export function ListEvents({ filteredEvents }: ListEventsProps) {
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
-                        className="bg-red-600 h-2 rounded-full transition-all duration-500"
+                        className="bg-red-800/80 h-2 rounded-full transition-all duration-500"
                         style={{ width: `${(event.participants / event.maxParticipants) * 100}%` }}
                       />
                     </div>
@@ -90,7 +90,7 @@ export function ListEvents({ filteredEvents }: ListEventsProps) {
 
                 {/* Botón de acción */}
                 <Link to={`/events-products/${event.id}`}>
-                  <Button className="w-full bg-red-600 hover:bg-red-700 text-white group/btn">
+                  <Button className="w-full bg-red-800/80 hover:bg-red-800 text-white group/btn">
                     Ver detalles del evento
                     <ChevronRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
                   </Button>

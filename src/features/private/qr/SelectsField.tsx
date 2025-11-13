@@ -157,8 +157,8 @@ export default function SelectsField({ generateQr }: SelectsFieldProps) {
               })}
               placeholder="Selecciona un evento"
               icon={MapPin}
-              gradientFrom="from-emerald-400"
-              gradientTo="to-cyan-400"
+              gradientFrom="from-red-400"
+              gradientTo="to-red-600"
             />
           </div>
 
@@ -173,8 +173,8 @@ export default function SelectsField({ generateQr }: SelectsFieldProps) {
               options={restaurantesSelect}
               placeholder="Selecciona restaurante"
               icon={MapPin}
-              gradientFrom="from-emerald-400"
-              gradientTo="to-cyan-400"
+              gradientFrom="from-red-400"
+              gradientTo="to-red-600"
               disabled={selectedEventId.trim() == ""}
             />
           </div>
@@ -187,8 +187,8 @@ export default function SelectsField({ generateQr }: SelectsFieldProps) {
               options={branchsRestaurantSelect}
               placeholder="Elige sucursal"
               icon={User}
-              gradientFrom="from-purple-400"
-              gradientTo="to-pink-400"
+              gradientFrom="from-red-400"
+              gradientTo="to-red-600"
               disabled={selectedRestaurant.trim() == ""}
             />
           </div>
@@ -212,7 +212,7 @@ export default function SelectsField({ generateQr }: SelectsFieldProps) {
                   event_id: selectedEventId,
                 });
               }}
-              className="w-full lg:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-lg transform transition-all duration-300 cursor-pointer flex items-center justify-center gap-2"
+              className="w-full lg:w-auto px-8 py-4 bg-red-800/80 hover:bg-red-800 text-white font-semibold rounded-xl shadow-lg transform transition-all duration-300 cursor-pointer flex items-center justify-center gap-2"
             >
               <Send className="h-5 w-5" />
               <span className="lg:hidden">Generar QR</span>

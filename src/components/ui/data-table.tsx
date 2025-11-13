@@ -234,7 +234,7 @@ export function DataTable<TData, TValue>({
                     variant={isActive ? "default" : "outline"}
                     size="sm"
                     onClick={() => table.setPageIndex(pageNumber)}
-                    className={isActive ? "" : ""}
+                    className={isActive ? "bg-red-800/80 hover:bg-red-800 text-white" : ""}
                   >
                     {pageNumber + 1}
                   </Button>

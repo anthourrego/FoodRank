@@ -306,7 +306,7 @@ const DialogConfigInternal = ({
               <DialogClose asChild>
                 <Button variant="outline">Cancel</Button>
               </DialogClose>
-              <Button type="submit" className="hover:opacity-90 cursor-pointer">Guardar</Button>
+              <Button type="submit" className="bg-red-800/80 hover:bg-red-800 text-white">Guardar</Button>
             </DialogFooter>
           </form>
         </Form>
