@@ -41,70 +41,72 @@ export const EventDialog = memo(function EventDialog({ open, setOpen, editing, f
 
 return (
   <Dialog open={open} onOpenChange={setOpen}>
-    <DialogContent>
-      <DialogHeader>
+    <DialogContent className="flex flex-col max-h-[90vh]">
+      <DialogHeader className="flex-shrink-0">
         <DialogTitle>{editing ? "Editar evento" : "Nuevo evento"}</DialogTitle>
       </DialogHeader>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-          <FormInput
-            control={form.control}
-            name="name"
-            required={true}
-            label="Nombre"
-            type="text"
-            placeholder="Nombre"
-          />
-          <div className="space-y-0">
-            <FormTextarea
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 min-h-0">
+          <div className="flex-1 overflow-y-auto overflow-x-hidden space-y-3 min-h-0">
+            <FormInput
+              control={form.control}
+              name="name"
+              required={true}
+              label="Nombre"
+              type="text"
+              placeholder="Nombre"
+            />
+            <div className="space-y-0">
+              <FormTextarea
+                control={form.control}
+                required={true}
+                name="description"
+                label="Descripción"
+                placeholder="Descripción del evento..."
+                maxLength={255}
+                rows={4}
+              />
+              <p className="text-xs text-gray-500 text-right">
+                {form.watch("description")?.length || 0}/255 caracteres
+              </p>
+            </div>
+           
+            <FormCombobox
               control={form.control}
               required={true}
-              name="description"
-              label="Descripción"
-              placeholder="Descripción del evento..."
-              maxLength={255}
-              rows={4}
+              label="Ciudad"
+      
+              items={cityOptions}
+              name="city_id"
+              textUnselected="Seleccione una ciudad"
+              className="w-full lg:w-full"
             />
-            <p className="text-xs text-gray-500 text-right">
-              {form.watch("description")?.length || 0}/255 caracteres
-            </p>
-          </div>
-         
-          <FormCombobox
-            control={form.control}
-            required={true}
-            label="Ciudad"
-    
-            items={cityOptions}
-            name="city_id"
-            textUnselected="Seleccione una ciudad"
-            className="w-full lg:w-full"
-          />
-          <FormInput
-            control={form.control}
-            required={true}
-            name="start_date"
-            label="Fecha inicio"
-            type="datetime-local"
-            placeholder="Fecha inicio"
-          />
-          <FormInput
-            control={form.control}
-            required={true}
-            name="end_date"
-            label="Fecha fin"
-            type="datetime-local"
-            placeholder="Fecha fin"
-          />
-          <FormSelect
-            control={form.control}
-            name="is_active"
-            label="Estado"
-            options={[{ label: "Activo", value: "true" }, { label: "Inactivo", value: "false" }]}
-            onValueChange={(value) => form.setValue("is_active", value === "true")}
+            <FormInput
+              control={form.control}
+              required={true}
+              name="start_date"
+              label="Fecha inicio"
+              type="datetime-local"
+              placeholder="Fecha inicio"
+            />
+            <FormInput
+              control={form.control}
+              required={true}
+              name="end_date"
+              label="Fecha fin"
+              type="datetime-local"
+              placeholder="Fecha fin"
+            />
+            <FormSelect
+              control={form.control}
+              name="is_active"
+              label="Estado"
+              options={[{ label: "Activo", value: "true" }, { label: "Inactivo", value: "false" }]}
+              onValueChange={(value) => form.setValue("is_active", value === "true")}
 
-          />
-          <DialogFooter>
+            />
+          </div>
+          <DialogFooter className="flex-shrink-0 mt-4">
             <Button type="button" variant="outline" onClick={() => setOpen(false)} className="flex items-center gap-2">
               <X className="h-4 w-4" />
               Cancelar

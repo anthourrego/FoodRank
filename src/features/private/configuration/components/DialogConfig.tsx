@@ -162,8 +162,8 @@ const DialogConfigInternal = ({
   if(isLoadingEvents){
     return (
       <Dialog open={openDialogConfig} onOpenChange={setOpenDialogConfig}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
+        <DialogContent className="flex flex-col max-h-[90vh] sm:max-w-[425px]">
+          <DialogHeader className="flex-shrink-0">
             <DialogTitle>Nueva Configuración</DialogTitle>
             <DialogDescription>
               Cargando lista de eventos...
@@ -183,10 +183,10 @@ const DialogConfigInternal = ({
   return (
     <Dialog open={openDialogConfig} onOpenChange={setOpenDialogConfig}>
 
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="flex flex-col max-h-[90vh] sm:max-w-[425px]">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit, onInvalid)}>
-            <DialogHeader>
+          <form onSubmit={form.handleSubmit(onSubmit, onInvalid)} className="flex flex-col flex-1 min-h-0">
+            <DialogHeader className="flex-shrink-0">
               <DialogTitle>Nueva Configuración</DialogTitle>
               <DialogDescription>
                 Ingresar el nombre de la configuración, el valor y el tipo de
@@ -194,8 +194,8 @@ const DialogConfigInternal = ({
               </DialogDescription>
             </DialogHeader>
 
-            <Separator className="my-4" />
-            <div className="grid gap-4 mb-4">
+            <Separator className="my-4 flex-shrink-0" />
+            <div className="flex-1 overflow-y-auto overflow-x-hidden grid gap-4 mb-4 min-h-0">
               <FormSelect
                 control={form.control}
                 required={true}
@@ -302,7 +302,7 @@ const DialogConfigInternal = ({
                 />
               </div>
             </div>
-            <DialogFooter>
+            <DialogFooter className="flex-shrink-0 mt-4">
               <DialogClose asChild>
                 <Button variant="outline">Cancel</Button>
               </DialogClose>

@@ -5,6 +5,7 @@ import { PrivateGuard } from "./PrivateGuard";
 
 import AuthProvider from "@/features/public/auth/context/AuthProvider";
 import { Loading } from "@/components/ui/loading";
+import { PublicLayout } from "@/layout/PublicLayout";
 
 const Login = lazy(() => import("@/features/public/auth/page/Login"));
 const PrivateRouter = lazy(() => import("./PrivateRouter"));
@@ -33,12 +34,15 @@ export function AppRouter() {
           <RoutesNotFound>
             <Route path="/" element={<Navigate to="/events" replace />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/events" element={<Events />} />
-            <Route path="/events-products/:eventId" element={<RateProducts />} />
-            <Route
-              path="/rate-product/:productId"
-              element={<RateProductsVoting />}
-            />
+            
+            <Route element={<PublicLayout />}>
+              <Route path="/events" element={<Events />} />
+              <Route path="/events-products/:eventId" element={<RateProducts />} />
+              <Route
+                path="/rate-product/:productId"
+                element={<RateProductsVoting />}
+              />
+            </Route>
 
             <Route element={<PrivateGuard />}>
               <Route path="/home/*" element={<PrivateRouter />} />

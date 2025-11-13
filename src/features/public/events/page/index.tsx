@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { FiltersEvents } from "../components/FiltersEvents"
 import { ListEvents } from "../components/ListEvents"
 import { Footer } from "@/components/footer"
-import { Link } from "react-router"
+import { Link, Navigate } from "react-router"
 import logo from '@/assets/images/logo.webp'
 
 
@@ -16,7 +16,7 @@ function TopBar() {
         <div className="flex items-center justify-between h-16">
           <nav className="flex items-center space-x-8">
             <Link to="/events" className="hover:text-red-200 transition-colors">
-              Eventos
+              Inicio
             </Link>
           </nav>
           <div className="flex items-center">
@@ -84,12 +84,12 @@ function Events() {
 
   if (isLoadingEvents) return <Loading className="min-h-screen flex items-center justify-center" />
 
- /*  if(eventsData?.data?.length === 1){
+  if(eventsData?.data?.length === 1){
     return <Navigate to={`/events-products/${eventsData?.data[0].id}`} />
-  } */
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 ">
-      <TopBar />
+      
       <div className="container mx-auto px-4 py-8">
 
       <Header activeEventsCount={eventsData?.data?.length || 0} />
@@ -102,7 +102,7 @@ function Events() {
       </div>
       <ListEvents filteredEvents={filteredEvents} />
       </div>
-      <Footer />
+      
     </div>
   )
 }
