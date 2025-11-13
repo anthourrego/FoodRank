@@ -90,7 +90,7 @@ function Events() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 ">
       <TopBar />
-      <div className="container mx-auto px-4 py-8">
+      <div className="min-h-[calc(100vh-118px)] container mx-auto px-4 py-8">
 
       <Header activeEventsCount={eventsData?.data?.length || 0} />
       <FiltersEvents searchTerm={searchTerm} setSearchTerm={setSearchTerm} cities={citiesEvents} selectedCity={selectedCity} setSelectedCity={setSelectedCity} />
