@@ -291,7 +291,7 @@ export function RateProductCard({
                   {product.description && product.description.length > 1 && (
                     <>
                       <div className="h-30 overflow-y-auto">
-                        <p className="text-sm text-muted-foreground leading-relaxed">
+                        <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
                           {product.description}
                         </p>
                       </div>
