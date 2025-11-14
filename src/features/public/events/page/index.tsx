@@ -16,7 +16,7 @@ function TopBar() {
         <div className="flex items-center justify-between h-16">
           <nav className="flex items-center space-x-8">
             <Link to="/events" className="hover:text-red-200 transition-colors">
-              Eventos
+              Inicio
             </Link>
           </nav>
           <div className="flex items-center">
@@ -89,8 +89,8 @@ function Events() {
   }
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 ">
-      <TopBar />
-      <div className="min-h-[calc(100vh-118px)] container mx-auto px-4 py-8">
+      
+      <div className="container mx-auto px-4 py-8">
 
       <Header activeEventsCount={eventsData?.data?.length || 0} />
       <FiltersEvents searchTerm={searchTerm} setSearchTerm={setSearchTerm} cities={citiesEvents} selectedCity={selectedCity} setSelectedCity={setSelectedCity} />
@@ -102,7 +102,7 @@ function Events() {
       </div>
       <ListEvents filteredEvents={filteredEvents} />
       </div>
-      <Footer />
+      
     </div>
   )
 }

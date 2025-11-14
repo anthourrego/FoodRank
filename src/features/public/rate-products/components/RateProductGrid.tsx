@@ -39,12 +39,15 @@ export function RateProductGrid({productsEvents, configurationEvent}: RateProduc
   if(productsEvents.length === 0){
     return <CartEmpty />
   }
-  console.log(productsEvents)
+  
   return (
     <>
     {
       configurationEvent?.find((config) => config.key === 'topBanner')?.value && (
-        <LazyLoadImage src={`${import.meta.env.VITE_URL_RESOURCE}${configurationEvent?.find((config) => config.key === 'topBanner')?.value || ''}`} alt="Evento"   />
+        <div className="mx-auto w-full items-center justify-center flex">
+
+          <LazyLoadImage src={`${import.meta.env.VITE_URL_RESOURCE}${configurationEvent?.find((config) => config.key === 'topBanner')?.value || ''}`} alt="Evento"   />
+        </div>
       )
     }
     <section className="py-16   ">

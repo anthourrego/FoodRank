@@ -2,14 +2,15 @@ import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { Outlet } from "react-router";
 
-export const PrivateLayout = () => {
+export const PublicLayout = () => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="h-screen overflow-x-hidden">
       <Header />
-      <main className="flex-1">
+      <main className="overflow-auto overflow-x-hidden min-h-[calc(100vh-118px)]">
         <Outlet />
       </main>
       <Footer />
     </div>
   );
 };
+
