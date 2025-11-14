@@ -46,7 +46,7 @@ export function RateProductGrid({productsEvents, configurationEvent}: RateProduc
       configurationEvent?.find((config) => config.key === 'topBanner')?.value && (
         <div className="mx-auto w-full items-center justify-center flex">
 
-          <LazyLoadImage src={`${import.meta.env.VITE_URL_RESOURCE}${configurationEvent?.find((config) => config.key === 'topBanner')?.value || ''}`} alt="Evento"   />
+          <LazyLoadImage className="w-full" src={`${import.meta.env.VITE_URL_RESOURCE}${configurationEvent?.find((config) => config.key === 'topBanner')?.value || ''}`} alt="Evento"   />
         </div>
       )
     }

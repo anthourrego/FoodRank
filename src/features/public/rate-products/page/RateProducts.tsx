@@ -38,7 +38,6 @@ function RateProducts(){
         <RateProductGrid productsEvents={productsByEvent?.data || []} configurationEvent={configurationEvent} />
       </div>
       
-      <Footer />
 
       {/* Scroll Indicator */}
       {showScrollIndicator && (
