@@ -23,7 +23,7 @@ const GenerateQr = () => {
 
       <Card className="w-full max-w-md mx-auto shadow-2xl border-0 bg-white/90 backdrop-blur-sm">
         <CardHeader className="text-center pb-4">
-          <div className="mx-auto mb-4 w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+          <div className="mx-auto mb-4 w-12 h-12 bg-gradient-to-r from-red-700 to-red-900 rounded-full flex items-center justify-center">
             <QrCode className="w-6 h-6 text-white" />
           </div>
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">

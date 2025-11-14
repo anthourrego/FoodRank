@@ -23,7 +23,7 @@ function CartEmpty() {
         <div className="flex items-center justify-center h-full">
           <p className="text-red-600">No hay productos disponibles</p>
           <Link to="/events">
-            <Button className="bg-red-600 hover:bg-red-700 text-white">
+            <Button className="bg-red-800/80 hover:bg-red-800 text-white">
               <ArrowLeft className="w-4 h-4" />
               Volver
             </Button>

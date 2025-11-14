@@ -111,7 +111,7 @@ return (
               <X className="h-4 w-4" />
               Cancelar
             </Button>
-            <Button type="submit" disabled={isSubmitting} className="flex items-center gap-2">
+            <Button type="submit" disabled={isSubmitting} className="flex items-center gap-2 bg-red-800/80 hover:bg-red-800 text-white">
               <Save className="h-4 w-4" />
               {editing ? "Guardar cambios" : "Crear evento"}
             </Button>

@@ -85,7 +85,7 @@ function Events() {
   if (isLoadingEvents) return <Loading className="min-h-screen flex items-center justify-center" />
 
   if(eventsData?.data?.length === 1){
-    return <Navigate to={`/events-products/${eventsData?.data[0].id}`} />
+    return <Navigate to={`/events-products/${eventsData?.data[0].id}`} replace />
   }
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 ">

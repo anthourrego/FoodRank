@@ -88,7 +88,7 @@ export function BranchesModalInternal() {
         </ScrollArea>
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
-          <Button onClick={onSave}>Guardar</Button>
+          <Button onClick={onSave} className="bg-red-800/80 hover:bg-red-800 text-white">Guardar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

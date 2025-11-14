@@ -29,23 +29,14 @@ console.log(configurations)
 
 
   const btnCreate = (
-    <Button variant="default" className="h-full" onClick={() => setOpenDialogConfig(true)}>
+    <Button className="h-full bg-red-800/80 hover:bg-red-800 text-white" onClick={() => setOpenDialogConfig(true)}>
       <Plus size={20} className="mr-2" />
-      <span className="text-white">Nueva Configuración</span>
+      <span>Nueva Configuración</span>
     </Button>
   )
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <section>
-        <div>
-          <h2 className="text-3xl font-bold text-slate-800">
-            Gestión de Configuración
-          </h2>
-          <p className="mt-2 text-gray-600">
-            Administra la configuración de la plataforma
-          </p>
-        </div>
-        <Separator className="my-4" />
         <div className="flex items-center gap-2">
           <ListTree className="w-6 h-6 text-slate-700" />
           <h2 className="text-xl font-bold text-slate-700">

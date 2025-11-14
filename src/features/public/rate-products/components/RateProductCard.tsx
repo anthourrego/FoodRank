@@ -493,7 +493,7 @@ export function RateProductCard({
                             ) : (
                               <Button
                                 onClick={confirmVote}
-                                className="bg-red-600 hover:bg-red-700 w-full"
+                                className="bg-red-800/80 hover:bg-red-800 w-full"
                                 size="sm"
                                 disabled={
                                   userRating === 0 || alreadyVoted || hasVoted
