@@ -4,15 +4,12 @@ import { Outlet } from "react-router";
 
 export const PrivateLayout = () => {
   return (
-    <div className="h-screen overflow-x-hidden">
-      <main className="overflow-x-hidden">
-        <Header />
-        <div className="overflow-auto overflow-x-hidden min-h-[calc(100vh-118px)]">
-          <Outlet />
-        </div>
-
-        <Footer />
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-1">
+        <Outlet />
       </main>
+      <Footer />
     </div>
   );
 };

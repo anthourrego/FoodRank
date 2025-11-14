@@ -39,7 +39,7 @@ const RestaurantBranchesPage: React.FC = () => {
     is_active: undefined,
     city_id: undefined,
     page: 1,
-    per_page: 3,
+    per_page: 10,
     restaurant_id: restaurantId ? +restaurantId : 0,
   });
 
@@ -146,76 +146,72 @@ const RestaurantBranchesPage: React.FC = () => {
   const handleClearFIlters = useCallback(() => {
     setFilters({
       restaurant_id: restaurantId ? +restaurantId : 0,
-      per_page: 3,
+      per_page: 10,
       page: 1
     });
   }, []);
 
   if (!restaurantId) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
-        <div className="container mx-auto px-4 py-8">
-          <div
-            className={`mb-6 p-4 rounded-md flex items-center animate-fade-in bg-red-50 text-red-800 border border-red-200`}
-          >
-            <AlertCircle size={20} className="mr-2 flex-shrink-0" />
-            <span className="flex-1">
-              No se encontró restaurante seleccionado
-            </span>
-          </div>
+      <div className="container mx-auto px-4 py-8">
+        <div
+          className={`mb-6 p-4 rounded-md flex items-center animate-fade-in bg-red-50 text-red-800 border border-red-200`}
+        >
+          <AlertCircle size={20} className="mr-2 flex-shrink-0" />
+          <span className="flex-1">
+            No se encontró restaurante seleccionado
+          </span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">
-            Sucursales de {currentRestaurant?.name}
-          </h1>
-          <Button 
-            onClick={handleNewBranch} 
-            className="flex items-center gap-2 bg-red-800/80 hover:bg-red-800 text-white"
-          >
-            <Plus className="h-4 w-4" />
-            Nueva Sucursal
-          </Button>
-        </div>
-
-        <div className="mb-6">
-          <SearchAndFilters
-            filters={filters}
-            cities={cities}
-            onFiltersChange={handleFiltersChange}
-            handleClearFIlters={handleClearFIlters}
-            canOrderBy={false}
-          />
-        </div>
-
-        <RestaurantBranchTable
-          branches={branches}
-          loading={loading}
-          error={error}
-          pagination={pagination}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          onToggleStatus={handleToggleStatus}
-          onPageChange={handlePageChange}
-        />
-
-        {showForm && (
-          <RestaurantBranchForm
-            branch={selectedBranch}
-            restaurants={restaurants}
-            cities={cities}
-            onSubmit={handleSubmit}
-            onCancel={handleCancelForm}
-            restaurantId={+restaurantId}
-          />
-        )}
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">
+          Sucursales de {currentRestaurant?.name}
+        </h1>
+        <Button 
+          onClick={handleNewBranch} 
+          className="flex items-center gap-2 bg-red-800/80 hover:bg-red-800 text-white"
+        >
+          <Plus className="h-4 w-4" />
+          Nueva Sucursal
+        </Button>
       </div>
+
+      <div className="mb-6">
+        <SearchAndFilters
+          filters={filters}
+          cities={cities}
+          onFiltersChange={handleFiltersChange}
+          handleClearFIlters={handleClearFIlters}
+          canOrderBy={false}
+        />
+      </div>
+
+      <RestaurantBranchTable
+        branches={branches}
+        loading={loading}
+        error={error}
+        pagination={pagination}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        onToggleStatus={handleToggleStatus}
+        onPageChange={handlePageChange}
+      />
+
+      {showForm && (
+        <RestaurantBranchForm
+          branch={selectedBranch}
+          restaurants={restaurants}
+          cities={cities}
+          onSubmit={handleSubmit}
+          onCancel={handleCancelForm}
+          restaurantId={+restaurantId}
+        />
+      )}
     </div>
   );
 };

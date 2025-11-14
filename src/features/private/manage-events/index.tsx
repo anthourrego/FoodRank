@@ -111,30 +111,28 @@ function ManageEvents() {
   }, [navigate])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Administración de Eventos</h1>
-          <Button onClick={onOpenNew} className="flex items-center gap-2 bg-red-800/80 hover:bg-red-800 text-white">
-            <Plus className="h-4 w-4" />
-            Nuevo Evento
-          </Button>
-        </div>
-
-
-        <EventsTable isLoading={isLoading} events={events} onEdit={onOpenEdit} onAssignParticipants={onAssignParticipants} generarQr={generarQr} />
-
-
-        <EventDialog
-          open={open}
-          setOpen={setOpen}
-          editing={editing}
-          form={form}
-          onSubmit={onSubmit}
-          isSubmitting={createEventMutation.isPending || updateEventMutation.isPending}
-          cities={cities}
-        />
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold text-gray-900">Administración de Eventos</h1>
+        <Button onClick={onOpenNew} className="flex items-center gap-2 bg-red-800/80 hover:bg-red-800 text-white">
+          <Plus className="h-4 w-4" />
+          Nuevo Evento
+        </Button>
       </div>
+
+
+      <EventsTable isLoading={isLoading} events={events} onEdit={onOpenEdit} onAssignParticipants={onAssignParticipants} generarQr={generarQr} />
+
+
+      <EventDialog
+        open={open}
+        setOpen={setOpen}
+        editing={editing}
+        form={form}
+        onSubmit={onSubmit}
+        isSubmitting={createEventMutation.isPending || updateEventMutation.isPending}
+        cities={cities}
+      />
     </div>
   )
 }

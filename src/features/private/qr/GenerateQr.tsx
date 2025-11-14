@@ -18,7 +18,7 @@ const GenerateQr = () => {
   };
 
   return (
-    <div className="h-full overflow-auto bg-gradient-to-br from-slate-50 to-slate-100 p-4">
+    <div className="min-h-[calc(100vh-118px)] h-full overflow-auto bg-gradient-to-br from-slate-50 to-slate-100 p-4">
       <SelectsField generateQr={generateQr} />
 
       <Card className="w-full max-w-md mx-auto shadow-2xl border-0 bg-white/90 backdrop-blur-sm">

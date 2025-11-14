@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Plus } from "lucide-react";
 import { useSearchParams, useNavigate } from "react-router";
+import { Button } from "@/components/ui/button";
 import useProductsRestaurant from "../hook/UseProductsRestaurant";
 import type {
   CreateProductRestaurantData,
@@ -43,7 +44,7 @@ const ProductsRestaurantPage: React.FC = () => {
     sort_by: "created_at",
     sort_order: "desc",
     page: 1,
-    per_page: 5,
+    per_page: 10,
   });
 
   useEffect(() => {
@@ -73,7 +74,7 @@ const ProductsRestaurantPage: React.FC = () => {
       sort_by: "created_at",
       sort_order: "desc",
       page: 1,
-      per_page: 5,
+      per_page: 10,
     });
   }, [navigate]);
 
@@ -143,31 +144,41 @@ const ProductsRestaurantPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">
-          Gestión de Productos
-        </h1>
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">
+            Gestión de Productos
+          </h1>
+          
+          {/* Indicador de filtro por restaurante */}
+          {filters.restaurant_id && (
+            <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-center justify-between">
+              <p className="text-sm text-blue-800">
+                📍 Mostrando productos de: <strong>
+                  {restaurants.find(r => r.id === filters.restaurant_id)?.name || `Restaurante ID: ${filters.restaurant_id}`}
+                </strong>
+              </p>
+              <button
+                onClick={handleClearFIlters}
+                className="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors"
+              >
+                Ver todos los productos
+              </button>
+            </div>
+          )}
+        </div>
         
-        {/* Indicador de filtro por restaurante */}
-        {filters.restaurant_id && (
-          <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-center justify-between">
-            <p className="text-sm text-blue-800">
-              📍 Mostrando productos de: <strong>
-                {restaurants.find(r => r.id === filters.restaurant_id)?.name || `Restaurante ID: ${filters.restaurant_id}`}
-              </strong>
-            </p>
-            <button
-              onClick={handleClearFIlters}
-              className="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors"
-            >
-              Ver todos los productos
-            </button>
-          </div>
-        )}
-      </header>
+        <Button
+          onClick={handleCreateProduct}
+          className="flex items-center gap-2 bg-red-800/80 hover:bg-red-800 text-white"
+        >
+          <Plus className="h-4 w-4" />
+          Nuevo Producto
+        </Button>
+      </div>
 
-      <div className="mb-6 flex flex-col sm:flex-row gap-4">
+      <div className="mb-6">
         <SearchAndFilters
           filters={filters}
           restaurants={restaurants}
@@ -175,14 +186,6 @@ const ProductsRestaurantPage: React.FC = () => {
           handleClearFIlters={handleClearFIlters}
           canOrderBy={true}
         />
-
-        <button
-          onClick={handleCreateProduct}
-          className="flex items-center px-4 py-2 text-white bg-red-800/80 rounded-lg transition-colors"
-        >
-          <Plus size={20} className="mr-2" />
-          Nuevo Producto
-        </button>
       </div>
 
       <ProductsRestaurantTable

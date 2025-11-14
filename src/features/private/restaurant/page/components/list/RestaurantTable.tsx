@@ -57,8 +57,7 @@ export const RestaurantTable: React.FC<RestaurantTableProps> = ({
   }
 
   return (
-    <div className="bg-white shadow rounded-lg overflow-hidden border border-gray-300">
-      <div className="overflow-x-auto">
+    <div className="bg-white shadow rounded-lg border border-gray-300 overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-400">
           <thead className="bg-gray-50">
             <tr>
@@ -91,7 +90,6 @@ export const RestaurantTable: React.FC<RestaurantTableProps> = ({
             ))}
           </tbody>
         </table>
-      </div>
 
       {restaurants.length === 0 && (
         <div className="text-center py-12">
