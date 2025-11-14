@@ -12,29 +12,6 @@ import { Footer } from "@/components/footer";
 import { Link } from "react-router";
 import logo from '@/assets/images/logo.webp';
 
-
-function TopBar() {
-  return (
-    <header className="bg-red-800/80 backdrop-blur-sm text-white sticky top-0 z-50">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <nav className="flex items-center space-x-8">
-            <Link to="/events" className="hover:text-red-200 transition-colors">
-              Eventos
-            </Link>
-          </nav>
-          <div className="flex items-center">
-            <Link to="/events">
-              <img src={logo} alt="Food Rank" className="h-12 w-auto" />
-            </Link>
-          </div>
-        </div>
-      </div>
-    </header>
-  )
-}
-
-
 function RateProducts(){ 
   const {eventId} = useParams()
   const {showScrollIndicator} = useCheckIsMobile()
@@ -57,8 +34,6 @@ function RateProducts(){
 
   return(
     <div className="min-h-screen flex flex-col bg-white bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]">
-      <TopBar />
-      
       <div className="flex-1 w-full overflow-auto">
         <RateProductGrid productsEvents={productsByEvent?.data || []} configurationEvent={configurationEvent} />
       </div>
