@@ -454,7 +454,7 @@ export function RateProductCard({
                             variant="default"
                             className="bg-green-600 hover:bg-green-600"
                           >
-                            Ya calificaste esta hamburguesa
+                            Ya calificaste este producto
                           </Badge>
                           <p className="text-xs text-muted-foreground">
                             Diste {userRating} estrella
@@ -465,7 +465,7 @@ export function RateProductCard({
                     ) : (
                       <div>
                         <h4 className="font-semibold text-gray-900 mb-3 text-center">
-                          ¿Cómo calificarías esta hamburguesa?
+                          ¿Cómo calificarías este producto?
                         </h4>
                         <div className="flex flex-col items-center gap-4">
                           <StarRating

@@ -155,7 +155,7 @@ const getRankBadge = (position: number) => {
             </div>
           </div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Descubre cuáles son las hamburguesas mejor calificadas por nuestros usuarios en el evento seleccionado
+            Descubre cuáles son los mejores calificadas por nuestros usuarios en el evento seleccionado
           </p>
 
           <div className="mt-8">
