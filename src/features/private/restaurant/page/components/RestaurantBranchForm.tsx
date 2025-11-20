@@ -203,9 +203,10 @@ export const RestaurantBranchForm: React.FC<RestaurantBranchFormProps> = ({
       isOpen={true}
       onClose={onCancel}
       title={branch ? "Editar Sucursal" : "Nueva Sucursal"}
+      className="!max-h-[80vh]"
     >
       <div className="flex flex-col h-full">
-        <form className="flex-1 px-1 overflow-y-auto max-h-[calc(90vh-140px)] space-y-4">
+        <form className="flex-1 px-1 space-y-4">
           <SelectField
             id="restaurant_id"
             name="restaurant_id"

@@ -10,6 +10,7 @@ interface SearchAndFiltersProps {
   onFiltersChange: (filters: Partial<RestaurantFilters>) => void;
   handleClearFIlters: () => void;
   canOrderBy: boolean;
+  confirmFilterRestaurants: () => void;
 }
 
 export const SearchAndFilters: React.FC<SearchAndFiltersProps> = ({
@@ -18,6 +19,7 @@ export const SearchAndFilters: React.FC<SearchAndFiltersProps> = ({
   onFiltersChange,
   handleClearFIlters,
   canOrderBy = true,
+  confirmFilterRestaurants
 }) => {
   const [showFilters, setShowFilters] = useState(false);
 
@@ -142,7 +144,12 @@ export const SearchAndFilters: React.FC<SearchAndFiltersProps> = ({
               Limpiar
             </Button>
             <Button
-              onClick={() => setShowFilters(!showFilters)}
+              onClick={() => {
+                setShowFilters(!showFilters)
+                if (confirmFilterRestaurants) {
+                  confirmFilterRestaurants()
+                }
+              }}
               className="bg-red-800/80"
             >
               Aceptar

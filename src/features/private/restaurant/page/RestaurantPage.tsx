@@ -41,7 +41,7 @@ const RestaurantPage: React.FC = () => {
 
   useEffect(() => {
     fetchRestaurants(filters);
-  }, [fetchRestaurants, filters]);
+  }, [fetchRestaurants]);
 
   const handleFiltersChange = useCallback(
     (newFilters: Partial<RestaurantFilters>) => {
@@ -68,6 +68,10 @@ const RestaurantPage: React.FC = () => {
     setShowForm(true);
   }, []);
 
+  const confirmFilterRestaurants = () => {
+    fetchRestaurants(filters);
+  }
+  
   const handleDeleteRestaurant = useCallback(
     async (restaurant: Restaurant) => {
       const result = await deleteRestaurant(restaurant.id);
@@ -139,6 +143,7 @@ const RestaurantPage: React.FC = () => {
           onFiltersChange={handleFiltersChange}
           handleClearFIlters={handleClearFIlters}
           canOrderBy={true}
+          confirmFilterRestaurants={confirmFilterRestaurants}
         />
       </div>
 

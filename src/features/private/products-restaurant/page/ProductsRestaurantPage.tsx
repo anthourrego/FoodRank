@@ -53,7 +53,7 @@ const ProductsRestaurantPage: React.FC = () => {
 
   useEffect(() => {
     fetchProducts(filters);
-  }, [fetchProducts, filters]);
+  }, [fetchProducts]);
 
   const handleFiltersChange = useCallback(
     (newFilters: Partial<ProductRestaurantFilters>) => {
@@ -185,6 +185,9 @@ const ProductsRestaurantPage: React.FC = () => {
           onFiltersChange={handleFiltersChange}
           handleClearFIlters={handleClearFIlters}
           canOrderBy={true}
+          confirmSearchProducts={() => {
+            fetchProducts(filters)
+          }}
         />
       </div>
 

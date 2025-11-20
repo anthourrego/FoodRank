@@ -83,8 +83,8 @@ const useRestaurants = (): UseRestaurantsReturn => {
       
       await fetchRestaurants();
       return { success: true, data: data.restaurant, message: data.message };
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error desconocido';
+    } catch (err: any) {
+      const errorMessage = err && err.message ? err.message : 'Error desconocido';
       setError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
@@ -104,8 +104,8 @@ const useRestaurants = (): UseRestaurantsReturn => {
       
       await fetchRestaurants();
       return { success: true, data: data.restaurant, message: data.message };
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error desconocido';
+    } catch (err: any) {
+      const errorMessage = err && err.message ? err.message : 'Error desconocido';
       setError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {

@@ -57,7 +57,7 @@ const RestaurantBranchesPage: React.FC = () => {
 
   useEffect(() => {
     loadBranches();
-  }, [filters]);
+  }, []);
 
   const loadBranches = async () => {
     setLoading(true);
@@ -188,6 +188,7 @@ const RestaurantBranchesPage: React.FC = () => {
           onFiltersChange={handleFiltersChange}
           handleClearFIlters={handleClearFIlters}
           canOrderBy={false}
+          confirmFilterRestaurants={loadBranches}
         />
       </div>
 
