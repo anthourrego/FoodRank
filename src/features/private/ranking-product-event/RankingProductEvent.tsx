@@ -59,7 +59,7 @@ function RankingProductEvent() {
 
           <div className="flex gap-4 justify-center mt-8">
          
-            <Link to="/r4nk1ngh1dd3n">
+            <Link to="/home/ranking">
               <Button
                 variant="outline"
                 className="flex items-center gap-2 bg-white/80 backdrop-blur-sm border-2 hover:bg-white hover:shadow-lg transition-all duration-300 rounded-full px-6 py-3"

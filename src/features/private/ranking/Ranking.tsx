@@ -558,7 +558,7 @@ const getRankBadge = (position: number) => {
                 </div>
               </div>
               <div className="mt-4 pt-4 border-t border-gray-200">
-                <Button onClick={() => navigate(`/raking/product-event/${selectedProduct?.event_product_id}`)} variant="default">
+                <Button onClick={() => navigate(`/home/ranking/product-event/${selectedProduct?.event_product_id}`)} variant="default">
                   Ver más
                 </Button>
               </div>
