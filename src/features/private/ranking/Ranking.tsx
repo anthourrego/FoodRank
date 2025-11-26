@@ -5,32 +5,15 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Modal } from "@/components/ui/modal"
-import { Trophy, Medal, Award, Star, Crown, ArrowLeft, Sparkles, BarChart3 } from "lucide-react"
+import { Trophy, Medal, Award, Star, Crown, ArrowLeft, Sparkles, BarChart3, Table2, Download } from "lucide-react"
 import { useNavigate } from "react-router"
 import { LazyLoadImage } from "react-lazy-load-image-component"
 import { useRanking } from "./hooks/useRanking"
 import { useQueryServiceEvents } from "@/hooks/useQueryServiceEvents"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-
-
-
-
-
-type RankingItem = {
-  product_name: string
-  product_image: string
-  avg_rating: number
-  total_reviews: number
-  total_comments?: number
-  restaurant_name: string
-  detail?: Record<string, number>
-  event_product_id?: number
-}
-
-type EventSummary = {
-  id: number
-  name: string
-}
+import type { RankingItem, EventSummary, ReviewItem } from "./types/ranking.types"
+import { DataTableServer } from "@/components/ui/data-table-server"
+import type { ColumnDef } from "@tanstack/react-table"
 
 const getRankIcon = (position: number) => {
   switch (position) {
@@ -97,14 +80,19 @@ const getRankBadge = (position: number) => {
 
  function Ranking() {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isTableModalOpen, setIsTableModalOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<RankingItem | null>(null)
   const [selectedEventId, setSelectedEventId] = useState<number | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [perPage, setPerPage] = useState(10)
 
   const navigate = useNavigate()
 
-  const { ranking, getRanking } = useRanking()
+  const { ranking, paginatedRanking, isLoadingExport, getRanking, getRankingPaginated, exportToExcel } = useRanking()
   const { GetEvents } = useQueryServiceEvents()
   const { data: eventsData } = GetEvents()
+
+  const selectedEventName = eventsData?.data?.find((event: EventSummary) => event.id === selectedEventId)?.name || 'evento'
 
   useEffect(() => {
     if (!selectedEventId && eventsData?.data?.length > 0) {
@@ -116,7 +104,13 @@ const getRankBadge = (position: number) => {
     if (selectedEventId) {
       getRanking(selectedEventId)
     }
-  }, [selectedEventId])
+  }, [selectedEventId, getRanking])
+
+  useEffect(() => {
+    if (selectedEventId && isTableModalOpen) {
+      getRankingPaginated(selectedEventId, currentPage, perPage)
+    }
+  }, [selectedEventId, isTableModalOpen, currentPage, perPage, getRankingPaginated])
 
   const handleProductClick = (product: RankingItem) => {
     setSelectedProduct(product)
@@ -127,6 +121,93 @@ const getRankBadge = (position: number) => {
     setIsModalOpen(false)
     setSelectedProduct(null)
   }
+
+  const handleOpenTableModal = () => {
+    setIsTableModalOpen(true)
+    setCurrentPage(1)
+  }
+
+  const handleCloseTableModal = () => {
+    setIsTableModalOpen(false)
+    setCurrentPage(1)
+  }
+
+  const handleExportToExcel = async () => {
+    if (selectedEventId) {
+      try {
+        await exportToExcel(selectedEventId, selectedEventName)
+      } catch (error) {
+        console.error('Error al exportar:', error)
+      }
+    }
+  }
+
+  const handlePaginationChange = (pageIndex: number, pageSize: number) => {
+    setCurrentPage(pageIndex + 1) // TanStack usa índice base 0, Laravel base 1
+    setPerPage(pageSize)
+  }
+
+  //columnas para la tabla
+  const columns: ColumnDef<ReviewItem>[] = [
+    {
+      accessorKey: "restaurant_name",
+      header: "Restaurante",
+      cell: ({ row }) => (
+        <span className="text-gray-600">{row.original.restaurant_name}</span>
+      ),
+      enableSorting: true,
+    },
+    {
+      accessorKey: "product_name",
+      header: "Producto",
+      cell: ({ row }) => (
+        <span className="font-semibold text-gray-900">{row.original.product_name}</span>
+      ),
+      enableSorting: true,
+    },
+    {
+      accessorKey: "rating",
+      header: () => <div className="text-center">Calificación</div>,
+      cell: ({ row }) => (
+        <div className="flex flex-col items-center gap-1">
+          <div className="flex items-center gap-1">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <Star
+                key={star}
+                className={`w-4 h-4 ${
+                  star <= row.original.rating
+                    ? "fill-yellow-400 text-yellow-400"
+                    : "fill-gray-200 text-gray-200"
+                }`}
+              />
+            ))}
+          </div>
+          <span className="font-bold text-lg text-gray-900">{row.original.rating}</span>
+        </div>
+      ),
+      enableSorting: true,
+    },
+    {
+      accessorKey: "comment",
+      header: "Comentario",
+      cell: ({ row }) => (
+        <div className="min-w-[300px] max-w-[400px]">
+          <p className="text-sm text-gray-700 line-clamp-3 break-words whitespace-normal" title={row.original.comment || 'Sin comentario'}>
+            {row.original.comment || <span className="text-gray-400 italic">Sin comentario</span>}
+          </p>
+        </div>
+      ),
+      enableSorting: false,
+    },
+    {
+      accessorKey: "ip",
+      header: () => <div className="text-center">IP</div>,
+      cell: ({ row }) => (
+        <span className="text-xs text-gray-500">{row.original.ip}</span>
+      ),
+      enableSorting: false,
+    },
+  ]
 
 /*   if(ranking.length === 0) {
     return <div>Sin datos disponibles para el evento seleccionado</div>
@@ -175,15 +256,39 @@ const getRankBadge = (position: number) => {
                 </Select>
               </div>
               
-              <Button
+             {/*  <Button
               onClick={() => navigate('/')}
                 variant="outline"
                 className="flex items-center gap-2 bg-white/80 backdrop-blur-sm border-2 hover:bg-white hover:shadow-lg transition-all duration-300 rounded-full px-6 py-3"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Volver al listado
-              </Button>
+              </Button> */}
+
+{selectedEventId && (
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 ">
+                <Button
+                  onClick={handleOpenTableModal}
+                  variant="outline"
+                  className="flex items-center gap-2 bg-white/80 backdrop-blur-sm border-2 hover:bg-white hover:shadow-lg transition-all duration-300 rounded-full px-6 py-3"
+                >
+                  <Table2 className="w-4 h-4" />
+                  Ver tabla
+                </Button>
+
+                <Button
+                  onClick={handleExportToExcel}
+                  disabled={isLoadingExport}
+                  className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white rounded-full px-6 py-3 shadow-lg transition-all duration-300"
+                >
+                  <Download className="w-4 h-4" />
+                  {isLoadingExport ? 'Exportando...' : 'Exportar a Excel'}
+                </Button>
+              </div>
+            )}
             </div>
+
+            
           </div>
         </div>
 
@@ -569,6 +674,28 @@ const getRankBadge = (position: number) => {
             <p className="text-gray-500">No hay detalles de votación disponibles</p>
           </div>
         )}
+      </Modal>
+
+      {/* Modal de Tabla */}
+      <Modal
+        isOpen={isTableModalOpen}
+        onClose={handleCloseTableModal}
+        title={`Ranking Completo - ${selectedEventName}`}
+        className="!max-w-7xl"
+      >
+        <div className="space-y-6">
+          <DataTableServer
+            columns={columns}
+            data={paginatedRanking.data}
+            pageCount={paginatedRanking.last_page}
+            pageIndex={currentPage - 1} // TanStack usa índice base 0
+            pageSize={perPage}
+            total={paginatedRanking.total}
+            from={paginatedRanking.from}
+            to={paginatedRanking.to}
+            onPaginationChange={handlePaginationChange}
+          />
+        </div>
       </Modal>
     </div>
   )
