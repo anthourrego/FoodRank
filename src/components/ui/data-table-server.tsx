@@ -18,7 +18,7 @@ import {
 import { Button } from "./button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
 import { ChevronLeft, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown, Search } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "./input";
 
 interface DataTableServerProps<TData, TValue> {
@@ -33,6 +33,7 @@ interface DataTableServerProps<TData, TValue> {
   onPaginationChange: (pageIndex: number, pageSize: number) => void;
   onSortingChange?: (sorting: SortingState) => void;
   onSearchChange?: (search: string) => void;
+  searchValue?: string;
   isLoading?: boolean;
   manualSorting?: boolean;
   enableSearch?: boolean;
@@ -51,14 +52,29 @@ export function DataTableServer<TData, TValue>({
   onPaginationChange,
   onSortingChange,
   onSearchChange,
+  searchValue = "",
   isLoading = false,
   manualSorting = false,
   enableSearch = false,
   searchPlaceholder = "Buscar...",
 }: DataTableServerProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [localSearchValue, setLocalSearchValue] = useState<string>(searchValue);
   const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
+
+  // Sincronizar el valor local cuando cambia el prop (ej: al abrir modal)
+  useEffect(() => {
+    setLocalSearchValue(searchValue);
+  }, [searchValue]);
+
+  // Limpiar timeout al desmontar
+  useEffect(() => {
+    return () => {
+      if (searchTimeout) {
+        clearTimeout(searchTimeout);
+      }
+    };
+  }, [searchTimeout]);
   const table = useReactTable({
     data,
     columns,
@@ -92,7 +108,8 @@ export function DataTableServer<TData, TValue>({
   };
 
   const handleSearchChange = (value: string) => {
-    setSearchTerm(value);
+    // Actualizar estado local inmediatamente para que el input sea responsivo
+    setLocalSearchValue(value);
     
     // Limpiar timeout anterior
     if (searchTimeout) {
@@ -100,6 +117,7 @@ export function DataTableServer<TData, TValue>({
     }
     
     // Debounce: esperar 500ms después de que el usuario deje de escribir
+    // Solo entonces actualizamos el estado del padre
     const timeout = setTimeout(() => {
       if (onSearchChange) {
         onSearchChange(value);
@@ -122,7 +140,7 @@ export function DataTableServer<TData, TValue>({
             <Input
               type="text"
               placeholder={searchPlaceholder}
-              value={searchTerm}
+              value={localSearchValue}
               onChange={(e) => handleSearchChange(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
             />

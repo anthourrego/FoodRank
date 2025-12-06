@@ -129,9 +129,10 @@ const getRankBadge = (position: number) => {
     setCurrentPage(1)
   }
 
-  const handleCloseTableModal = () => {
+  const handleCloseTableModalReset = () => {
     setIsTableModalOpen(false)
     setCurrentPage(1)
+    // NO reseteamos searchTerm para mantener el filtro
   }
 
   const handleExportToExcel = async () => {
@@ -706,7 +707,7 @@ const getRankBadge = (position: number) => {
       {/* Modal de Tabla */}
       <Modal
         isOpen={isTableModalOpen}
-        onClose={handleCloseTableModal}
+        onClose={handleCloseTableModalReset}
         title={`Ranking Completo - ${selectedEventName}`}
         className="!max-w-7xl"
       >
@@ -723,6 +724,7 @@ const getRankBadge = (position: number) => {
             onPaginationChange={handlePaginationChange}
             onSortingChange={handleSortingChange}
             onSearchChange={handleSearchChange}
+            searchValue={searchTerm}
             manualSorting={true}
             enableSearch={true}
             searchPlaceholder="Buscar por producto, restaurante, comentario o IP..."
