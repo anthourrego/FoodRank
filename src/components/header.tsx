@@ -22,7 +22,7 @@ export function Header() {
   return (
     <header className="bg-red-800/80 backdrop-blur-sm text-white sticky top-0 z-50 overflow-x-hidden">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between md:justify-start md:space-x-2 h-16">
+        <div className="flex items-center justify-between h-16">
           {/* Logo - siempre visible */}
           <div className="flex items-center flex-shrink-0">
             <Link to="/" onClick={closeMobileMenu}>
@@ -31,7 +31,7 @@ export function Header() {
           </div>
 
           {/* Menú Desktop - oculto en móvil */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-8 flex-1 ml-8">
             <Link to='/' className="hover:text-red-200 transition-colors whitespace-nowrap">
               Inicio
             </Link>
@@ -59,18 +59,27 @@ export function Header() {
           {/* Botones de acción Desktop - oculto en móvil */}
           <div className="hidden md:flex items-center">
             {isLogged && (
-              <div className="cursor-pointer" onClick={logout}>
-                <LogOut />
-              </div>
+              <button 
+                className="flex items-center gap-2 hover:text-red-200 transition-colors cursor-pointer" 
+                onClick={logout}
+                aria-label="Cerrar sesión"
+              >
+                <span>Salir</span>
+                <LogOut size={20} />
+              </button>
             )}
           </div>
 
           {/* Botón hamburguesa - solo visible en móvil */}
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden flex items-center gap-4">
             {isLogged && (
-              <div className="mr-4 cursor-pointer" onClick={logout}>
-                <LogOut />
-              </div>
+              <button 
+                className="cursor-pointer hover:text-red-200 transition-colors" 
+                onClick={logout}
+                aria-label="Cerrar sesión"
+              >
+                <LogOut size={20} />
+              </button>
             )}
             <button
               onClick={toggleMobileMenu}
