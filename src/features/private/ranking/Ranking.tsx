@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Modal } from "@/components/ui/modal"
-import { Trophy, Medal, Award, Star, Crown, ArrowLeft, Sparkles, BarChart3, Table2, Download } from "lucide-react"
+import { Trophy, Medal, Award, Star, Crown, Sparkles, BarChart3, Table2, Download } from "lucide-react"
 import { useNavigate } from "react-router"
 import { LazyLoadImage } from "react-lazy-load-image-component"
 import { useRanking } from "./hooks/useRanking"
@@ -13,7 +13,7 @@ import { useQueryServiceEvents } from "@/hooks/useQueryServiceEvents"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import type { RankingItem, EventSummary, ReviewItem } from "./types/ranking.types"
 import { DataTableServer } from "@/components/ui/data-table-server"
-import type { ColumnDef } from "@tanstack/react-table"
+import type { ColumnDef, SortingState } from "@tanstack/react-table"
 
 const getRankIcon = (position: number) => {
   switch (position) {
@@ -85,6 +85,8 @@ const getRankBadge = (position: number) => {
   const [selectedEventId, setSelectedEventId] = useState<number | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [perPage, setPerPage] = useState(10)
+  const [sortField, setSortField] = useState<string | undefined>(undefined)
+  const [searchTerm, setSearchTerm] = useState<string>("")
 
   const navigate = useNavigate()
 
@@ -108,9 +110,9 @@ const getRankBadge = (position: number) => {
 
   useEffect(() => {
     if (selectedEventId && isTableModalOpen) {
-      getRankingPaginated(selectedEventId, currentPage, perPage)
+      getRankingPaginated(selectedEventId, currentPage, perPage, sortField, searchTerm)
     }
-  }, [selectedEventId, isTableModalOpen, currentPage, perPage, getRankingPaginated])
+  }, [selectedEventId, isTableModalOpen, currentPage, perPage, sortField, searchTerm, getRankingPaginated])
 
   const handleProductClick = (product: RankingItem) => {
     setSelectedProduct(product)
@@ -145,6 +147,31 @@ const getRankBadge = (position: number) => {
   const handlePaginationChange = (pageIndex: number, pageSize: number) => {
     setCurrentPage(pageIndex + 1) // TanStack usa índice base 0, Laravel base 1
     setPerPage(pageSize)
+  }
+
+  const handleSortingChange = (sorting: SortingState) => {
+    if (sorting.length === 0) {
+      setSortField(undefined)
+      return
+    }
+
+    const sort = sorting[0]
+    const columnIdMap: Record<string, string> = {
+      'restaurant_name': 'eventProduct.restaurantProduct.restaurant.name',
+      'product_name': 'eventProduct.restaurantProduct.name',
+      'rating': 'rating',
+    }
+
+    const field = columnIdMap[sort.id]
+    if (field) {
+      // Spatie usa: -field para desc, field para asc
+      setSortField(sort.desc ? `-${field}` : field)
+    }
+  }
+
+  const handleSearchChange = (search: string) => {
+    setSearchTerm(search)
+    setCurrentPage(1) // Resetear a la primera página al buscar
   }
 
   //columnas para la tabla
@@ -694,6 +721,11 @@ const getRankBadge = (position: number) => {
             from={paginatedRanking.from}
             to={paginatedRanking.to}
             onPaginationChange={handlePaginationChange}
+            onSortingChange={handleSortingChange}
+            onSearchChange={handleSearchChange}
+            manualSorting={true}
+            enableSearch={true}
+            searchPlaceholder="Buscar por producto, restaurante, comentario o IP..."
           />
         </div>
       </Modal>

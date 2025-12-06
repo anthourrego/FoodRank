@@ -13,13 +13,23 @@ export class RankingService {
     return result
   }
 
-  async getRankingPaginated(event_id: number, page: number = 1, perPage: number = 10) {
+  async getRankingPaginated(event_id: number, page: number = 1, perPage: number = 10, sort?: string, search?: string) {
+    const params: Record<string, string | number | boolean> = {
+      paginate: true,
+      page,
+      rows: perPage
+    }
+    
+    if (sort) {
+      params.sort = sort
+    }
+
+    if (search) {
+      params['filter[search]'] = search
+    }
+    
     const result = await axios.get(`${this.urlBack}reviews/ranking-list/event/${event_id}`, {
-      params: {
-        paginate: true,
-        page,
-        rows: perPage
-      }
+      params
     })
     return result
   }

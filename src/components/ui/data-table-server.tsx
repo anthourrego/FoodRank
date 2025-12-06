@@ -17,8 +17,9 @@ import {
 } from "@/components/ui/table";
 import { Button } from "./button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
-import { ChevronLeft, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown, Search } from "lucide-react";
 import { useState } from "react";
+import { Input } from "./input";
 
 interface DataTableServerProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -31,8 +32,11 @@ interface DataTableServerProps<TData, TValue> {
   to: number;
   onPaginationChange: (pageIndex: number, pageSize: number) => void;
   onSortingChange?: (sorting: SortingState) => void;
+  onSearchChange?: (search: string) => void;
   isLoading?: boolean;
   manualSorting?: boolean;
+  enableSearch?: boolean;
+  searchPlaceholder?: string;
 }
 
 export function DataTableServer<TData, TValue>({
@@ -46,11 +50,15 @@ export function DataTableServer<TData, TValue>({
   to,
   onPaginationChange,
   onSortingChange,
+  onSearchChange,
   isLoading = false,
   manualSorting = false,
+  enableSearch = false,
+  searchPlaceholder = "Buscar...",
 }: DataTableServerProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
-  
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
   const table = useReactTable({
     data,
     columns,
@@ -83,8 +91,45 @@ export function DataTableServer<TData, TValue>({
     onPaginationChange(0, newPageSize);
   };
 
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    
+    // Limpiar timeout anterior
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+    
+    // Debounce: esperar 500ms después de que el usuario deje de escribir
+    const timeout = setTimeout(() => {
+      if (onSearchChange) {
+        onSearchChange(value);
+      }
+    }, 500);
+    
+    setSearchTimeout(timeout);
+  };
+
   return (
     <div>
+      {/* Barra de búsqueda */}
+      {enableSearch && (
+        <div className="mb-6">
+          <div className="relative">
+            <Search
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              size={20}
+            />
+            <Input
+              type="text"
+              placeholder={searchPlaceholder}
+              value={searchTerm}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+            />
+          </div>
+        </div>
+      )}
+
       <div className="overflow-hidden rounded-xl shadow-md border border-gray-200">
         <Table>
           <TableHeader className="bg-gradient-to-r from-gray-50 to-gray-100">

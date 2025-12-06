@@ -30,8 +30,8 @@ export const useRanking = () => {
     setRanking(dataRanking)
   }, [rankingService])
 
-  const getRankingPaginated = useCallback(async (event_id: number, page: number = 1, perPage: number = 10) => {
-    const result = await rankingService.getRankingPaginated(event_id, page, perPage)
+  const getRankingPaginated = useCallback(async (event_id: number, page: number = 1, perPage: number = 10, sort?: string, search?: string) => {
+    const result = await rankingService.getRankingPaginated(event_id, page, perPage, sort, search)
     setPaginatedRanking(result.data)
   }, [rankingService])
 
