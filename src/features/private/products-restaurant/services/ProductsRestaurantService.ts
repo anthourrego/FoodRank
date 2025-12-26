@@ -20,9 +20,8 @@ export class ProductsRestaurantService {
         queryParams.append(key, value.toString());
       }
     });
-    const url = `${this.endpoint}${
-      queryParams.toString() ? `?${queryParams.toString()}` : ""
-    }`;
+    const url = `${this.endpoint}${queryParams.toString() ? `?${queryParams.toString()}` : ""
+      }`;
     const response = await apiClient.get(url);
     return response.data;
   }
@@ -35,6 +34,21 @@ export class ProductsRestaurantService {
     product: ProductRestaurant;
     message: string;
   }> {
+    if (data.image) {
+      const formData = new FormData();
+      formData.append('name', data.name);
+      if (data.description) {
+        formData.append('description', data.description);
+      }
+      formData.append('restaurant_id', data.restaurant_id.toString());
+      formData.append('image', data.image);
+
+      return apiClient.post(`${this.endpoint}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+    }
     return apiClient.post(`${this.endpoint}`, data);
   }
 
@@ -45,6 +59,31 @@ export class ProductsRestaurantService {
     product: ProductRestaurant;
     message: string;
   }> {
+    // Si hay una imagen, enviar como FormData
+    if (data.image) {
+      const formData = new FormData();
+      if (data.name) {
+        formData.append('name', data.name);
+      }
+      if (data.description) {
+        formData.append('description', data.description);
+      }
+      if (data.restaurant_id) {
+        formData.append('restaurant_id', data.restaurant_id.toString());
+      }
+      formData.append('image', data.image);
+
+      // Para Laravel, necesitamos usar _method POST con FormData en updates
+      formData.append('_method', 'PUT');
+
+      return apiClient.post(`${this.endpoint}/${id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+    }
+
+    // Si no hay imagen, enviar como JSON normal
     return apiClient.put(`${this.endpoint}/${id}`, data);
   }
 

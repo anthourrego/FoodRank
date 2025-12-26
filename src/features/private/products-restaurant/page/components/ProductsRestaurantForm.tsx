@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { Save, Loader2 } from "lucide-react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { Save, Loader2, Upload, X, Info, Image as ImageIcon } from "lucide-react";
 import {
   type ProductRestaurant,
   type Restaurant,
@@ -35,7 +35,7 @@ const ProductsRestaurantForm: React.FC<ProductsRestaurantFormProps> = ({
     () => ({
       name: product?.name || "",
       description: product?.description || "",
-      image_url: product?.image_url || "",
+      image: null,
       restaurant_id: product?.restaurant_id?.toString() || preselectedRestaurantId?.toString() || "",
     }),
     [product, preselectedRestaurantId]
@@ -45,6 +45,9 @@ const ProductsRestaurantForm: React.FC<ProductsRestaurantFormProps> = ({
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(product?.image_url || null);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setFormData(initialFormData);
@@ -95,6 +98,51 @@ const ProductsRestaurantForm: React.FC<ProductsRestaurantFormProps> = ({
     [validateField]
   );
 
+  const handleImageChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+
+      if (file) {
+        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+        if (!validTypes.includes(file.type)) {
+          setErrors((prev) => ({
+            ...prev,
+            image: 'El archivo debe ser una imagen (JPEG, JPG, PNG o WEBP)',
+          }));
+          return;
+        }
+
+        const maxSize = 5120 * 1024;
+        if (file.size > maxSize) {
+          setErrors((prev) => ({
+            ...prev,
+            image: 'La imagen no debe superar los 5MB',
+          }));
+          return;
+        }
+
+        setFormData((prev) => ({ ...prev, image: file }));
+        setErrors((prev) => ({ ...prev, image: undefined }));
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImagePreview(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      }
+    },
+    []
+  );
+
+  const handleRemoveImage = useCallback(() => {
+    setFormData((prev) => ({ ...prev, image: null }));
+    setImagePreview(null);
+    setErrors((prev) => ({ ...prev, image: undefined }));
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  }, []);
+
   const handleSubmit = useCallback(async () => {
     setIsSubmitting(true);
 
@@ -117,9 +165,12 @@ const ProductsRestaurantForm: React.FC<ProductsRestaurantFormProps> = ({
         const submitData: CreateProductRestaurantData = {
           name: formData.name.trim(),
           description: formData.description.trim(),
-          image_url: formData.image_url.trim() || undefined,
           restaurant_id: parseInt(formData.restaurant_id + "", 10),
         };
+
+        if (formData.image) {
+          submitData.image = formData.image;
+        }
 
         await onSubmit(submitData);
       }
@@ -164,14 +215,6 @@ const ProductsRestaurantForm: React.FC<ProductsRestaurantFormProps> = ({
         rows: 3,
         required: true,
       },
-      {
-        id: "image_url",
-        name: "image_url",
-        label: "URL de la imagen",
-        type: "url",
-        value: formData.image_url,
-        placeholder: "https://ejemplo.com/imagen.jpg",
-      },
     ],
     [formData]
   );
@@ -198,12 +241,105 @@ const ProductsRestaurantForm: React.FC<ProductsRestaurantFormProps> = ({
             error={getFieldError("description")}
           />
 
-          <FormField
-            {...formFields[2]}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            error={getFieldError("image_url")}
-          />
+          {/* Campo de imagen */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <label htmlFor="image" className="block text-sm font-medium text-gray-700">
+                Imagen del producto
+              </label>
+              <div className="relative">
+                <button
+                  type="button"
+                  onMouseEnter={() => setShowTooltip(true)}
+                  onMouseLeave={() => setShowTooltip(false)}
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <Info size={16} />
+                </button>
+                {showTooltip && (
+                  <div className="absolute left-0 top-6 z-50 w-64 px-3 py-2 text-xs text-white bg-gray-800 rounded-lg shadow-lg">
+                    <div className="font-semibold mb-1">Requisitos de la imagen:</div>
+                    <ul className="space-y-0.5">
+                      <li>• Formatos: JPEG, JPG, PNG, WEBP</li>
+                      <li>• Tamaño máximo: 5MB</li>
+                    </ul>
+                    <div className="absolute -top-1 left-2 w-2 h-2 bg-gray-800 transform rotate-45"></div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {!imagePreview ? (
+              <div>
+                <input
+                  ref={fileInputRef}
+                  id="image"
+                  name="image"
+                  type="file"
+                  accept="image/jpeg,image/jpg,image/png,image/webp"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+                <label
+                  htmlFor="image"
+                  className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors"
+                >
+                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                    <Upload className="w-8 h-8 mb-2 text-gray-400" />
+                    <p className="mb-1 text-sm text-gray-600 font-medium">
+                      Click para seleccionar imagen
+                    </p>
+                    <p className="text-xs text-gray-500">o arrastra y suelta aquí</p>
+                  </div>
+                </label>
+              </div>
+            ) : (
+              <div className="relative group">
+                <div className="relative w-full h-48 rounded-lg overflow-hidden border-2 border-gray-200 bg-gray-100">
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="w-full h-full object-contain"
+                  />
+                  <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-40 transition-opacity duration-200"></div>
+                  <div className="absolute inset-0 flex items-center justify-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 px-4 py-2 bg-white text-gray-700 rounded-md text-sm font-medium hover:bg-gray-100 flex items-center gap-2 shadow-lg"
+                    >
+                      <ImageIcon size={16} />
+                      Cambiar
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleRemoveImage}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 px-4 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700 flex items-center gap-2 shadow-lg"
+                    >
+                      <X size={16} />
+                      Eliminar
+                    </button>
+                  </div>
+                </div>
+                <input
+                  ref={fileInputRef}
+                  id="image"
+                  name="image"
+                  type="file"
+                  accept="image/jpeg,image/jpg,image/png,image/webp"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+              </div>
+            )}
+
+            {getFieldError("image") && (
+              <p className="text-sm text-red-600 flex items-center gap-1">
+                <X size={14} />
+                {getFieldError("image")}
+              </p>
+            )}
+          </div>
 
           <SelectField
             id="restaurant_id"
@@ -218,7 +354,7 @@ const ProductsRestaurantForm: React.FC<ProductsRestaurantFormProps> = ({
             required
             disabled={!!preselectedRestaurantId}
           />
-          
+
           {/* Mensaje explicativo cuando el restaurante está preseleccionado */}
           {preselectedRestaurantId && (
             <p className="text-xs text-blue-600 mt-1 flex items-center">

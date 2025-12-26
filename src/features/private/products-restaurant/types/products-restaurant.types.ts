@@ -27,7 +27,7 @@ export interface ProductRestaurant {
 export interface CreateProductRestaurantData {
   name: string;
   description?: string;
-  image_url?: string;
+  image?: File;
   restaurant_id: number;
 }
 
@@ -38,7 +38,7 @@ export interface UpdateProductRestaurantData extends Partial<CreateProductRestau
 export interface ProductRestaurantFormData {
   name: string;
   description: string;
-  image_url: string;
+  image: File | null;
   restaurant_id: number | string;
 }
 

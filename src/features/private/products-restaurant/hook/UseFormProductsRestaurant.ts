@@ -21,12 +21,6 @@ export const useFormValidation = () => {
           return "La descripción debe tener al menos 10 caracteres";
         return null;
       },
-      image_url: (value: string) => {
-        if (value && !/^https?:\/\/.+/.test(value)) {
-          return "La URL debe comenzar con http:// o https://";
-        }
-        return null;
-      },
       restaurant_id: (value: string) => {
         if (!value || value === "") return "El restaurante es obligatorio";
         return null;
