@@ -34,7 +34,7 @@ const ProductsRestaurantPage: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
   const [selectedProduct, setSelectedProduct] =
     useState<ProductRestaurant | null>(null);
-  
+
   // Leer restaurant_id de los parámetros de la URL
   const restaurantIdParam = searchParams.get('restaurant_id');
   const [filters, setFilters] = useState<ProductRestaurantFilters>({
@@ -65,7 +65,7 @@ const ProductsRestaurantPage: React.FC = () => {
   const handleClearFIlters = useCallback(() => {
     // Limpiar los parámetros de la URL
     navigate('/home/products-restaurant', { replace: true });
-    
+
     // Resetear los filtros
     setFilters({
       search: "",
@@ -88,7 +88,9 @@ const ProductsRestaurantPage: React.FC = () => {
   }, []);
 
   const handleEditProduct = useCallback((product: ProductRestaurant) => {
-    setSelectedProduct(product);
+    const dataProduct = { ...product };
+    dataProduct.image_url = import.meta.env.VITE_URL_BACK + "imageproduct/" + product?.image_url;
+    setSelectedProduct(dataProduct);
     setShowForm(true);
   }, []);
 
@@ -150,7 +152,7 @@ const ProductsRestaurantPage: React.FC = () => {
           <h1 className="text-2xl font-bold text-gray-900">
             Gestión de Productos
           </h1>
-          
+
           {/* Indicador de filtro por restaurante */}
           {filters.restaurant_id && (
             <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-center justify-between">
@@ -168,7 +170,7 @@ const ProductsRestaurantPage: React.FC = () => {
             </div>
           )}
         </div>
-        
+
         <Button
           onClick={handleCreateProduct}
           className="flex items-center gap-2 bg-red-800/80 hover:bg-red-800 text-white"

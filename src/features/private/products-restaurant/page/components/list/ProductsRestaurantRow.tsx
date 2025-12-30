@@ -23,7 +23,9 @@ export const ProductsRestaurantRow: React.FC<ProductsRestaurantRowProps> = ({
         <div className="flex items-center">
           {product.image_url ? (
             <img
-              src={product.image_url}
+              src={import.meta.env.VITE_URL_BACK +
+                "imageproduct/" +
+                product?.image_url}
               alt={product.name}
               className="w-12 h-12 rounded-lg object-cover mr-3"
             />
@@ -54,11 +56,10 @@ export const ProductsRestaurantRow: React.FC<ProductsRestaurantRowProps> = ({
       <td className="px-6 py-4 whitespace-nowrap">
         <button
           onClick={() => onToggleStatus(product)}
-          className={`inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer ${
-            product.is_active
+          className={`inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer ${product.is_active
               ? "bg-green-100 text-green-800 hover:bg-green-200"
               : "bg-red-100 text-red-800 hover:bg-red-200"
-          }`}
+            }`}
         >
           {product.is_active ? "Activa" : "Inactiva"}
         </button>
