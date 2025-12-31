@@ -21,9 +21,9 @@ export const useQueryServiceConfig = () => {
     }
   })
 
-  const GetConfigurations = ()=>useQuery({
-    queryKey: ['configurations'],
-    queryFn: ({signal}) => configurationService.getConfigurations({signal}),
+  const GetConfigurations = (eventId?: number)=>useQuery({
+    queryKey: eventId ? ['configurations', eventId] : ['configurations'],
+    queryFn: ({signal}) => configurationService.getConfigurations({signal, eventId}),
   })
 
   const GetConfigurationEvent = (eventId: number) => useQuery({

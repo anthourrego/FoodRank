@@ -8,11 +8,12 @@ interface EventsTableProps {
   onEdit: (row: EventRow) => void
   onAssignParticipants: (row: EventRow) => void,
   generarQr: (row: EventRow) => void
+  onGoToConfiguration: (row: EventRow) => void
 }
 
-export function EventsTable({ isLoading, events, onEdit, onAssignParticipants, generarQr }: EventsTableProps) {
+export function EventsTable({ isLoading, events, onEdit, onAssignParticipants, generarQr, onGoToConfiguration }: EventsTableProps) {
   const data = Array.isArray(events) ? events : []
-  return <DataTable columns={columnsEvents(onEdit, onAssignParticipants, generarQr)} data={isLoading ? [] : data} />
+  return <DataTable columns={columnsEvents(onEdit, onAssignParticipants, generarQr, onGoToConfiguration)} data={isLoading ? [] : data} />
 }
 
 

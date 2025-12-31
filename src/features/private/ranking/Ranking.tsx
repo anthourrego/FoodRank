@@ -91,8 +91,8 @@ const getRankBadge = (position: number) => {
   const navigate = useNavigate()
 
   const { ranking, paginatedRanking, isLoadingExport, getRanking, getRankingPaginated, exportToExcel } = useRanking()
-  const { GetEvents } = useQueryServiceEvents()
-  const { data: eventsData } = GetEvents()
+  const { GetAllEvents } = useQueryServiceEvents()
+  const { data: eventsData } = GetAllEvents()
 
   const selectedEventName = eventsData?.data?.find((event: EventSummary) => event.id === selectedEventId)?.name || 'evento'
 

@@ -15,8 +15,9 @@ export class ConfigurationService {
         return response.data
     }
 
-    async getConfigurations({signal}: {signal: AbortSignal}) {
-        const response = await this.apiClient.get(`${this.endpoint}`, {signal})
+    async getConfigurations({signal, eventId}: {signal: AbortSignal, eventId?: number}) {
+        const url = eventId ? `${this.endpoint}?eventId=${eventId}` : this.endpoint
+        const response = await this.apiClient.get(url, {signal})
         return response.data
     }
 

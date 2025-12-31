@@ -1,13 +1,14 @@
 import { Button } from "@/components/ui/button"
 import type { ColumnDef } from "@tanstack/react-table"
 import type { EventRow } from "../models/EventRow"
-import { ArrowUpDown, ListTree, Edit, Users, QrCode } from "lucide-react"
+import { ArrowUpDown, ListTree, Edit, Users, QrCode, Settings } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 export const columnsEvents = (
   onEdit: (row: EventRow) => void,
   onAssignParticipants: (row: EventRow) => void,
-  generarQr: (row: EventRow) => void
+  generarQr: (row: EventRow) => void,
+  onGoToConfiguration: (row: EventRow) => void
 ): ColumnDef<EventRow>[] => [
   {
     accessorKey: "name",
@@ -86,6 +87,10 @@ export const columnsEvents = (
             <DropdownMenuItem onClick={() => onAssignParticipants(ev)} className="flex items-center gap-2">
               <Users className="h-4 w-4" />
               Asignar participantes
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onGoToConfiguration(ev)} className="flex items-center gap-2">
+              <Settings className="h-4 w-4" />
+              Configuración
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => generarQr(ev)} className="flex items-center gap-2">
               <QrCode className="h-4 w-4" />

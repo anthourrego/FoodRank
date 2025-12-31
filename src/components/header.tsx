@@ -49,9 +49,9 @@ export function Header() {
                 <Link to="/home/qr" className="hover:text-red-200 transition-colors whitespace-nowrap">
                   Generar QR
                 </Link>
-                <Link to="/home/configuration" className="hover:text-red-200 transition-colors whitespace-nowrap">
+                {/* <Link to="/home/configuration" className="hover:text-red-200 transition-colors whitespace-nowrap">
                   Configuración
-                </Link>
+                </Link> */}
               </>)
             }
           </nav>
@@ -132,13 +132,13 @@ export function Header() {
                   >
                     Generar QR
                   </Link>
-                  <Link 
+                  {/* <Link 
                     to="/home/configuration" 
                     className="hover:text-red-200 transition-colors px-2 py-1"
                     onClick={closeMobileMenu}
                   >
                     Configuración
-                  </Link>
+                  </Link> */}
                 </>
               )}
             </nav>

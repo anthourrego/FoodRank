@@ -110,6 +110,10 @@ function ManageEvents() {
     navigate(`/home/qr/${row.id}`)
   }, [navigate])
 
+  const onGoToConfiguration = useCallback((row: EventRow) => {
+    navigate(`/home/configuration?eventId=${row.id}`)
+  }, [navigate])
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-6">
@@ -121,7 +125,7 @@ function ManageEvents() {
       </div>
 
 
-      <EventsTable isLoading={isLoading} events={events} onEdit={onOpenEdit} onAssignParticipants={onAssignParticipants} generarQr={generarQr} />
+      <EventsTable isLoading={isLoading} events={events} onEdit={onOpenEdit} onAssignParticipants={onAssignParticipants} generarQr={generarQr} onGoToConfiguration={onGoToConfiguration} />
 
 
       <EventDialog

@@ -19,6 +19,7 @@ interface Props<T extends FieldValues> {
   name: FieldPath<T>;
   className?: string;
   onValueChange?: (value: string) => void;
+  disabled?: boolean;
   restProps?: React.HTMLAttributes<HTMLDivElement>;
 }
 
@@ -31,6 +32,7 @@ export function FormSelect<T extends FieldValues>({
   options,
   className = "",
   onValueChange,
+  disabled = false,
   ...restProps
 }: Props<T>) {
   const {
@@ -62,7 +64,7 @@ export function FormSelect<T extends FieldValues>({
             }}
             value={String(field.value)}
             aria-invalid={errors.typeDocument ? "true" : "false"}
-            
+            disabled={disabled}
           >
             <FormControl>
               <SelectTrigger className="w-full truncate">

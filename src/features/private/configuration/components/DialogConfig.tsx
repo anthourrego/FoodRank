@@ -30,6 +30,7 @@ interface DialogConfigProps {
   openDialogConfig: boolean;
   setOpenDialogConfig: (open: boolean) => void;
   fnSubmit: UseMutationResult<TypeFormSchemaConfiguration, Error, TypeFormSchemaConfiguration>;
+  eventId?: number;
 }
 
 // Componente interno que maneja la lógica del formulario
@@ -37,11 +38,12 @@ const DialogConfigInternal = ({
   openDialogConfig,
   setOpenDialogConfig,
   fnSubmit,
+  eventId,
 }: DialogConfigProps) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
-  const { GetEvents } = useQueryServiceEvents()
-  const { data: eventsData, isLoading: isLoadingEvents } = GetEvents()
+  const { GetAllEvents } = useQueryServiceEvents()
+  const { data: eventsData, isLoading: isLoadingEvents } = GetAllEvents()
 
   const [eventsList, setEventsList] = useState<OptionItem[]>([])
   useEffect(() => {
@@ -66,6 +68,13 @@ const DialogConfigInternal = ({
     resolver: zodResolver(FormSchemaConfiguration),
     defaultValues: defaultFormSchemaConfiguration,
   });
+
+  // Pre-llenar el eventId cuando se abre el diálogo
+  useEffect(() => {
+    if (openDialogConfig && eventId) {
+      form.setValue("eventId", eventId.toString());
+    }
+  }, [openDialogConfig, eventId, form]);
 
   const onSubmit = (data: TypeFormSchemaConfiguration) => {
     console.log("Datos del formulario:", data);
@@ -202,7 +211,7 @@ const DialogConfigInternal = ({
                 label="Configuracion del evento"
                 options={eventsList}
                 name="eventId"
-
+                disabled={!!eventId}
               />
               <div className="grid gap-3">
                 <FormSelect
@@ -320,6 +329,7 @@ export const DialogConfig = ({
   openDialogConfig,
   setOpenDialogConfig,
   fnSubmit,
+  eventId,
 }: DialogConfigProps) => {
   // Solo renderizar cuando el diálogo esté abierto
   if (!openDialogConfig) {
@@ -332,6 +342,7 @@ export const DialogConfig = ({
         openDialogConfig={openDialogConfig}
         setOpenDialogConfig={setOpenDialogConfig}
         fnSubmit={fnSubmit}
+        eventId={eventId}
       />
     </Suspense>
   );
