@@ -262,6 +262,7 @@ const ProductsRestaurantForm: React.FC<ProductsRestaurantFormProps> = ({
                     <ul className="space-y-0.5">
                       <li>• Formatos: JPEG, JPG, PNG, WEBP</li>
                       <li>• Tamaño máximo: 5MB</li>
+                      <li>• Dimensiones recomendadas: 685x455 píxeles</li>
                     </ul>
                     <div className="absolute -top-1 left-2 w-2 h-2 bg-gray-800 transform rotate-45"></div>
                   </div>
