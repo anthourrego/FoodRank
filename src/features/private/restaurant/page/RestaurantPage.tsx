@@ -20,6 +20,7 @@ const RestaurantPage: React.FC = () => {
     error,
     pagination,
     fetchRestaurants,
+    fetchCities,
     createRestaurant,
     updateRestaurant,
     deleteRestaurant,
@@ -41,7 +42,11 @@ const RestaurantPage: React.FC = () => {
 
   useEffect(() => {
     fetchRestaurants(filters);
-  }, [fetchRestaurants]);
+  }, [fetchRestaurants, filters]);
+
+  useEffect(() => {
+    fetchCities();
+  }, [fetchCities]);
 
   const handleFiltersChange = useCallback(
     (newFilters: Partial<RestaurantFilters>) => {
@@ -67,10 +72,6 @@ const RestaurantPage: React.FC = () => {
     setSelectedRestaurant(restaurant);
     setShowForm(true);
   }, []);
-
-  const confirmFilterRestaurants = () => {
-    fetchRestaurants(filters);
-  }
   
   const handleDeleteRestaurant = useCallback(
     async (restaurant: Restaurant) => {
@@ -143,7 +144,6 @@ const RestaurantPage: React.FC = () => {
           onFiltersChange={handleFiltersChange}
           handleClearFIlters={handleClearFIlters}
           canOrderBy={true}
-          confirmFilterRestaurants={confirmFilterRestaurants}
         />
       </div>
 
