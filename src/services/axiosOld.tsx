@@ -28,8 +28,14 @@ apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('foodranktoken');
-      window.location.assign('login');
+      const currentPath =
+        typeof window !== 'undefined' ? window.location.pathname : '';
+      const isPrivateRoute = currentPath.startsWith('/home');
+
+      if (isPrivateRoute) {
+        localStorage.removeItem('foodranktoken');
+        window.location.assign('/login');
+      }
     }
     return Promise.reject(error);
   }

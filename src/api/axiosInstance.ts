@@ -31,17 +31,22 @@ function createAxiosIntance() {
     },
     async (error) => {
       if (error?.response?.status === 401) {
+        const currentPath =
+          typeof window !== "undefined" ? window.location.pathname : "";
+        const isPrivateRoute = currentPath.startsWith("/home");
+
         try {
-          // Limpia estado y storage, y redirige al login
-          useAuthStore.getState().onLogout();
-          try {
-            localStorage.removeItem("foodranktoken");
-          } catch {
-            // ignore
-          }
-          if (typeof window !== "undefined") {
-            // HashRouter
-            window.location.assign('login');
+          // Solo forzamos login en rutas privadas.
+          if (isPrivateRoute) {
+            useAuthStore.getState().onLogout();
+            try {
+              localStorage.removeItem("foodranktoken");
+            } catch {
+              // ignore
+            }
+            if (typeof window !== "undefined") {
+              window.location.assign("/login");
+            }
           }
         } catch {
           // ignore side effects errors
